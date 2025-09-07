@@ -24,10 +24,10 @@ input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
-  -webkit-text-fill-color: black;
+  -webkit-text-fill-color: white;
   transition: background-color 5000s ease-in-out 0s;
   box-shadow: 0 0 0px 1000px transparent inset !important;
-  caret-color: black;
+  caret-color: white;
 }
 
 ::-webkit-scrollbar {
@@ -46,19 +46,4 @@ input:-webkit-autofill:active {
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
-}
-
-input:focus,
-textarea:focus,
-select:focus {
-  outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.4);
-  transition: all 0.3s ease;
-}
-
-input,
-textarea,
-select {
-  transition: all 0.3s ease;
 }
