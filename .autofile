@@ -1,0 +1,11 @@
+
+dev {
+  $ taskkill /F /IM node.exe
+  + cd backend && npm i && npm run dev
+  + cd frontend && npm i && npm run dev
+  $ code .
+}
+
+web {
+  $ wr http://localhost:3000
+}

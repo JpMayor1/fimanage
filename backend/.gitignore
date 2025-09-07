@@ -1,0 +1,7 @@
+node_modules
+build
+bundle
+*.env
+*.production
+.scpignore
+publish.py
