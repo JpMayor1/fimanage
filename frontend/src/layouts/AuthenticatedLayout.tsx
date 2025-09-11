@@ -5,7 +5,7 @@ const AuthenticatedLayout = () => {
   const { authUser } = useAuthStore();
 
   if (!authUser) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/auth/login" replace />;
   }
   return (
     <div className="h-screen w-screen overflow-hidden bg-white">

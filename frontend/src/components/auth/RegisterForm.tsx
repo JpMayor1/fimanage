@@ -1,4 +1,4 @@
-import { useAuthStore } from "@/stores/auth/useAuthStore";
+// import { useAuthStore } from "@/stores/auth/useAuthStore";
 import { motion } from "framer-motion";
 import React, { useState } from "react";
 import { FaEye, FaEyeSlash, FaLock, FaUser } from "react-icons/fa";
@@ -14,8 +14,17 @@ interface FormErrors {
   password?: string;
 }
 
-const LoginForm: React.FC = () => {
-  const { loginAccount, loginLoading } = useAuthStore();
+const RegisterForm: React.FC = () => {
+  //   const { loginAccount, loginLoading } = useAuthStore();
+  const loginLoading = false;
+  const loginAccount = async (formData: {
+    username: string;
+    password: string;
+  }) => {
+    console.log(formData);
+    return true;
+  };
+
   const [formData, setFormData] = useState<FormData>({
     username: "",
     password: "",
@@ -83,7 +92,7 @@ const LoginForm: React.FC = () => {
           <h1 className="font-poppins text-3xl font-bold text-yellow mb-2">
             Fimanage
           </h1>
-          <p className="text-white/50 text-sm">Sign in to your account</p>
+          <p className="text-white/50 text-sm">Register an account</p>
         </motion.div>
 
         {/* Form */}
@@ -175,13 +184,13 @@ const LoginForm: React.FC = () => {
             transition={{ delay: 0.5, duration: 0.5 }}
             className="w-full flex items-center justify-center gap-1"
           >
-            <p className="text-white text-sm">Don't have an account?</p>
+            <p className="text-white text-sm">Already have an account?</p>
             <button
               type="button"
               className="text-yellow text-sm cursor-pointer hover:underline"
-              onClick={() => navigate("/auth/register")}
+              onClick={() => navigate("/auth/login")}
             >
-              Register here
+              Login here
             </button>
           </motion.div>
 
@@ -208,10 +217,10 @@ const LoginForm: React.FC = () => {
                       ease: "linear",
                     }}
                   />
-                  Signing In...
+                  Registering...
                 </div>
               ) : (
-                "Sign In"
+                "Register"
               )}
             </motion.button>
           </motion.div>
@@ -221,4 +230,4 @@ const LoginForm: React.FC = () => {
   );
 };
 
-export default LoginForm;
+export default RegisterForm;
