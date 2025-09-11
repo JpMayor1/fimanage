@@ -8,7 +8,7 @@ export type AccountType = {
   username: string;
   password: string;
   address: string;
-  recoveryCode: string;
+  recoveryCode?: string;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -19,3 +19,12 @@ export type AccountFilterType = Partial<
 >;
 
 export type AccountDocumentType = AccountType & Document;
+
+export type RegisterAccountType = {
+  profilePicture?: string;
+  name: string;
+  email: string;
+  username: string;
+  password: string;
+  address: string;
+};

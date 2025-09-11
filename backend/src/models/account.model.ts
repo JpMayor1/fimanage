@@ -3,12 +3,12 @@ import { model, Model, Schema } from "mongoose";
 
 const accountSchema = new Schema<AccountDocumentType>(
   {
-    profilePicture: { type: String, required: true },
+    profilePicture: String,
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    address: String,
+    address: { type: String, required: true },
     recoveryCode: String,
   },
   { timestamps: true }

@@ -1,4 +1,4 @@
-import { loginApi, logoutApi } from "@/api/auth/auth.api";
+import { loginApi, logoutApi, registerApi } from "@/api/auth/auth.api";
 import type { AuthStateType } from "@/types/auth/auth.type";
 import { AxiosError } from "axios";
 import toast from "react-hot-toast";
@@ -13,8 +13,43 @@ export const useAuthStore = create(
       registerLoading: false,
       loginLoading: false,
       logoutLoading: false,
-      updateProfileLoading: false,
 
+      registerccount: async ({
+        profilePicture,
+        name,
+        email,
+        username,
+        password,
+        address,
+      }) => {
+        set({ registerLoading: true });
+        try {
+          const response = await registerApi({
+            profilePicture,
+            name,
+            email,
+            username,
+            password,
+            address,
+          });
+          set({ authUser: response.data.user });
+          return true;
+        } catch (error) {
+          console.error("Error registering in account", error);
+          if (error instanceof AxiosError) {
+            if (error.response) {
+              toast.error(error.response.data.message);
+            } else {
+              toast.error(error.message);
+            }
+          } else {
+            toast.error("An unexpected error occurred.");
+          }
+          return false;
+        } finally {
+          set({ registerLoading: false });
+        }
+      },
       loginAccount: async ({ username, password }) => {
         set({ loginLoading: true });
         try {
@@ -22,7 +57,7 @@ export const useAuthStore = create(
           set({ authUser: response.data.user });
           return true;
         } catch (error) {
-          console.error("Error logging in account", error);
+          console.error("Error loging in account", error);
           if (error instanceof AxiosError) {
             if (error.response) {
               toast.error(error.response.data.message);

@@ -12,6 +12,8 @@ import morgan from "morgan";
 import initDB from "@/db/db.connect.js";
 import { globalErrorHandler } from "./middlewares/globalErrorHandler";
 
+import authRoute from "@/routes/auth/auth.route";
+
 const bootstrap = async () => {
   const app = express();
   const PORT = process.env.PORT || 5000;
@@ -38,6 +40,8 @@ const bootstrap = async () => {
   app.get("/", (req, res) => {
     res.status(200).send("API is running");
   });
+
+  app.use("/api/auth", authRoute);
 
   app.use(globalErrorHandler);
 
