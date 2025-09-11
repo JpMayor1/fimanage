@@ -10,7 +10,7 @@ import http from "http";
 import morgan from "morgan";
 
 import initDB from "@/db/db.connect.js";
-import { globalErrorHandler } from "./middleware/globalErrorHandler";
+import { globalErrorHandler } from "./middlewares/globalErrorHandler";
 
 const bootstrap = async () => {
   const app = express();
