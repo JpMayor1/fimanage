@@ -1,33 +1,19 @@
 import axiosInstance from "@/axios/axiosInstance";
+import type { RegisterAccountType } from "@/types/auth/auth.type";
 
 export const registerApi = async ({
-  profilePicture,
   name,
   email,
   username,
   password,
   address,
-}: {
-  profilePicture: File;
-  name: string;
-  email: string;
-  username: string;
-  password: string;
-  address: string;
-}) => {
-  const fd = new FormData();
-
-  fd.append("profilePicture", profilePicture);
-  fd.append("name", name);
-  fd.append("email", email);
-  fd.append("username", username);
-  fd.append("password", password);
-  fd.append("address", address);
-
-  const response = await axiosInstance.post("/auth/admin/register", fd, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
+}: RegisterAccountType) => {
+  const response = await axiosInstance.post("/auth/admin/register", {
+    name,
+    email,
+    username,
+    password,
+    address,
   });
   return response;
 };

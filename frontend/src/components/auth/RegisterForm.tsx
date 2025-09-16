@@ -1,33 +1,36 @@
-// import { useAuthStore } from "@/stores/auth/useAuthStore";
+import { useAuthStore } from "@/stores/auth/useAuthStore";
 import { motion } from "framer-motion";
 import React, { useState } from "react";
 import { FaEye, FaEyeSlash, FaLock, FaUser } from "react-icons/fa";
+import { IoLocation } from "react-icons/io5";
+import { MdEmail } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 
 interface FormData {
+  name: string;
+  email: string;
   username: string;
   password: string;
+  address: string;
 }
 
 interface FormErrors {
+  name?: string;
+  email?: string;
   username?: string;
   password?: string;
+  address?: string;
 }
 
 const RegisterForm: React.FC = () => {
-  //   const { loginAccount, loginLoading } = useAuthStore();
-  const loginLoading = false;
-  const loginAccount = async (formData: {
-    username: string;
-    password: string;
-  }) => {
-    console.log(formData);
-    return true;
-  };
+  const { registerccount, registerLoading } = useAuthStore();
 
   const [formData, setFormData] = useState<FormData>({
+    name: "",
+    email: "",
     username: "",
     password: "",
+    address: "",
   });
   const [errors, setErrors] = useState<FormErrors>({});
   const [showPassword, setShowPassword] = useState(false);
@@ -68,9 +71,18 @@ const RegisterForm: React.FC = () => {
 
     if (!validateForm()) return;
 
-    const success = await loginAccount(formData);
+    const success = await registerccount(formData);
 
-    if (success) navigate("/home");
+    if (success) {
+      setFormData({
+        name: "",
+        email: "",
+        username: "",
+        password: "",
+        address: "",
+      });
+      navigate("/");
+    }
   };
 
   return (
@@ -80,7 +92,7 @@ const RegisterForm: React.FC = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
     >
-      {/* Login Card */}
+      {/* Register Card */}
       <motion.div className="bg-primary rounded-2xl p-8 shadow-2xl">
         {/* Header */}
         <motion.div
@@ -97,6 +109,76 @@ const RegisterForm: React.FC = () => {
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Name Input */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.3, duration: 0.5 }}
+          >
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <FaUser className="h-5 w-5 text-white/90" />
+              </div>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleInputChange}
+                placeholder="Name"
+                className={`w-full pl-12 pr-4 py-4 font-inter bg-primary/50 border rounded-xl text-white placeholder-white/40 focus:outline-none focus:ring-2 transition-all duration-300 ${
+                  errors.name
+                    ? "border-red focus:ring-red/50"
+                    : "border-yellow focus:ring-yellow/50"
+                }`}
+              />
+            </div>
+            {errors.name && (
+              <motion.p
+                className="mt-2 text-sm text-red-300 font-inter"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                {errors.name}
+              </motion.p>
+            )}
+          </motion.div>
+
+          {/* Email Input */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.3, duration: 0.5 }}
+          >
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <MdEmail className="h-5 w-5 text-white/90" />
+              </div>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                placeholder="Email"
+                className={`w-full pl-12 pr-4 py-4 font-inter bg-primary/50 border rounded-xl text-white placeholder-white/40 focus:outline-none focus:ring-2 transition-all duration-300 ${
+                  errors.email
+                    ? "border-red focus:ring-red/50"
+                    : "border-yellow focus:ring-yellow/50"
+                }`}
+              />
+            </div>
+            {errors.email && (
+              <motion.p
+                className="mt-2 text-sm text-red-300 font-inter"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                {errors.email}
+              </motion.p>
+            )}
+          </motion.div>
+
           {/* Username Input */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -178,6 +260,42 @@ const RegisterForm: React.FC = () => {
             )}
           </motion.div>
 
+          {/* Address Input */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.3, duration: 0.5 }}
+          >
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <IoLocation className="h-5 w-5 text-white/90" />
+              </div>
+              <input
+                type="text"
+                name="address"
+                value={formData.address}
+                onChange={handleInputChange}
+                placeholder="Address"
+                className={`w-full pl-12 pr-4 py-4 font-inter bg-primary/50 border rounded-xl text-white placeholder-white/40 focus:outline-none focus:ring-2 transition-all duration-300 ${
+                  errors.address
+                    ? "border-red focus:ring-red/50"
+                    : "border-yellow focus:ring-yellow/50"
+                }`}
+              />
+            </div>
+            {errors.address && (
+              <motion.p
+                className="mt-2 text-sm text-red-300 font-inter"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                {errors.address}
+              </motion.p>
+            )}
+          </motion.div>
+
+          {/* login link */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -194,7 +312,7 @@ const RegisterForm: React.FC = () => {
             </button>
           </motion.div>
 
-          {/* Login Button */}
+          {/* Register Button */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -202,11 +320,11 @@ const RegisterForm: React.FC = () => {
           >
             <motion.button
               type="submit"
-              disabled={loginLoading}
+              disabled={registerLoading}
               className="w-full py-4 font-poppins font-semibold text-white bg-gradient-to-r from-yellow to-yellow hover:opacity-90 rounded-xl shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 cursor-pointer"
               whileTap={{ scale: 0.98 }}
             >
-              {loginLoading ? (
+              {registerLoading ? (
                 <div className="flex items-center justify-center">
                   <motion.div
                     className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full mr-3"

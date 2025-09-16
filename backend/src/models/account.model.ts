@@ -3,7 +3,6 @@ import { model, Model, Schema } from "mongoose";
 
 const accountSchema = new Schema<AccountDocumentType>(
   {
-    profilePicture: String,
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     username: { type: String, required: true, unique: true },

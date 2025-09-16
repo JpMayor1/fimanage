@@ -1,14 +1,21 @@
 export type AccountType = {
   _id: string;
-  profilePicture?: string;
   name: string;
   email: string;
   username: string;
   password: string;
   address: string;
   recoveryCode?: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type RegisterAccountType = {
+  name: string;
+  email: string;
+  username: string;
+  password: string;
+  address: string;
 };
 
 export type AuthStateType = {
@@ -19,20 +26,12 @@ export type AuthStateType = {
   logoutLoading: boolean;
 
   registerccount: ({
-    profilePicture,
     name,
     email,
     username,
     password,
     address,
-  }: {
-    profilePicture: File;
-    name: string;
-    email: string;
-    username: string;
-    password: string;
-    address: string;
-  }) => Promise<boolean>;
+  }: RegisterAccountType) => Promise<boolean>;
   loginAccount: ({
     username,
     password,

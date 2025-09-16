@@ -18,7 +18,6 @@ export const findAccountS = async (
 };
 
 export const registerAccountS = async ({
-  profilePicture,
   name,
   email,
   username,
@@ -26,7 +25,6 @@ export const registerAccountS = async ({
   address,
 }: RegisterAccountType) => {
   const account = await Account.create({
-    profilePicture,
     name,
     email,
     username,

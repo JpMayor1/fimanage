@@ -61,7 +61,13 @@ const LoginForm: React.FC = () => {
 
     const success = await loginAccount(formData);
 
-    if (success) navigate("/home");
+    if (success) {
+      setFormData({
+        username: "",
+        password: "",
+      });
+      navigate("/");
+    }
   };
 
   return (

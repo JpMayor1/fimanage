@@ -1,11 +1,11 @@
 import { findAccountS, registerAccountS } from "@/services/auth/auth.service";
-import { comparePassword } from "@/utils/bcrypt/bcrypt";
+import { comparePassword, hashPassword } from "@/utils/bcrypt/bcrypt";
 import { AppError } from "@/utils/error/appError";
 import generateToken from "@/utils/jwt/generateToken";
 import { Request, Response } from "express";
 
 export const register = async (req: Request, res: Response) => {
-  const { profilePicture, name, email, username, password, address } = req.body;
+  const { name, email, username, password, address } = req.body;
   if (!name) {
     throw new AppError("Name is required.", 400);
   }
@@ -20,21 +20,22 @@ export const register = async (req: Request, res: Response) => {
   }
 
   const emailExist = await findAccountS({ email });
-  if (!emailExist) {
+  if (emailExist) {
     throw new AppError("Email already exist.", 409);
   }
 
   const usernameExist = await findAccountS({ username });
-  if (!usernameExist) {
+  if (usernameExist) {
     throw new AppError("Username already exist.", 409);
   }
 
+  const hashedPassword = await hashPassword(password);
+
   const account = await registerAccountS({
-    profilePicture,
     name,
     email,
     username,
-    password,
+    password: hashedPassword,
     address,
   });
 
