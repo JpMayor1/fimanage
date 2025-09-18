@@ -14,11 +14,25 @@ export const useAuthStore = create(
       loginLoading: false,
       logoutLoading: false,
 
-      registerccount: async ({ name, email, username, password, address }) => {
+      registerccount: async ({
+        profilePicture,
+        firstName,
+        middleName,
+        lastName,
+        suffix,
+        email,
+        username,
+        password,
+        address,
+      }) => {
         set({ registerLoading: true });
         try {
           const response = await registerApi({
-            name,
+            profilePicture,
+            firstName,
+            middleName,
+            lastName,
+            suffix,
             email,
             username,
             password,

@@ -12,6 +12,7 @@ import morgan from "morgan";
 import initDB from "@/db/db.connect.js";
 import { globalErrorHandler } from "./middlewares/globalErrorHandler";
 
+import cloudinary from "@/middlewares/cloudinary";
 import authRoute from "@/routes/auth/auth.route";
 
 const bootstrap = async () => {
@@ -42,6 +43,7 @@ const bootstrap = async () => {
   });
 
   app.use("/api/auth", authRoute);
+  app.use("/api/cloudinary", cloudinary);
 
   app.use(globalErrorHandler);
 

@@ -18,18 +18,26 @@ export const findAccountS = async (
 };
 
 export const registerAccountS = async ({
-  name,
+  profilePicture,
+  firstName,
+  middleName,
+  lastName,
+  suffix,
+  address,
   email,
   username,
   password,
-  address,
 }: RegisterAccountType) => {
   const account = await Account.create({
-    name,
+    profilePicture,
+    firstName,
+    middleName,
+    lastName,
+    suffix,
+    address,
     email,
     username,
     password,
-    address,
   });
   return account;
 };

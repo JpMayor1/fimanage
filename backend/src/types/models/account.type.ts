@@ -2,7 +2,11 @@ import { Document } from "mongoose";
 
 export type AccountType = {
   _id: string;
-  name: string;
+  profilePicture?: string;
+  firstName: string;
+  middleName?: string;
+  lastName: string;
+  suffix?: string;
   email: string;
   username: string;
   password: string;
@@ -20,7 +24,11 @@ export type AccountFilterType = Partial<
 export type AccountDocumentType = AccountType & Document;
 
 export type RegisterAccountType = {
-  name: string;
+  profilePicture?: string;
+  firstName: string;
+  middleName?: string;
+  lastName: string;
+  suffix?: string;
   email: string;
   username: string;
   password: string;

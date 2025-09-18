@@ -11,11 +11,15 @@ export type AccountType = {
 };
 
 export type RegisterAccountType = {
-  name: string;
+  profilePicture?: null | File;
+  firstName: string;
+  middleName?: string;
+  lastName: string;
+  suffix?: string;
+  address: string;
   email: string;
   username: string;
   password: string;
-  address: string;
 };
 
 export type AuthStateType = {
@@ -26,7 +30,11 @@ export type AuthStateType = {
   logoutLoading: boolean;
 
   registerccount: ({
-    name,
+    profilePicture,
+    firstName,
+    middleName,
+    lastName,
+    suffix,
     email,
     username,
     password,

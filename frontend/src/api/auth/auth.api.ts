@@ -1,15 +1,33 @@
 import axiosInstance from "@/axios/axiosInstance";
 import type { RegisterAccountType } from "@/types/auth/auth.type";
+import { uploadFile } from "@/utils/upload/uploadFile";
 
 export const registerApi = async ({
-  name,
+  profilePicture,
+  firstName,
+  middleName,
+  lastName,
+  suffix,
   email,
   username,
   password,
   address,
 }: RegisterAccountType) => {
+  let default_secure_url = "";
+  let default_public_id = "";
+  if (profilePicture) {
+    const { secure_url, public_id } = await uploadFile(profilePicture as File);
+    default_public_id = public_id;
+    default_secure_url = secure_url;
+  }
+
   const response = await axiosInstance.post("/auth/admin/register", {
-    name,
+    publicId: default_public_id,
+    profilePicture: default_secure_url,
+    firstName,
+    middleName,
+    lastName,
+    suffix,
     email,
     username,
     password,

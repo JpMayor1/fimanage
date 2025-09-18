@@ -1,81 +1,68 @@
 import { useAuthStore } from "@/stores/auth/useAuthStore";
+import type { RegisterAccountType } from "@/types/auth/auth.type";
 import { motion } from "framer-motion";
-import React, { useState } from "react";
-import { FaEye, FaEyeSlash, FaLock, FaUser } from "react-icons/fa";
-import { IoLocation } from "react-icons/io5";
-import { MdEmail } from "react-icons/md";
+import React, { useRef, useState } from "react";
+import {
+  FiAtSign,
+  FiEye,
+  FiEyeOff,
+  FiImage,
+  FiLock,
+  FiMail,
+  FiUser,
+} from "react-icons/fi";
+import { IoLocationOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
-
-interface FormData {
-  name: string;
-  email: string;
-  username: string;
-  password: string;
-  address: string;
-}
-
-interface FormErrors {
-  name?: string;
-  email?: string;
-  username?: string;
-  password?: string;
-  address?: string;
-}
+import TextField from "../custom/TextField";
 
 const RegisterForm: React.FC = () => {
   const { registerccount, registerLoading } = useAuthStore();
+  const navigate = useNavigate();
 
-  const [formData, setFormData] = useState<FormData>({
-    name: "",
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const [form, setForm] = useState<RegisterAccountType>({
+    profilePicture: null,
+    firstName: "",
+    middleName: "",
+    lastName: "",
+    suffix: "",
     email: "",
     username: "",
     password: "",
     address: "",
   });
-  const [errors, setErrors] = useState<FormErrors>({});
   const [showPassword, setShowPassword] = useState(false);
+  const [profilePreview, setProfilePreview] = useState<string | null>(null);
 
-  const navigate = useNavigate();
-
-  const validateForm = (): boolean => {
-    const newErrors: FormErrors = {};
-
-    if (!formData.username.trim()) {
-      newErrors.username = "Username is required";
-    } else if (formData.username.length < 3) {
-      newErrors.username = "Username must be at least 3 characters";
-    }
-
-    if (!formData.password) {
-      newErrors.password = "Password is required";
-    } else if (formData.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setForm((prev) => ({ ...prev, [name]: value }));
+  }
 
-    // Clear specific error when user starts typing
-    if (errors[name as keyof FormErrors]) {
-      setErrors((prev) => ({ ...prev, [name]: undefined }));
+  function handleProfilePicChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (file) {
+      setForm((prev) => ({ ...prev, profilePicture: file }));
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        setProfilePreview(ev.target?.result as string);
+      };
+      reader.readAsDataURL(file);
     }
-  };
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!validateForm()) return;
-
-    const success = await registerccount(formData);
+    const success = await registerccount(form);
 
     if (success) {
-      setFormData({
-        name: "",
+      setForm({
+        profilePicture: null,
+        firstName: "",
+        middleName: "",
+        lastName: "",
+        suffix: "",
         email: "",
         username: "",
         password: "",
@@ -87,16 +74,16 @@ const RegisterForm: React.FC = () => {
 
   return (
     <motion.div
-      className="w-full max-w-md mx-4"
+      className="w-full max-w-lg"
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
     >
       {/* Register Card */}
-      <motion.div className="bg-primary rounded-2xl p-8 shadow-2xl">
+      <motion.div className="bg-primary rounded-2xl p-4 shadow-2xl">
         {/* Header */}
         <motion.div
-          className="text-center mb-8"
+          className="text-center mb-4"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.5 }}
@@ -108,200 +95,129 @@ const RegisterForm: React.FC = () => {
         </motion.div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Name Input */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.3, duration: 0.5 }}
-          >
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <FaUser className="h-5 w-5 text-white/90" />
+        <form
+          className="w-full flex flex-col gap-4"
+          autoComplete="off"
+          onSubmit={handleSubmit}
+        >
+          {/* Profile Picture Upload */}
+          <div className="flex flex-col items-center mb-2">
+            <div onClick={() => fileInputRef.current?.click()}>
+              <div className="w-20 h-20 md:w-30 md:h-30 rounded-full bg-yellow-100 border-2 border-yellow-300 flex items-center justify-center overflow-hidden shadow cursor-pointer hover:ring-2 hover:ring-yellow-400 transition">
+                {profilePreview ? (
+                  <img
+                    src={profilePreview}
+                    alt="Profile"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <FiImage className="text-4xl text-yellow-400" />
+                )}
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleProfilePicChange}
+                />
               </div>
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleInputChange}
-                placeholder="Name"
-                className={`w-full pl-12 pr-4 py-4 font-inter bg-primary/50 border rounded-xl text-white placeholder-white/40 focus:outline-none focus:ring-2 transition-all duration-300 ${
-                  errors.name
-                    ? "border-red focus:ring-red/50"
-                    : "border-yellow focus:ring-yellow/50"
-                }`}
-              />
             </div>
-            {errors.name && (
-              <motion.p
-                className="mt-2 text-sm text-red-300 font-inter"
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                {errors.name}
-              </motion.p>
-            )}
-          </motion.div>
+          </div>
+          {/* Names */}
+          <div className="flex gap-2">
+            <TextField
+              name="firstName"
+              placeholder="First Name *"
+              value={form.firstName}
+              onChange={handleChange}
+              required
+              icon={<FiUser />}
+            />
+            <TextField
+              name="middleName"
+              placeholder="Middle Name"
+              value={form.middleName}
+              onChange={handleChange}
+              icon={<FiUser />}
+            />
+          </div>
+          <div className="flex gap-2">
+            <TextField
+              name="lastName"
+              placeholder="Last Name *"
+              value={form.lastName}
+              onChange={handleChange}
+              required
+              icon={<FiUser />}
+            />
+            <TextField
+              name="suffix"
+              placeholder="Suffix"
+              value={form.suffix}
+              onChange={handleChange}
+              icon={<FiUser />}
+            />
+          </div>
 
-          {/* Email Input */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.3, duration: 0.5 }}
-          >
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <MdEmail className="h-5 w-5 text-white/90" />
-              </div>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                placeholder="Email"
-                className={`w-full pl-12 pr-4 py-4 font-inter bg-primary/50 border rounded-xl text-white placeholder-white/40 focus:outline-none focus:ring-2 transition-all duration-300 ${
-                  errors.email
-                    ? "border-red focus:ring-red/50"
-                    : "border-yellow focus:ring-yellow/50"
-                }`}
-              />
-            </div>
-            {errors.email && (
-              <motion.p
-                className="mt-2 text-sm text-red-300 font-inter"
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                {errors.email}
-              </motion.p>
-            )}
-          </motion.div>
+          {/* Address */}
+          <TextField
+            type="address"
+            name="address"
+            placeholder="Address *"
+            value={form.address}
+            onChange={handleChange}
+            required
+            icon={<IoLocationOutline />}
+          />
 
-          {/* Username Input */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.3, duration: 0.5 }}
-          >
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <FaUser className="h-5 w-5 text-white/90" />
-              </div>
-              <input
-                type="text"
-                name="username"
-                value={formData.username}
-                onChange={handleInputChange}
-                placeholder="Username"
-                className={`w-full pl-12 pr-4 py-4 font-inter bg-primary/50 border rounded-xl text-white placeholder-white/40 focus:outline-none focus:ring-2 transition-all duration-300 ${
-                  errors.username
-                    ? "border-red focus:ring-red/50"
-                    : "border-yellow focus:ring-yellow/50"
-                }`}
-              />
-            </div>
-            {errors.username && (
-              <motion.p
-                className="mt-2 text-sm text-red-300 font-inter"
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                {errors.username}
-              </motion.p>
-            )}
-          </motion.div>
+          {/* Email */}
+          <TextField
+            type="email"
+            name="email"
+            placeholder="Email *"
+            value={form.email}
+            onChange={handleChange}
+            required
+            icon={<FiMail />}
+          />
 
-          {/* Password Input */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.4, duration: 0.5 }}
-          >
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <FaLock className="h-5 w-5 text-white/90" />
-              </div>
-              <input
-                type={showPassword ? "text" : "password"}
-                name="password"
-                value={formData.password}
-                onChange={handleInputChange}
-                placeholder="Password"
-                className={`w-full pl-12 pr-12 py-4 font-inter bg-primary/50 border rounded-xl text-white placeholder-white/40 focus:outline-none focus:ring-2 transition-all duration-300 ${
-                  errors.password
-                    ? "border-red focus:ring-red/50"
-                    : "border-yellow focus:ring-yellow/50"
-                }`}
-              />
+          {/* Username */}
+          <TextField
+            name="username"
+            placeholder="Username *"
+            value={form.username}
+            onChange={handleChange}
+            required
+            icon={<FiAtSign />}
+          />
+
+          {/* Password */}
+          <TextField
+            type={showPassword ? "text" : "password"}
+            name="password"
+            placeholder="Password *"
+            value={form.password}
+            onChange={handleChange}
+            required
+            icon={<FiLock />}
+            rightIcon={
               <button
                 type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-0 pr-4 flex items-center text-yellow hover:text-white transition-colors"
+                tabIndex={-1}
+                className="text-yellow-400 hover:text-yellow-600 transition"
+                onClick={() => setShowPassword((v) => !v)}
+                aria-label={showPassword ? "Hide password" : "Show password"}
               >
                 {showPassword ? (
-                  <FaEyeSlash className="h-5 w-5" />
+                  <FiEyeOff className="text-lg" />
                 ) : (
-                  <FaEye className="h-5 w-5" />
+                  <FiEye className="text-lg" />
                 )}
               </button>
-            </div>
-            {errors.password && (
-              <motion.p
-                className="mt-2 text-sm text-red-300 font-inter"
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                {errors.password}
-              </motion.p>
-            )}
-          </motion.div>
+            }
+          />
 
-          {/* Address Input */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.3, duration: 0.5 }}
-          >
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <IoLocation className="h-5 w-5 text-white/90" />
-              </div>
-              <input
-                type="text"
-                name="address"
-                value={formData.address}
-                onChange={handleInputChange}
-                placeholder="Address"
-                className={`w-full pl-12 pr-4 py-4 font-inter bg-primary/50 border rounded-xl text-white placeholder-white/40 focus:outline-none focus:ring-2 transition-all duration-300 ${
-                  errors.address
-                    ? "border-red focus:ring-red/50"
-                    : "border-yellow focus:ring-yellow/50"
-                }`}
-              />
-            </div>
-            {errors.address && (
-              <motion.p
-                className="mt-2 text-sm text-red-300 font-inter"
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                {errors.address}
-              </motion.p>
-            )}
-          </motion.div>
-
-          {/* login link */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.5 }}
-            className="w-full flex items-center justify-center gap-1"
-          >
+          <div className="w-full flex items-center justify-center gap-1">
             <p className="text-white text-sm">Already have an account?</p>
             <button
               type="button"
@@ -310,38 +226,20 @@ const RegisterForm: React.FC = () => {
             >
               Login here
             </button>
-          </motion.div>
+          </div>
 
-          {/* Register Button */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.5 }}
+          <motion.button
+            disabled={registerLoading}
+            type="submit"
+            whileTap={{ scale: 0.97 }}
+            className={`${
+              registerLoading
+                ? "cursor-not-allowed opacity-80"
+                : "cursor-pointer hover:scale-101 hover:shadow-xl transition-all"
+            } w-full py-3 rounded-xl bg-gradient-to-r from-yellow-700 to-yellow-500 text-white font-bold text-lg mt-2 shadow-md`}
           >
-            <motion.button
-              type="submit"
-              disabled={registerLoading}
-              className="w-full py-4 font-poppins font-semibold text-white bg-gradient-to-r from-yellow to-yellow hover:opacity-90 rounded-xl shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 cursor-pointer"
-              whileTap={{ scale: 0.98 }}
-            >
-              {registerLoading ? (
-                <div className="flex items-center justify-center">
-                  <motion.div
-                    className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full mr-3"
-                    animate={{ rotate: 360 }}
-                    transition={{
-                      duration: 1,
-                      repeat: Infinity,
-                      ease: "linear",
-                    }}
-                  />
-                  Registering...
-                </div>
-              ) : (
-                "Register"
-              )}
-            </motion.button>
-          </motion.div>
+            {registerLoading ? "Registering..." : "Register"}
+          </motion.button>
         </form>
       </motion.div>
     </motion.div>
