@@ -29,7 +29,7 @@ const TextField = ({
         } py-3 rounded-xl border border-yellow focus:border-yellow-400 bg-primary/50 text-white placeholder-white/40 outline-none transition ${inputClassName}`}
       />
       {rightIcon && (
-        <span className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer">
+        <span className="absolute right-4 top-4 cursor-pointer">
           {rightIcon}
         </span>
       )}

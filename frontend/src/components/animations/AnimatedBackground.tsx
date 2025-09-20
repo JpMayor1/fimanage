@@ -17,7 +17,7 @@ const AnimatedBackground: React.FC = () => {
   const gridLines = Array.from({ length: 20 }, (_, i) => i);
 
   return (
-    <div className="fixed inset-0 overflow-hidden pointer-events-none">
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
       {/* Gradient Background (black → dark gold glow) */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary via-black to-primary" />
 
