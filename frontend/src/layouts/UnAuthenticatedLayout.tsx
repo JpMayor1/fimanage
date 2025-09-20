@@ -10,7 +10,9 @@ const UnAuthenticatedLayout = () => {
   return (
     <div className="h-screen w-sccreen overflow-hidden">
       <AnimatedBackground />
-      <Outlet />
+      <div className="relative h-full w-full ">
+        <Outlet />
+      </div>
     </div>
   );
 };

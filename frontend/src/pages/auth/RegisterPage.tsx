@@ -72,12 +72,12 @@ const RegisterPage: React.FC = () => {
     }
   };
   return (
-    <div className="h-full w-full flex items-start justify-center relative p-2 overflow-y-scroll no-scrollbar">
+    <div className="h-full w-full flex items-start justify-center px-4 py-5 overflow-y-scroll no-scrollbar">
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className="w-full md:max-w-md p-8 shadow-2xl bg-primary rounded-2xl"
+        className="w-full md:max-w-md px-4 py-8 shadow-2xl bg-primary rounded-2xl"
       >
         {/* Header */}
         <motion.div

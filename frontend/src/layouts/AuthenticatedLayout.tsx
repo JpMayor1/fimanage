@@ -1,3 +1,4 @@
+import AnimatedBackground from "@/components/animations/AnimatedBackground";
 import { useAuthStore } from "@/stores/auth/useAuthStore";
 import { Navigate, Outlet } from "react-router-dom";
 
@@ -8,8 +9,9 @@ const AuthenticatedLayout = () => {
     return <Navigate to="/auth/login" replace />;
   }
   return (
-    <div className="h-screen w-screen overflow-hidden bg-white">
-      <div className="h-[calc(100%-70px)] no-scrollbar">
+    <div className="h-screen w-sccreen overflow-hidden">
+      <AnimatedBackground />
+      <div className="relative h-full w-full ">
         <Outlet />
       </div>
     </div>
