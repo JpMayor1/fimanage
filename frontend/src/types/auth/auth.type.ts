@@ -1,6 +1,10 @@
 export type AccountType = {
   _id: string;
-  name: string;
+  profilePicture?: string;
+  firstName: string;
+  middleName?: string;
+  lastName: string;
+  suffix?: string;
   email: string;
   username: string;
   password: string;
