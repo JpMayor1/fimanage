@@ -24,17 +24,13 @@ const Header = () => {
             onClick={() => setOpenProfile(!openProfile)}
           />
         ) : (
-          <div
+          <Avatar
+            key={authUser._id}
+            name={`${authUser.firstName} ${authUser.lastName}`}
+            size="lg"
+            className="bg-yellow p-4 rounded-full h-14 w-14 cursor-pointer"
             onClick={() => setOpenProfile(!openProfile)}
-            className="cursor-pointer"
-          >
-            <Avatar
-              key={authUser._id}
-              name={`${authUser.firstName} ${authUser.lastName}`}
-              size="lg"
-              className="bg-yellow p-4 rounded-full h-14 w-14"
-            />
-          </div>
+          />
         )}
 
         <AnimatePresence>

@@ -4,6 +4,7 @@ import AuthenticatedLayout from "./layouts/AuthenticatedLayout";
 import UnAuthenticatedLayout from "./layouts/UnAuthenticatedLayout";
 import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
+import LandingPage from "./pages/general/Landingpage";
 import PageNotFound from "./pages/general/PageNotFound";
 import HomePage from "./pages/home/HomePage";
 
@@ -11,18 +12,12 @@ function App() {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <AuthenticatedLayout />,
+      element: <UnAuthenticatedLayout />,
       children: [
         {
           path: "/",
-          element: <HomePage />,
+          element: <LandingPage />,
         },
-      ],
-    },
-    {
-      path: "/auth",
-      element: <UnAuthenticatedLayout />,
-      children: [
         {
           path: "/auth/login",
           element: <LoginPage />,
@@ -33,7 +28,16 @@ function App() {
         },
       ],
     },
-
+    {
+      path: "/dashboard",
+      element: <AuthenticatedLayout />,
+      children: [
+        {
+          path: "/dashboard",
+          element: <HomePage />,
+        },
+      ],
+    },
     {
       path: "*",
       element: <PageNotFound />,

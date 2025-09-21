@@ -35,7 +35,7 @@ const LoginPage: React.FC = () => {
         username: "",
         password: "",
       });
-      navigate("/");
+      navigate("/dashboard");
     }
   };
   return (
