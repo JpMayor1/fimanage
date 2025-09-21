@@ -1,12 +1,21 @@
 import { Toaster } from "react-hot-toast";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
 import AuthenticatedLayout from "./layouts/AuthenticatedLayout";
 import UnAuthenticatedLayout from "./layouts/UnAuthenticatedLayout";
-import LoginPage from "./pages/auth/LoginPage";
-import RegisterPage from "./pages/auth/RegisterPage";
+
 import LandingPage from "./pages/general/Landingpage";
 import PageNotFound from "./pages/general/PageNotFound";
-import HomePage from "./pages/home/HomePage";
+
+import LoginPage from "./pages/auth/LoginPage";
+import RegisterPage from "./pages/auth/RegisterPage";
+
+import DashboardPage from "./pages/home/DashboardPage";
+import ExpensesPage from "./pages/home/ExpensesPage";
+import IncomePage from "./pages/home/IncomePage";
+import InvestmentsPage from "./pages/home/InvestmentsPage";
+import ReportPage from "./pages/home/ReportPage";
+import SavingsPage from "./pages/home/SavingsPage";
 
 function App() {
   const router = createBrowserRouter([
@@ -29,12 +38,32 @@ function App() {
       ],
     },
     {
-      path: "/dashboard",
+      path: "/home",
       element: <AuthenticatedLayout />,
       children: [
         {
-          path: "/dashboard",
-          element: <HomePage />,
+          path: "/home/dashboard",
+          element: <DashboardPage />,
+        },
+        {
+          path: "/home/income",
+          element: <IncomePage />,
+        },
+        {
+          path: "/home/expenses",
+          element: <ExpensesPage />,
+        },
+        {
+          path: "/home/savings",
+          element: <SavingsPage />,
+        },
+        {
+          path: "/home/investments",
+          element: <InvestmentsPage />,
+        },
+        {
+          path: "/home/report",
+          element: <ReportPage />,
         },
       ],
     },

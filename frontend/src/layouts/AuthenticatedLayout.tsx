@@ -10,13 +10,13 @@ const AuthenticatedLayout = () => {
     return <Navigate to="/" replace />;
   }
   return (
-    <div className="h-screen w-sccreen overflow-hidden flex">
+    <div className="h-screen w-sccreen overflow-hidden flex justify-end">
       <SideBar />
-      <div className="h-full w-full">
+      <div className="h-full w-full md:w-[calc(100%-240px)]">
         <header className="h-[70px] w-full">
           <Header />
         </header>
-        <div className="h-[calc(100%-70px)] no-scrollbar">
+        <div className="h-[calc(100%-70px)]">
           <Outlet />
         </div>
       </div>

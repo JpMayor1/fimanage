@@ -70,7 +70,7 @@ const ProfileCard: FC<ProfileCardI> = ({ onClose }) => {
               key={authUser._id}
               name={`${authUser.firstName} ${authUser.lastName}`}
               size="lg"
-              className="bg-yellow p-4 rounded-full h-13 w-13"
+              className="bg-primary p-4 rounded-full h-13 w-13"
             />
           )}
         </motion.div>
@@ -94,7 +94,7 @@ const ProfileCard: FC<ProfileCardI> = ({ onClose }) => {
         {/* Sign out */}
         <button
           onClick={logout}
-          className="w-full py-2 rounded-xl bg-yellow/90 text-white font-semibold shadow hover:bg-yellow transition cursor-pointer"
+          className="w-full py-2 rounded-xl bg-primary/90 text-white font-semibold shadow hover:bg-primary transition cursor-pointer"
         >
           Sign out
         </button>

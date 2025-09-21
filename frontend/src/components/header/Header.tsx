@@ -1,4 +1,5 @@
 import { useAuthStore } from "@/stores/auth/useAuthStore";
+import { useSideBar } from "@/stores/sidebar/useSideBar";
 import Avatar from "avatox";
 import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
@@ -8,18 +9,23 @@ import ProfileCard from "../custom/ProfileCard";
 
 const Header = () => {
   const { authUser } = useAuthStore();
+  const { setOpen } = useSideBar();
+
   const [openProfile, setOpenProfile] = useState(false);
 
   if (!authUser) return;
   return (
     <div className="h-full w-full flex items-center justify-between md:justify-end px-3">
-      <RxHamburgerMenu className="md:hidden text-black text-2xl" />
+      <RxHamburgerMenu
+        className="md:hidden text-black text-2xl"
+        onClick={() => setOpen(true)}
+      />
       <div>
         {authUser.profilePicture ? (
           <BlurImage
             src={authUser.profilePicture}
             alt="Profile picture"
-            className="h-14 w-14 rounded-full object-cover cursor-pointer border border-yellow"
+            className="h-14 w-14 rounded-full object-cover cursor-pointer border border-primary"
             draggable={false}
             onClick={() => setOpenProfile(!openProfile)}
           />
@@ -28,7 +34,7 @@ const Header = () => {
             key={authUser._id}
             name={`${authUser.firstName} ${authUser.lastName}`}
             size="lg"
-            className="bg-yellow p-4 rounded-full h-14 w-14 cursor-pointer"
+            className="bg-primary p-4 rounded-full h-14 w-14 cursor-pointer"
             onClick={() => setOpenProfile(!openProfile)}
           />
         )}
