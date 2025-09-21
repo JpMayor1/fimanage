@@ -1,5 +1,5 @@
-import AnimatedBackground from "@/components/animations/AnimatedBackground";
 import Header from "@/components/header/Header";
+import SideBar from "@/components/sidebar/SideBar";
 import { useAuthStore } from "@/stores/auth/useAuthStore";
 import { Navigate, Outlet } from "react-router-dom";
 
@@ -10,9 +10,9 @@ const AuthenticatedLayout = () => {
     return <Navigate to="/auth/login" replace />;
   }
   return (
-    <div className="h-screen w-sccreen overflow-hidden">
-      <AnimatedBackground />
-      <div className="h-full w-full relative">
+    <div className="h-screen w-sccreen overflow-hidden flex">
+      <SideBar />
+      <div className="h-full w-full">
         <header className="h-[70px] w-full">
           <Header />
         </header>

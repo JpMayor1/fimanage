@@ -2,6 +2,7 @@ import { useAuthStore } from "@/stores/auth/useAuthStore";
 import Avatar from "avatox";
 import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
+import { RxHamburgerMenu } from "react-icons/rx";
 import BlurImage from "../custom/BlurImage";
 import ProfileCard from "../custom/ProfileCard";
 
@@ -11,7 +12,8 @@ const Header = () => {
 
   if (!authUser) return;
   return (
-    <div className="h-full w-full flex items-center justify-end px-3">
+    <div className="h-full w-full flex items-center justify-between md:justify-end px-3">
+      <RxHamburgerMenu className="md:hidden text-black text-2xl" />
       <div>
         {authUser.profilePicture ? (
           <BlurImage
