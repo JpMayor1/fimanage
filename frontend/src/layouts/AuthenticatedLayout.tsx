@@ -1,10 +1,12 @@
-import Header from "@/components/header/Header";
 import SideBar from "@/components/sidebar/SideBar";
 import { useAuthStore } from "@/stores/auth/useAuthStore";
+import { useSideBar } from "@/stores/sidebar/useSideBar";
+import { RxHamburgerMenu } from "react-icons/rx";
 import { Navigate, Outlet } from "react-router-dom";
 
 const AuthenticatedLayout = () => {
   const { authUser } = useAuthStore();
+  const { setOpen } = useSideBar();
 
   if (!authUser) {
     return <Navigate to="/" replace />;
@@ -12,11 +14,12 @@ const AuthenticatedLayout = () => {
   return (
     <div className="h-screen w-sccreen overflow-hidden flex justify-end">
       <SideBar />
-      <div className="h-full w-full md:w-[calc(100%-240px)]">
-        <header className="h-[70px] w-full">
-          <Header />
-        </header>
-        <div className="h-[calc(100%-70px)]">
+      <div className="h-full w-full md:w-[calc(100%-240px)] px-2 md:px-4">
+        <RxHamburgerMenu
+          className="md:hidden text-black text-2xl h-6 mt-3"
+          onClick={() => setOpen(true)}
+        />
+        <div className="h-[calc(100%-40px)] md:h-full pt-3">
           <Outlet />
         </div>
       </div>

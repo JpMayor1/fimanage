@@ -14,6 +14,7 @@ import DashboardPage from "./pages/home/DashboardPage";
 import ExpensesPage from "./pages/home/ExpensesPage";
 import IncomePage from "./pages/home/IncomePage";
 import InvestmentsPage from "./pages/home/InvestmentsPage";
+import ProfilePage from "./pages/home/ProfilePage";
 import ReportPage from "./pages/home/ReportPage";
 import SavingsPage from "./pages/home/SavingsPage";
 
@@ -41,6 +42,10 @@ function App() {
       path: "/home",
       element: <AuthenticatedLayout />,
       children: [
+        {
+          path: "/home/profile",
+          element: <ProfilePage />,
+        },
         {
           path: "/home/dashboard",
           element: <DashboardPage />,
