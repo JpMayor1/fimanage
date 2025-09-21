@@ -77,7 +77,7 @@ const RegisterPage: React.FC = () => {
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className="w-full md:max-w-md px-4 py-8 shadow-2xl bg-primary rounded-2xl"
+        className="w-full md:max-w-md px-4 md:px-8 py-8 shadow-2xl bg-primary rounded-2xl"
       >
         {/* Header */}
         <motion.div

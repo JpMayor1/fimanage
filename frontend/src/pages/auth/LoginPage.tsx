@@ -10,55 +10,23 @@ interface FormData {
   password: string;
 }
 
-interface FormErrors {
-  username?: string;
-  password?: string;
-}
-
 const LoginPage: React.FC = () => {
   const { loginAccount, loginLoading } = useAuthStore();
   const [form, setForm] = useState<FormData>({
     username: "",
     password: "",
   });
-  const [errors, setErrors] = useState<FormErrors>({});
   const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
 
-  const validateForm = (): boolean => {
-    const newErrors: FormErrors = {};
-
-    if (!form.username.trim()) {
-      newErrors.username = "Username is required";
-    } else if (form.username.length < 3) {
-      newErrors.username = "Username must be at least 3 characters";
-    }
-
-    if (!form.password) {
-      newErrors.password = "Password is required";
-    } else if (form.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
-
-    // Clear specific error when user starts typing
-    if (errors[name as keyof FormErrors]) {
-      setErrors((prev) => ({ ...prev, [name]: undefined }));
-    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!validateForm()) return;
 
     const success = await loginAccount(form);
 
@@ -76,7 +44,7 @@ const LoginPage: React.FC = () => {
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className="w-full md:max-w-md px-4 py-8 shadow-2xl bg-primary rounded-2xl"
+        className="w-full md:max-w-md px-4 md:px-8 py-8 shadow-2xl bg-primary rounded-2xl"
       >
         {/* Header */}
         <motion.div
