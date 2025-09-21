@@ -3,7 +3,7 @@ import { useAuthStore } from "@/stores/auth/useAuthStore";
 import { motion } from "framer-motion";
 import React, { useState } from "react";
 import { FiAtSign, FiEye, FiEyeOff, FiLock } from "react-icons/fi";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 interface FormData {
   username: string;
@@ -53,9 +53,12 @@ const LoginPage: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.5 }}
         >
-          <h1 className="font-poppins text-3xl font-bold text-yellow mb-2">
+          <Link
+            to={"/"}
+            className="font-poppins text-3xl font-bold text-yellow mb-2"
+          >
             Fimanage
-          </h1>
+          </Link>
           <p className="text-white/50 text-sm">Sign in to your account</p>
         </motion.div>
 

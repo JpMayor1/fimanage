@@ -13,7 +13,7 @@ import {
   FiUser,
 } from "react-icons/fi";
 import { IoLocationOutline } from "react-icons/io5";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const RegisterPage: React.FC = () => {
   const { registerccount, registerLoading } = useAuthStore();
@@ -72,7 +72,7 @@ const RegisterPage: React.FC = () => {
     }
   };
   return (
-    <div className="h-full w-full flex items-start justify-center px-4 py-5 overflow-y-scroll no-scrollbar">
+    <div className="h-full w-full flex items-start justify-center px-4 pt-5 pb-20 overflow-y-scroll no-scrollbar">
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
@@ -86,9 +86,12 @@ const RegisterPage: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.5 }}
         >
-          <h1 className="font-poppins text-3xl font-bold text-yellow mb-2">
+          <Link
+            to={"/"}
+            className="font-poppins text-3xl font-bold text-yellow mb-2"
+          >
             Fimanage
-          </h1>
+          </Link>
           <p className="text-white/50 text-sm">Register an account</p>
         </motion.div>
 
