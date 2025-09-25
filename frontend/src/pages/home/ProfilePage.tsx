@@ -34,7 +34,7 @@ const ProfilePage = () => {
       variants={overlayAnim}
       className="w-full flex items-center justify-center p-5"
     >
-      <div className="w-full max-w-3xl bg-white border border-primary/10 rounded-2xl shadow-2xl py-8 px-4 md:px-8 relative flex flex-col items-center">
+      <div className="w-full max-w-3xl border border-primary/10 rounded-2xl shadow-2xl py-8 px-4 md:px-8 relative flex flex-col items-center">
         {/* Profile Section */}
         <motion.div
           initial="initial"

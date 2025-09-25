@@ -12,11 +12,11 @@ const AuthenticatedLayout = () => {
     return <Navigate to="/" replace />;
   }
   return (
-    <div className="h-screen w-sccreen overflow-hidden flex justify-end">
+    <div className="h-screen w-screen overflow-hidden flex justify-end bg-gradient-to-br from-primary via-black to-primary">
       <SideBar />
       <div className="h-full w-full md:w-[calc(100%-240px)] px-2 md:px-4">
         <RxHamburgerMenu
-          className="md:hidden text-black text-2xl h-6 mt-3"
+          className="md:hidden text-white text-2xl h-6 mt-3"
           onClick={() => setOpen(true)}
         />
         <div className="h-[calc(100%-40px)] md:h-full pt-3">

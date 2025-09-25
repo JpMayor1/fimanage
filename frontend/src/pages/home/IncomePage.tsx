@@ -1,94 +1,96 @@
-import { MdDelete, MdEdit } from "react-icons/md";
+import { IoMdGift } from "react-icons/io";
+import { MdDelete, MdEdit, MdOutlineSupportAgent } from "react-icons/md";
 import { TbMoneybag } from "react-icons/tb";
 
 const IncomePage = () => {
+  const incomes = [
+    {
+      id: 1,
+      icon: TbMoneybag,
+      description: "Monthly Salary",
+      category: "Salary",
+      amount: 15000,
+      dt: "September 15, 2025",
+    },
+    {
+      id: 2,
+      icon: MdOutlineSupportAgent,
+      description: "Freelancing",
+      category: "Freelance",
+      amount: 20000,
+      dt: "October 1, 2024",
+    },
+    {
+      id: 3,
+      icon: IoMdGift,
+      description: "Gift",
+      category: "Gift",
+      amount: 1000,
+      dt: "December 25, 2024",
+    },
+  ];
+
   return (
     <div className="h-full w-full">
+      {/* Header */}
       <div className="w-full flex items-center justify-between mb-5">
         <div>
-          <h1 className="text-black text-xl font-bold">Income</h1>
-          <p className="text-black/70 text-xs md:text-sm">
+          <h1 className="text-white text-xl font-bold">Income</h1>
+          <p className="text-white/70 text-xs md:text-sm">
             Track & manage your income sources
           </p>
         </div>
 
-        <button className="bg-yellow/90 hover:bg-yellow rounded-md py-2 px-4 cursor-pointer">
+        <button className="bg-yellow/90 hover:bg-yellow text-black rounded-md py-2 px-4 cursor-pointer">
           + Income
         </button>
       </div>
 
+      {/* Income List */}
       <div className="w-full">
-        <p className="text-black text-md font-bold mb-2">All Income</p>
+        <p className="text-white text-md font-bold mb-2">All Income</p>
 
         <div className="space-y-2">
-          <div className="w-full rounded-md bg-primary p-4 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="bg-green/40 p-4 rounded-md">
-                <TbMoneybag className="text-white text-lg" />
-              </div>
-              <div>
-                <p className="text-white text-sm">Monthly salary</p>
-                <p className="text-white/50 text-xs">Salary</p>
-                <p className="text-white/30 text-xs">January 1, 2025</p>
-              </div>
+          {incomes.length === 0 ? (
+            <div className="w-full rounded-md bg-primary shadow-lg p-6 text-center">
+              <p className="text-white/70 text-sm">No income records found.</p>
             </div>
+          ) : (
+            incomes.map((income) => {
+              const Icon = income.icon;
+              return (
+                <div
+                  key={income.id}
+                  className="w-full rounded-md bg-primary shadow-lg p-4 flex items-center justify-between"
+                >
+                  {/* Left Section */}
+                  <div className="flex items-center gap-3">
+                    <div className="bg-green/40 p-4 rounded-md">
+                      <Icon className="text-white text-lg" />
+                    </div>
+                    <div>
+                      <p className="text-white text-sm">{income.description}</p>
+                      <p className="text-white/50 text-xs">{income.category}</p>
+                      <p className="text-white/30 text-xs">{income.dt}</p>
+                    </div>
+                  </div>
 
-            <div className="flex items-center justify-center gap-2">
-              <p className="text-green">+₱5,000</p>
-              <button className="text-white bg-green/50 rounded-md p-2">
-                <MdEdit />
-              </button>
-              <button className="text-white bg-red/50 rounded-md p-2">
-                <MdDelete />
-              </button>
-            </div>
-          </div>
-
-          <div className="w-full rounded-md bg-primary p-4 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="bg-green/40 p-4 rounded-md">
-                <TbMoneybag className="text-white text-lg" />
-              </div>
-              <div>
-                <p className="text-white text-sm">Monthly salary</p>
-                <p className="text-white/50 text-xs">Salary</p>
-                <p className="text-white/30 text-xs">January 1, 2025</p>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-center gap-2">
-              <p className="text-green">+₱5,000</p>
-              <button className="text-white bg-green/50 rounded-md p-2">
-                <MdEdit />
-              </button>
-              <button className="text-white bg-red/50 rounded-md p-2">
-                <MdDelete />
-              </button>
-            </div>
-          </div>
-
-          <div className="w-full rounded-md bg-primary p-4 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="bg-green/40 p-4 rounded-md">
-                <TbMoneybag className="text-white text-lg" />
-              </div>
-              <div>
-                <p className="text-white text-sm">Monthly salary</p>
-                <p className="text-white/50 text-xs">Salary</p>
-                <p className="text-white/30 text-xs">January 1, 2025</p>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-center gap-2">
-              <p className="text-green">+₱5,000</p>
-              <button className="text-white bg-green/50 rounded-md p-2">
-                <MdEdit />
-              </button>
-              <button className="text-white bg-red/50 rounded-md p-2">
-                <MdDelete />
-              </button>
-            </div>
-          </div>
+                  {/* Right Section */}
+                  <div className="flex items-center justify-center gap-2">
+                    <p className="text-green">
+                      +₱{income.amount.toLocaleString()}
+                    </p>
+                    <button className="text-white bg-green/80 hover:bg-green rounded-md p-2 cursor-pointer">
+                      <MdEdit />
+                    </button>
+                    <button className="text-white bg-red/80 hover:bg-red rounded-md p-2 cursor-pointer">
+                      <MdDelete />
+                    </button>
+                  </div>
+                </div>
+              );
+            })
+          )}
         </div>
       </div>
     </div>

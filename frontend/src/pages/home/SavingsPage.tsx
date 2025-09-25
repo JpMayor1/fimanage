@@ -1,5 +1,5 @@
 const SavingsPage = () => {
-  return <div>SavingsPage</div>;
+  return <div className="text-white">SavingsPage</div>;
 };
 
 export default SavingsPage;
