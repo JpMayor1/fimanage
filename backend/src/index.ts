@@ -13,7 +13,9 @@ import initDB from "@/db/db.connect.js";
 import { globalErrorHandler } from "./middlewares/globalErrorHandler";
 
 import cloudinary from "@/middlewares/cloudinary";
+
 import authRoute from "@/routes/auth/auth.route";
+import incomeRoute from "@/routes/income/income.route";
 
 const bootstrap = async () => {
   const app = express();
@@ -42,8 +44,10 @@ const bootstrap = async () => {
     res.status(200).send("API is running");
   });
 
-  app.use("/api/auth", authRoute);
   app.use("/api/cloudinary", cloudinary);
+
+  app.use("/api/auth", authRoute);
+  app.use("/api/income", incomeRoute);
 
   app.use(globalErrorHandler);
 

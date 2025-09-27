@@ -1,8 +1,13 @@
+import CreateIncomeCategory from "@/components/income/CreateIncomeCategory";
+import { AnimatePresence } from "framer-motion";
+import { useState } from "react";
+import { FaPlus } from "react-icons/fa6";
 import { IoMdGift } from "react-icons/io";
 import { MdDelete, MdEdit, MdOutlineSupportAgent } from "react-icons/md";
 import { TbMoneybag } from "react-icons/tb";
 
 const IncomePage = () => {
+  const [showAddCategoryModal, setShowAddCategoryModal] = useState(false);
   const incomes = [
     {
       id: 1,
@@ -36,14 +41,24 @@ const IncomePage = () => {
       <div className="w-full flex items-center justify-between mb-5">
         <div>
           <h1 className="text-white text-xl font-bold">Income</h1>
-          <p className="text-white/70 text-xs md:text-sm">
+          <p className="text-white/70 text-sm hidden md:block">
             Track & manage your income sources
           </p>
         </div>
 
-        <button className="bg-yellow/90 hover:bg-yellow text-black rounded-md py-2 px-4 cursor-pointer">
-          + Income
-        </button>
+        <div className="w-fit flex items-center gap-2">
+          <button
+            className="bg-yellow/90 hover:bg-yellow flex flex-row gap-2 items-center text-black rounded-md py-2 px-4 cursor-pointer text-xs md:text-base"
+            onClick={() => setShowAddCategoryModal(true)}
+          >
+            <FaPlus className="text-xs" />
+            Category
+          </button>
+          <button className="bg-yellow/90 hover:bg-yellow flex flex-row gap-2 items-center text-black rounded-md py-2 px-4 cursor-pointer text-xs md:text-base">
+            <FaPlus className="text-xs" />
+            Income
+          </button>
+        </div>
       </div>
 
       {/* Income List */}
@@ -93,6 +108,14 @@ const IncomePage = () => {
           )}
         </div>
       </div>
+
+      <AnimatePresence>
+        {showAddCategoryModal && (
+          <CreateIncomeCategory
+            onClose={() => setShowAddCategoryModal(false)}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 };
