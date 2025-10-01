@@ -15,7 +15,9 @@ export type IncomeType = {
 export type incomeStoreType = {
   categories: IncomeCategoryType[];
 
-  createCategoryLoading: boolean;
+  getLoading: boolean;
+  createLoading: boolean;
 
+  getCategories: () => Promise<void>;
   createCategories: (names: string[]) => Promise<boolean>;
 };

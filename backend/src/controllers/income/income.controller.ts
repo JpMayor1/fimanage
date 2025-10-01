@@ -1,10 +1,16 @@
 import {
   createIncomeCategoryS,
   findIncomeCategoryS,
+  getCategoriesS,
 } from "@/services/income/income.service";
 import { CustomRequest } from "@/types/express/express.type";
 import { AppError } from "@/utils/error/appError";
 import { Response } from "express";
+
+export const getCategories = async (req: CustomRequest, res: Response) => {
+  const categories = await getCategoriesS();
+  res.status(200).json({ categories });
+};
 
 export const createIncomeCategory = async (
   req: CustomRequest,
@@ -22,14 +28,14 @@ export const createIncomeCategory = async (
     if (existing) throw new AppError(`Category "${name}" already exists`, 400);
   }
 
-  const incomeCategories = await createIncomeCategoryS(names);
+  const newCategories = await createIncomeCategoryS(names);
 
-  if (!incomeCategories || incomeCategories.length === 0) {
+  if (!newCategories) {
     throw new AppError("Error creating income categories", 400);
   }
 
   res.status(201).json({
     message: "Categories created successfully.",
-    incomeCategories,
+    newCategories,
   });
 };

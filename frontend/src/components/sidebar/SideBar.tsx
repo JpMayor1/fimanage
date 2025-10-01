@@ -27,6 +27,11 @@ const SideBar = () => {
       link: "/home/dashboard",
       icon: MdOutlineSpaceDashboard,
     },
+    {
+      name: "Income Categories",
+      link: "/home/income/categories",
+      icon: GrMoney,
+    },
     { name: "Income", link: "/home/income", icon: GrMoney },
     { name: "Expenses", link: "/home/expenses", icon: GiExpense },
     { name: "Savings", link: "/home/savings", icon: MdOutlineSavings },

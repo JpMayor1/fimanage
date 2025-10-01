@@ -15,7 +15,7 @@ const overlayAnim = {
 };
 
 const CreateIncomeCategory = ({ onClose }: CreateIncomeCategoryI) => {
-  const { createCategories, createCategoryLoading } = useIncomeStore();
+  const { createCategories, createLoading } = useIncomeStore();
   const [names, setNames] = useState<string[]>([]);
 
   const handleAddName = () => setNames((prev) => [...prev, ""]);
@@ -103,13 +103,13 @@ const CreateIncomeCategory = ({ onClose }: CreateIncomeCategoryI) => {
           <button
             type="submit"
             className={`${
-              createCategoryLoading
+              createLoading
                 ? "cursor-not-allowed opacity-80"
                 : "cursor-pointer hover:scale-105 transition-all"
             } w-full py-2 rounded-xl bg-gradient-to-r from-yellow to-yellow/80 text-white font-bold text-lg mt-2 shadow-md`}
-            disabled={createCategoryLoading}
+            disabled={createLoading}
           >
-            {createCategoryLoading ? "Saving..." : "Save Categories"}
+            {createLoading ? "Saving..." : "Save Categories"}
           </button>
         </form>
       </div>

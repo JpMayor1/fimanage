@@ -19,7 +19,7 @@ const AuthenticatedLayout = () => {
           className="md:hidden text-white text-2xl h-6 mt-3"
           onClick={() => setOpen(true)}
         />
-        <div className="h-[calc(100%-40px)] md:h-full pt-3">
+        <div className="h-[calc(100%-100px)] md:h-[calc(100%-80px)] pt-3">
           <Outlet />
         </div>
       </div>

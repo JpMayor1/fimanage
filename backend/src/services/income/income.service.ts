@@ -16,6 +16,8 @@ export const findIncomeCategoryS = async (
   }
 };
 
+export const getCategoriesS = async () => await IncomeCategory.find().lean();
+
 export const createIncomeCategoryS = async (names: string[]) => {
   const categories = names.map((name) => ({ name }));
   return await IncomeCategory.insertMany(categories);

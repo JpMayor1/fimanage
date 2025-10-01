@@ -1,13 +1,9 @@
-import CreateIncomeCategory from "@/components/income/CreateIncomeCategory";
-import { AnimatePresence } from "framer-motion";
-import { useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { IoMdGift } from "react-icons/io";
 import { MdDelete, MdEdit, MdOutlineSupportAgent } from "react-icons/md";
 import { TbMoneybag } from "react-icons/tb";
 
 const IncomePage = () => {
-  const [showAddCategoryModal, setShowAddCategoryModal] = useState(false);
   const incomes = [
     {
       id: 1,
@@ -46,19 +42,10 @@ const IncomePage = () => {
           </p>
         </div>
 
-        <div className="w-fit flex items-center gap-2">
-          <button
-            className="bg-yellow/90 hover:bg-yellow flex flex-row gap-2 items-center text-black rounded-md py-2 px-4 cursor-pointer text-xs md:text-base"
-            onClick={() => setShowAddCategoryModal(true)}
-          >
-            <FaPlus className="text-xs" />
-            Category
-          </button>
-          <button className="bg-yellow/90 hover:bg-yellow flex flex-row gap-2 items-center text-black rounded-md py-2 px-4 cursor-pointer text-xs md:text-base">
-            <FaPlus className="text-xs" />
-            Income
-          </button>
-        </div>
+        <button className="bg-yellow/90 hover:bg-yellow flex flex-row gap-2 items-center text-black rounded-md py-2 px-4 cursor-pointer text-xs md:text-base">
+          <FaPlus className="text-xs" />
+          Income
+        </button>
       </div>
 
       {/* Income List */}
@@ -71,11 +58,11 @@ const IncomePage = () => {
               <p className="text-white/70 text-sm">No income records found.</p>
             </div>
           ) : (
-            incomes.map((income) => {
+            incomes.map((income, index) => {
               const Icon = income.icon;
               return (
                 <div
-                  key={income.id}
+                  key={index}
                   className="w-full rounded-md bg-primary shadow-lg p-4 flex items-center justify-between"
                 >
                   {/* Left Section */}
@@ -108,14 +95,6 @@ const IncomePage = () => {
           )}
         </div>
       </div>
-
-      <AnimatePresence>
-        {showAddCategoryModal && (
-          <CreateIncomeCategory
-            onClose={() => setShowAddCategoryModal(false)}
-          />
-        )}
-      </AnimatePresence>
     </div>
   );
 };
