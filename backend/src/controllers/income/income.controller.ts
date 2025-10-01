@@ -1,5 +1,6 @@
 import {
   createIncomeCategoryS,
+  deleteCategoryS,
   findIncomeCategoryS,
   getCategoriesS,
   updateCategoryS,
@@ -49,4 +50,11 @@ export const updateCategory = async (req: CustomRequest, res: Response) => {
     message: "Category updated successfully.",
     updatedCategory,
   });
+};
+
+export const deleteCategory = async (req: CustomRequest, res: Response) => {
+  const { categoryId } = req.params;
+  const deleted = await deleteCategoryS(categoryId);
+  if (!deleted) throw new AppError("Error deleting gategory", 400);
+  res.status(200).json({ message: "Category deleted successfully." });
 };

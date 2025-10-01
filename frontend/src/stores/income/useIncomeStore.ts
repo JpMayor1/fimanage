@@ -1,5 +1,6 @@
 import {
   createCategoriesApi,
+  deleteCategoryApi,
   getCategoriesApi,
   updateCategoryApi,
 } from "@/api/income/income.api";
@@ -14,6 +15,7 @@ export const useIncomeStore = create<incomeStoreType>((set) => ({
   getLoading: false,
   createLoading: false,
   updateLoading: false,
+  deleteLoading: false,
 
   getCategories: async () => {
     set({ getLoading: true });
@@ -21,7 +23,7 @@ export const useIncomeStore = create<incomeStoreType>((set) => ({
       const response = await getCategoriesApi();
       set({ categories: response.data.categories });
     } catch (error) {
-      console.error("Error getting categoriest", error);
+      console.error("Error getting categories", error);
       if (error instanceof AxiosError) {
         if (error.response) {
           toast.error(error.response.data.message);
@@ -45,7 +47,7 @@ export const useIncomeStore = create<incomeStoreType>((set) => ({
       toast.success(response.data.message);
       return true;
     } catch (error) {
-      console.error("Error creating categoriest", error);
+      console.error("Error creating categories", error);
       if (error instanceof AxiosError) {
         if (error.response) {
           toast.error(error.response.data.message);
@@ -72,7 +74,7 @@ export const useIncomeStore = create<incomeStoreType>((set) => ({
       toast.success(response.data.message);
       return true;
     } catch (error) {
-      console.error("Error creating categoriest", error);
+      console.error("Error updating category", error);
       if (error instanceof AxiosError) {
         if (error.response) {
           toast.error(error.response.data.message);
@@ -85,6 +87,31 @@ export const useIncomeStore = create<incomeStoreType>((set) => ({
       return false;
     } finally {
       set({ updateLoading: false });
+    }
+  },
+  deleteCategory: async (categoryId) => {
+    set({ deleteLoading: true });
+    try {
+      const response = await deleteCategoryApi(categoryId);
+      set((state) => ({
+        categories: state.categories.filter((c) => c._id !== categoryId),
+      }));
+      toast.success(response.data.message);
+      return true;
+    } catch (error) {
+      console.error("Error deleting category", error);
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          toast.error(error.response.data.message);
+        } else {
+          toast.error(error.message);
+        }
+      } else {
+        toast.error("An unexpected error occurred.");
+      }
+      return false;
+    } finally {
+      set({ deleteLoading: false });
     }
   },
 }));

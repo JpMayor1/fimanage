@@ -1,4 +1,5 @@
 import CreateIncomeCategory from "@/components/income/CreateIncomeCategory";
+import DeleteIncomeCategory from "@/components/income/DeleteIncomeCategory";
 import UpdateIncomeCategory from "@/components/income/UpdateIncomeCategory";
 import { useIncomeStore } from "@/stores/income/useIncomeStore";
 import type { IncomeCategoryType } from "@/types/income/income.type";
@@ -8,10 +9,13 @@ import { FaPlus } from "react-icons/fa6";
 import { MdDelete, MdEdit } from "react-icons/md";
 
 const IncomeCategoriesPage = () => {
+  const { getCategories, getLoading, categories } = useIncomeStore();
+
   const [showAddCategoryModal, setShowAddCategoryModal] = useState(false);
   const [showUpdateCategoryModal, setShowUpdateCategoryModal] =
     useState<IncomeCategoryType | null>(null);
-  const { getCategories, getLoading, categories } = useIncomeStore();
+  const [showDeleteCategoryModal, setShowDeleteCategoryModal] =
+    useState<IncomeCategoryType | null>(null);
 
   useEffect(() => {
     const fetchCategories = async () => await getCategories();
@@ -74,7 +78,10 @@ const IncomeCategoriesPage = () => {
                       >
                         <MdEdit />
                       </button>
-                      <button className="text-white bg-red/80 hover:bg-red rounded-md p-2 cursor-pointer">
+                      <button
+                        className="text-white bg-red/80 hover:bg-red rounded-md p-2 cursor-pointer"
+                        onClick={() => setShowDeleteCategoryModal(category)}
+                      >
                         <MdDelete />
                       </button>
                     </div>
@@ -87,15 +94,21 @@ const IncomeCategoriesPage = () => {
       </div>
 
       <AnimatePresence>
+        {showAddCategoryModal && (
+          <CreateIncomeCategory
+            onClose={() => setShowAddCategoryModal(false)}
+          />
+        )}
         {showUpdateCategoryModal && (
           <UpdateIncomeCategory
             category={showUpdateCategoryModal}
             onClose={() => setShowUpdateCategoryModal(null)}
           />
         )}
-        {showAddCategoryModal && (
-          <CreateIncomeCategory
-            onClose={() => setShowAddCategoryModal(false)}
+        {showDeleteCategoryModal && (
+          <DeleteIncomeCategory
+            category={showDeleteCategoryModal}
+            onClose={() => setShowDeleteCategoryModal(null)}
           />
         )}
       </AnimatePresence>

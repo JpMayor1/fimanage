@@ -8,3 +8,6 @@ export const createCategoriesApi = async (names: string[]) =>
 
 export const updateCategoryApi = async (categoryId: string, newName: string) =>
   await axiosInstance.put("/income/category/update", { categoryId, newName });
+
+export const deleteCategoryApi = async (categoryId: string) =>
+  await axiosInstance.delete(`/income/category/delete/${categoryId}`);

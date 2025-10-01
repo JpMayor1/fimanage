@@ -29,3 +29,6 @@ export const updateCategoryS = async (categoryId: string, newName: string) =>
     { name: newName },
     { new: true }
   );
+
+export const deleteCategoryS = async (categoryId: string) =>
+  await IncomeCategory.findByIdAndDelete(categoryId);
