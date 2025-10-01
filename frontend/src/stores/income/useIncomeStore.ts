@@ -1,4 +1,8 @@
-import { createCategoriesApi, getCategoriesApi } from "@/api/income/income.api";
+import {
+  createCategoriesApi,
+  getCategoriesApi,
+  updateCategoryApi,
+} from "@/api/income/income.api";
 import type { incomeStoreType } from "@/types/income/income.type";
 import { AxiosError } from "axios";
 import toast from "react-hot-toast";
@@ -9,6 +13,7 @@ export const useIncomeStore = create<incomeStoreType>((set) => ({
 
   getLoading: false,
   createLoading: false,
+  updateLoading: false,
 
   getCategories: async () => {
     set({ getLoading: true });
@@ -53,6 +58,33 @@ export const useIncomeStore = create<incomeStoreType>((set) => ({
       return false;
     } finally {
       set({ createLoading: false });
+    }
+  },
+  updateCategory: async (categoryId, newName) => {
+    set({ updateLoading: true });
+    try {
+      const response = await updateCategoryApi(categoryId, newName);
+      set((state) => ({
+        categories: state.categories.map((c) =>
+          c._id === categoryId ? { ...c, name: newName } : c
+        ),
+      }));
+      toast.success(response.data.message);
+      return true;
+    } catch (error) {
+      console.error("Error creating categoriest", error);
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          toast.error(error.response.data.message);
+        } else {
+          toast.error(error.message);
+        }
+      } else {
+        toast.error("An unexpected error occurred.");
+      }
+      return false;
+    } finally {
+      set({ updateLoading: false });
     }
   },
 }));

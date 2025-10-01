@@ -22,3 +22,10 @@ export const createIncomeCategoryS = async (names: string[]) => {
   const categories = names.map((name) => ({ name }));
   return await IncomeCategory.insertMany(categories);
 };
+
+export const updateCategoryS = async (categoryId: string, newName: string) =>
+  await IncomeCategory.findByIdAndUpdate(
+    categoryId,
+    { name: newName },
+    { new: true }
+  );

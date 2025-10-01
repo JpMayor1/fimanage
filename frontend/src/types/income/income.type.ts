@@ -17,7 +17,9 @@ export type incomeStoreType = {
 
   getLoading: boolean;
   createLoading: boolean;
+  updateLoading: boolean;
 
   getCategories: () => Promise<void>;
   createCategories: (names: string[]) => Promise<boolean>;
+  updateCategory: (categoryId: string, newName: string) => Promise<boolean>;
 };

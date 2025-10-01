@@ -1,12 +1,14 @@
 import {
   createIncomeCategory,
   getCategories,
+  updateCategory,
 } from "@/controllers/income/income.controller";
 import { Router } from "express";
 
 const router = Router();
 
-router.get("/categories/all", getCategories);
-router.post("/create", createIncomeCategory);
+router.get("/category/all", getCategories);
+router.post("/category/create", createIncomeCategory);
+router.put("/category/update", updateCategory);
 
 export default router;

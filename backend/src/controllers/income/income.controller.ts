@@ -2,6 +2,7 @@ import {
   createIncomeCategoryS,
   findIncomeCategoryS,
   getCategoriesS,
+  updateCategoryS,
 } from "@/services/income/income.service";
 import { CustomRequest } from "@/types/express/express.type";
 import { AppError } from "@/utils/error/appError";
@@ -37,5 +38,15 @@ export const createIncomeCategory = async (
   res.status(201).json({
     message: "Categories created successfully.",
     newCategories,
+  });
+};
+
+export const updateCategory = async (req: CustomRequest, res: Response) => {
+  const { categoryId, newName } = req.body;
+  const updatedCategory = await updateCategoryS(categoryId, newName);
+  if (!updatedCategory) throw new AppError("Error updating gategory", 400);
+  res.status(200).json({
+    message: "Category updated successfully.",
+    updatedCategory,
   });
 };

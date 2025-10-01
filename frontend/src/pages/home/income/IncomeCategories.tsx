@@ -1,5 +1,7 @@
 import CreateIncomeCategory from "@/components/income/CreateIncomeCategory";
+import UpdateIncomeCategory from "@/components/income/UpdateIncomeCategory";
 import { useIncomeStore } from "@/stores/income/useIncomeStore";
+import type { IncomeCategoryType } from "@/types/income/income.type";
 import { AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
@@ -7,6 +9,8 @@ import { MdDelete, MdEdit } from "react-icons/md";
 
 const IncomeCategoriesPage = () => {
   const [showAddCategoryModal, setShowAddCategoryModal] = useState(false);
+  const [showUpdateCategoryModal, setShowUpdateCategoryModal] =
+    useState<IncomeCategoryType | null>(null);
   const { getCategories, getLoading, categories } = useIncomeStore();
 
   useEffect(() => {
@@ -64,7 +68,10 @@ const IncomeCategoriesPage = () => {
 
                     {/* Right Section */}
                     <div className="flex items-center justify-center gap-2">
-                      <button className="text-white bg-green/80 hover:bg-green rounded-md p-2 cursor-pointer">
+                      <button
+                        className="text-white bg-green/80 hover:bg-green rounded-md p-2 cursor-pointer"
+                        onClick={() => setShowUpdateCategoryModal(category)}
+                      >
                         <MdEdit />
                       </button>
                       <button className="text-white bg-red/80 hover:bg-red rounded-md p-2 cursor-pointer">
@@ -80,6 +87,12 @@ const IncomeCategoriesPage = () => {
       </div>
 
       <AnimatePresence>
+        {showUpdateCategoryModal && (
+          <UpdateIncomeCategory
+            category={showUpdateCategoryModal}
+            onClose={() => setShowUpdateCategoryModal(null)}
+          />
+        )}
         {showAddCategoryModal && (
           <CreateIncomeCategory
             onClose={() => setShowAddCategoryModal(false)}

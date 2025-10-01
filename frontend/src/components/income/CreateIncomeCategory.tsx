@@ -60,7 +60,7 @@ const CreateIncomeCategory = ({ onClose }: CreateIncomeCategoryI) => {
           autoComplete="off"
         >
           <div className="w-full">
-            <label className="block font-semibold text-white mb-1">
+            <label className="block font-semibold text-white mb-2">
               Category Names
             </label>
             <div className="w-full flex flex-col gap-2">
