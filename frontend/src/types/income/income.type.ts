@@ -1,5 +1,6 @@
 export type IncomeCategoryType = {
-  _id: string;
+  _id?: string;
+  icon: string;
   name: string;
 };
 
@@ -21,7 +22,10 @@ export type incomeStoreType = {
   deleteLoading: boolean;
 
   getCategories: () => Promise<void>;
-  createCategories: (names: string[]) => Promise<boolean>;
-  updateCategory: (categoryId: string, newName: string) => Promise<boolean>;
+  createCategories: (categories: IncomeCategoryType[]) => Promise<boolean>;
+  updateCategory: (
+    categoryId: string,
+    updatedCategory: IncomeCategoryType
+  ) => Promise<boolean>;
   deleteCategory: (categoryId: string) => Promise<boolean>;
 };

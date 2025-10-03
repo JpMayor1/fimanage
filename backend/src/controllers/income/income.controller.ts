@@ -18,19 +18,21 @@ export const createIncomeCategory = async (
   req: CustomRequest,
   res: Response
 ) => {
-  const { names } = req.body;
+  const { categories } = req.body;
 
-  if (!names || !Array.isArray(names) || names.length === 0) {
-    throw new AppError("Names array is required", 400);
+  if (!categories || !Array.isArray(categories) || categories.length === 0) {
+    throw new AppError("Categories array (name + icon) is required", 400);
   }
 
-  // Check duplicates before inserting
-  for (const name of names) {
+  for (const { name, icon } of categories) {
+    if (!name || !icon) {
+      throw new AppError("Each category must have a name and icon", 400);
+    }
     const existing = await findIncomeCategoryS({ name });
     if (existing) throw new AppError(`Category "${name}" already exists`, 400);
   }
 
-  const newCategories = await createIncomeCategoryS(names);
+  const newCategories = await createIncomeCategoryS(categories);
 
   if (!newCategories) {
     throw new AppError("Error creating income categories", 400);
@@ -43,9 +45,17 @@ export const createIncomeCategory = async (
 };
 
 export const updateCategory = async (req: CustomRequest, res: Response) => {
-  const { categoryId, newName } = req.body;
-  const updatedCategory = await updateCategoryS(categoryId, newName);
-  if (!updatedCategory) throw new AppError("Error updating gategory", 400);
+  const { categoryId, name, icon } = req.body;
+
+  if (!categoryId) throw new AppError("Category ID is required", 400);
+  if (!name && !icon) {
+    throw new AppError("At least one of name or icon is required", 400);
+  }
+
+  const updatedCategory = await updateCategoryS(categoryId, { name, icon });
+
+  if (!updatedCategory) throw new AppError("Error updating category", 400);
+
   res.status(200).json({
     message: "Category updated successfully.",
     updatedCategory,

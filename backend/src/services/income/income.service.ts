@@ -18,17 +18,23 @@ export const findIncomeCategoryS = async (
 
 export const getCategoriesS = async () => await IncomeCategory.find().lean();
 
-export const createIncomeCategoryS = async (names: string[]) => {
-  const categories = names.map((name) => ({ name }));
-  return await IncomeCategory.insertMany(categories);
+export const createIncomeCategoryS = async (
+  categories: { name: string; icon: string }[]
+) => {
+  const newCategories = await IncomeCategory.insertMany(categories);
+  return newCategories as IncomeCategoryType[];
 };
 
-export const updateCategoryS = async (categoryId: string, newName: string) =>
-  await IncomeCategory.findByIdAndUpdate(
+export const updateCategoryS = async (
+  categoryId: string,
+  updateData: { name?: string; icon?: string }
+) => {
+  return await IncomeCategory.findByIdAndUpdate(
     categoryId,
-    { name: newName },
+    { $set: updateData },
     { new: true }
   );
+};
 
 export const deleteCategoryS = async (categoryId: string) =>
   await IncomeCategory.findByIdAndDelete(categoryId);

@@ -1,3 +1,4 @@
+import { incomeIcons, type IncomeIconKey } from "@/assets/icons/incomeIcons";
 import CreateIncomeCategory from "@/components/income/CreateIncomeCategory";
 import DeleteIncomeCategory from "@/components/income/DeleteIncomeCategory";
 import UpdateIncomeCategory from "@/components/income/UpdateIncomeCategory";
@@ -65,6 +66,13 @@ const IncomeCategoriesPage = () => {
                   >
                     {/* Left Section */}
                     <div className="flex items-center gap-3">
+                      <div className="w-13.5 h-13.5 flex items-center justify-center rounded-md border border-white/20 bg-black text-yellow ">
+                        {(() => {
+                          const Icon =
+                            incomeIcons[category.icon as IncomeIconKey];
+                          return Icon ? <Icon className="text-2xl" /> : null;
+                        })()}
+                      </div>
                       <div>
                         <p className="text-white text-sm">{category.name}</p>
                       </div>
