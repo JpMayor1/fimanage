@@ -3,7 +3,7 @@ import { useIncomeStore } from "@/stores/income/useIncomeStore";
 import { motion } from "framer-motion";
 import { useState, type FormEvent } from "react";
 import { FiChevronDown, FiPlus, FiTrash2, FiX } from "react-icons/fi";
-import TextField from "../custom/TextField";
+import TextField from "../../custom/TextField";
 
 interface CreateIncomeCategoryI {
   onClose: () => void;

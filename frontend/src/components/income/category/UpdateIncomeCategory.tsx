@@ -4,7 +4,7 @@ import type { IncomeCategoryType } from "@/types/income/income.type";
 import { motion } from "framer-motion";
 import { useState, type FormEvent } from "react";
 import { FiChevronDown, FiTrash2, FiX } from "react-icons/fi";
-import TextField from "../custom/TextField";
+import TextField from "../../custom/TextField";
 
 interface UpdateIncomeCategoryI {
   category: IncomeCategoryType;

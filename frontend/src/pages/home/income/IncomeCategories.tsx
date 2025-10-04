@@ -1,7 +1,7 @@
 import { incomeIcons, type IncomeIconKey } from "@/assets/icons/incomeIcons";
-import CreateIncomeCategory from "@/components/income/CreateIncomeCategory";
-import DeleteIncomeCategory from "@/components/income/DeleteIncomeCategory";
-import UpdateIncomeCategory from "@/components/income/UpdateIncomeCategory";
+import CreateIncomeCategory from "@/components/income/category/CreateIncomeCategory";
+import DeleteIncomeCategory from "@/components/income/category/DeleteIncomeCategory";
+import UpdateIncomeCategory from "@/components/income/category/UpdateIncomeCategory";
 import { useIncomeStore } from "@/stores/income/useIncomeStore";
 import type { IncomeCategoryType } from "@/types/income/income.type";
 import { AnimatePresence } from "framer-motion";
