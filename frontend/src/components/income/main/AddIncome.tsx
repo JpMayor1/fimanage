@@ -1,4 +1,6 @@
 import CustomSelect from "@/components/custom/CustomSelect";
+import LoadingBig from "@/components/custom/loading/LoadingBig";
+import LoadingSmall from "@/components/custom/loading/LoadingSmall";
 import TextField from "@/components/custom/TextField";
 import { useIncomeStore } from "@/stores/income/useIncomeStore";
 import type { IncomeType } from "@/types/income/income.type";
@@ -25,6 +27,7 @@ const initialState: Partial<IncomeType> = {
 const AddIncome = ({ onClose }: AddIncomeI) => {
   const { getCategories, getLoading, categories, addIncome, createLoading } =
     useIncomeStore();
+
   const [form, setForm] = useState<Partial<IncomeType>>(initialState);
 
   useEffect(() => {
@@ -61,7 +64,7 @@ const AddIncome = ({ onClose }: AddIncomeI) => {
         </button>
 
         {getLoading ? (
-          <>Loading..</>
+          <LoadingBig />
         ) : (
           <>
             <form className="space-y-4 w-full" onSubmit={handleSubmit}>
@@ -111,9 +114,13 @@ const AddIncome = ({ onClose }: AddIncomeI) => {
               <button
                 type="submit"
                 disabled={createLoading}
-                className="w-full py-2 rounded-xl bg-gradient-to-r from-yellow to-yellow/80 text-black text-lg mt-2 shadow-md hover:scale-101 hover:shadow-xl cursor-pointer"
+                className={`${
+                  createLoading
+                    ? "cursor-not-allowed opacity-80"
+                    : "cursor-pointer hover:scale-101 hover:shadow-xl transition-all"
+                } w-full py-2 rounded-xl bg-gradient-to-r from-yellow to-yellow/80 text-black text-lg mt-2 shadow-md`}
               >
-                {createLoading ? "Adding..." : "Add Income"}
+                {createLoading ? <LoadingSmall /> : "Add Income"}
               </button>
             </form>
           </>

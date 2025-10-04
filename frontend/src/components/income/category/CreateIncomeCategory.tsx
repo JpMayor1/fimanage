@@ -1,4 +1,5 @@
 import { incomeIcons, type IncomeIconKey } from "@/assets/icons/incomeIcons";
+import LoadingSmall from "@/components/custom/loading/LoadingSmall";
 import { useIncomeStore } from "@/stores/income/useIncomeStore";
 import { motion } from "framer-motion";
 import { useState, type FormEvent } from "react";
@@ -17,6 +18,7 @@ const overlayAnim = {
 
 const CreateIncomeCategory = ({ onClose }: CreateIncomeCategoryI) => {
   const { createCategories, createLoading } = useIncomeStore();
+
   const [categories, setCategories] = useState<
     { name: string; icon: IncomeIconKey; showIcons: boolean }[]
   >([{ name: "", icon: "MdBusinessCenter", showIcons: false }]);
@@ -156,9 +158,13 @@ const CreateIncomeCategory = ({ onClose }: CreateIncomeCategoryI) => {
           <button
             type="submit"
             disabled={createLoading}
-            className="w-full py-2 rounded-xl bg-gradient-to-r from-yellow to-yellow/80 text-black text-lg mt-2 shadow-md cursor-pointer"
+            className={`${
+              createLoading
+                ? "cursor-not-allowed opacity-80"
+                : "cursor-pointer hover:scale-101 hover:shadow-xl transition-all"
+            } w-full py-2 rounded-xl bg-gradient-to-r from-yellow to-yellow/80 text-black text-lg mt-2 shadow-md`}
           >
-            {createLoading ? "Saving..." : "Save Categories"}
+            {createLoading ? <LoadingSmall /> : "Save Categories"}
           </button>
         </form>
       </div>

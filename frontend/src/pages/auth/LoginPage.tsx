@@ -1,3 +1,4 @@
+import LoadingSmall from "@/components/custom/loading/LoadingSmall";
 import TextField from "@/components/custom/TextField";
 import { useAuthStore } from "@/stores/auth/useAuthStore";
 import { motion } from "framer-motion";
@@ -12,6 +13,7 @@ interface FormData {
 
 const LoginPage: React.FC = () => {
   const { loginAccount, loginLoading } = useAuthStore();
+
   const [form, setForm] = useState<FormData>({
     username: "",
     password: "",
@@ -132,22 +134,7 @@ const LoginPage: React.FC = () => {
               } w-full py-3 rounded-xl bg-gradient-to-r from-yellow-700 to-yellow-500 text-white font-bold text-lg mt-2 shadow-md`}
               whileTap={{ scale: 0.98 }}
             >
-              {loginLoading ? (
-                <div className="flex items-center justify-center">
-                  <motion.div
-                    className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full mr-3"
-                    animate={{ rotate: 360 }}
-                    transition={{
-                      duration: 1,
-                      repeat: Infinity,
-                      ease: "linear",
-                    }}
-                  />
-                  Signing In...
-                </div>
-              ) : (
-                "Sign In"
-              )}
+              {loginLoading ? <LoadingSmall /> : "Sign In"}
             </motion.button>
           </motion.div>
         </form>

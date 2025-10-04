@@ -1,4 +1,5 @@
 import { incomeIcons, type IncomeIconKey } from "@/assets/icons/incomeIcons";
+import LoadingBig from "@/components/custom/loading/LoadingBig";
 import CreateIncomeCategory from "@/components/income/category/CreateIncomeCategory";
 import DeleteIncomeCategory from "@/components/income/category/DeleteIncomeCategory";
 import UpdateIncomeCategory from "@/components/income/category/UpdateIncomeCategory";
@@ -30,7 +31,7 @@ const IncomeCategoriesPage = () => {
         <div>
           <h1 className="text-white text-xl font-bold">Income Categories</h1>
           <p className="text-white/70 text-sm hidden md:block">
-            Track & manage your category sources
+            Manage your income categories
           </p>
         </div>
 
@@ -45,10 +46,8 @@ const IncomeCategoriesPage = () => {
 
       {/* Income List */}
       <div className="h-full w-full overflow-y-scroll no-scrollbar">
-        <p className="text-white text-md font-bold mb-2">Income Categories</p>
-
         {getLoading ? (
-          <>Loading...</>
+          <LoadingBig />
         ) : (
           <div className="space-y-2">
             {categories.length === 0 ? (

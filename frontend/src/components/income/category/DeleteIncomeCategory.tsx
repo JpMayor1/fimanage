@@ -1,3 +1,4 @@
+import LoadingSmall from "@/components/custom/loading/LoadingSmall";
 import { useIncomeStore } from "@/stores/income/useIncomeStore";
 import type { IncomeCategoryType } from "@/types/income/income.type";
 import { motion } from "framer-motion";
@@ -57,7 +58,7 @@ const DeleteIncomeCategory = ({ category, onClose }: DeleteIncomeCategoryI) => {
             <p className="text-white text-center">
               Are you sure you want to delete
             </p>
-            <p className="text-red text-center">{category.name}?</p>
+            <p className="text-yellow text-center">{category.name}?</p>
           </div>
 
           <button
@@ -69,7 +70,7 @@ const DeleteIncomeCategory = ({ category, onClose }: DeleteIncomeCategoryI) => {
             } w-full py-2 rounded-xl bg-gradient-to-r from-red to-red/80 text-white text-lg mt-2 shadow-md`}
             disabled={deleteLoading}
           >
-            {deleteLoading ? "Deleting..." : "Delete"}
+            {deleteLoading ? <LoadingSmall /> : "Delete"}
           </button>
         </form>
       </div>

@@ -1,4 +1,5 @@
 import { incomeIcons } from "@/assets/icons/incomeIcons";
+import LoadingBig from "@/components/custom/loading/LoadingBig";
 import AddIncome from "@/components/income/main/AddIncome";
 import { useIncomeStore } from "@/stores/income/useIncomeStore";
 import { AnimatePresence } from "framer-motion";
@@ -38,10 +39,8 @@ const IncomePage = () => {
 
       {/* Income List */}
       <div className="h-full w-full overflow-y-scroll no-scrollbar">
-        <p className="text-white text-md font-bold mb-2">All Income</p>
-
         {getLoading ? (
-          <>Loading...</>
+          <LoadingBig />
         ) : (
           <div className="space-y-2">
             {incomes.length === 0 ? (

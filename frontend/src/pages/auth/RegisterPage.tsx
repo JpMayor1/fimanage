@@ -1,3 +1,4 @@
+import LoadingSmall from "@/components/custom/loading/LoadingSmall";
 import TextField from "@/components/custom/TextField";
 import { useAuthStore } from "@/stores/auth/useAuthStore";
 import type { RegisterAccountType } from "@/types/auth/auth.type";
@@ -239,7 +240,7 @@ const RegisterPage: React.FC = () => {
                 : "cursor-pointer hover:scale-101 hover:shadow-xl transition-all"
             } w-full py-3 rounded-xl bg-gradient-to-r from-yellow-700 to-yellow-500 text-white font-bold text-lg mt-2 shadow-md`}
           >
-            {registerLoading ? "Registering..." : "Register"}
+            {registerLoading ? <LoadingSmall /> : "Register"}
           </motion.button>
         </form>
       </motion.div>

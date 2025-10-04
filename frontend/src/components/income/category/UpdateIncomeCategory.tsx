@@ -1,4 +1,5 @@
 import { incomeIcons, type IncomeIconKey } from "@/assets/icons/incomeIcons";
+import LoadingSmall from "@/components/custom/loading/LoadingSmall";
 import { useIncomeStore } from "@/stores/income/useIncomeStore";
 import type { IncomeCategoryType } from "@/types/income/income.type";
 import { motion } from "framer-motion";
@@ -139,9 +140,13 @@ const UpdateIncomeCategory = ({ category, onClose }: UpdateIncomeCategoryI) => {
           <button
             type="submit"
             disabled={updateLoading}
-            className="w-full py-2 rounded-xl bg-gradient-to-r from-yellow to-yellow/80 text-black text-lg mt-2 shadow-md cursor-pointer"
+            className={`${
+              updateLoading
+                ? "cursor-not-allowed opacity-80"
+                : "cursor-pointer hover:scale-101 hover:shadow-xl transition-all"
+            } w-full py-2 rounded-xl bg-gradient-to-r from-yellow to-yellow/80 text-black text-lg mt-2 shadow-md`}
           >
-            {updateLoading ? "Updating..." : "Update Category"}
+            {updateLoading ? <LoadingSmall /> : "Update Category"}
           </button>
         </form>
       </div>
