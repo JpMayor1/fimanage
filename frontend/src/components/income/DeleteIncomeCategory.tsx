@@ -20,7 +20,7 @@ const DeleteIncomeCategory = ({ category, onClose }: DeleteIncomeCategoryI) => {
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    const success = await deleteCategory(category._id);
+    const success = await deleteCategory(category._id!);
     if (success) {
       onClose();
     }
@@ -66,7 +66,7 @@ const DeleteIncomeCategory = ({ category, onClose }: DeleteIncomeCategoryI) => {
               deleteLoading
                 ? "cursor-not-allowed opacity-80"
                 : "cursor-pointer hover:scale-105 transition-all"
-            } w-full py-2 rounded-xl bg-gradient-to-r from-red to-red/80 text-white font-bold text-lg mt-2 shadow-md`}
+            } w-full py-2 rounded-xl bg-gradient-to-r from-red to-red/80 text-white text-lg mt-2 shadow-md`}
             disabled={deleteLoading}
           >
             {deleteLoading ? "Deleting..." : "Delete"}

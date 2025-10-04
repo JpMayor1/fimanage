@@ -1,7 +1,11 @@
 import { FaHandHoldingUsd, FaWallet } from "react-icons/fa";
 import { GiReceiveMoney } from "react-icons/gi";
 import { IoMdGift } from "react-icons/io";
-import { MdBusinessCenter, MdOutlineSupportAgent } from "react-icons/md";
+import {
+  MdBusinessCenter,
+  MdMoreHoriz,
+  MdOutlineSupportAgent,
+} from "react-icons/md";
 import { TbCash, TbMoneybag, TbPigMoney } from "react-icons/tb";
 
 export const incomeIcons = {
@@ -14,6 +18,7 @@ export const incomeIcons = {
   GiReceiveMoney, // Receiving money
   MdOutlineSupportAgent, // Side job / commission / agent fees
   IoMdGift, // Gift income
+  MdMoreHoriz, // Other income
 };
 
 export type IncomeIconKey = keyof typeof incomeIcons;

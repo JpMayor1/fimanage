@@ -19,7 +19,7 @@ const CreateIncomeCategory = ({ onClose }: CreateIncomeCategoryI) => {
   const { createCategories, createLoading } = useIncomeStore();
   const [categories, setCategories] = useState<
     { name: string; icon: IncomeIconKey; showIcons: boolean }[]
-  >([]);
+  >([{ name: "", icon: "MdBusinessCenter", showIcons: false }]);
 
   const handleAddCategory = () =>
     setCategories((prev) => [
@@ -156,7 +156,7 @@ const CreateIncomeCategory = ({ onClose }: CreateIncomeCategoryI) => {
           <button
             type="submit"
             disabled={createLoading}
-            className="w-full py-2 rounded-xl bg-gradient-to-r from-yellow to-yellow/80 text-black font-bold text-lg mt-2 shadow-md cursor-pointer"
+            className="w-full py-2 rounded-xl bg-gradient-to-r from-yellow to-yellow/80 text-black text-lg mt-2 shadow-md cursor-pointer"
           >
             {createLoading ? "Saving..." : "Save Categories"}
           </button>

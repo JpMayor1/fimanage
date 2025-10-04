@@ -139,7 +139,7 @@ const UpdateIncomeCategory = ({ category, onClose }: UpdateIncomeCategoryI) => {
           <button
             type="submit"
             disabled={updateLoading}
-            className="w-full py-2 rounded-xl bg-gradient-to-r from-yellow to-yellow/80 text-black font-bold text-lg mt-2 shadow-md cursor-pointer"
+            className="w-full py-2 rounded-xl bg-gradient-to-r from-yellow to-yellow/80 text-black text-lg mt-2 shadow-md cursor-pointer"
           >
             {updateLoading ? "Updating..." : "Update Category"}
           </button>
