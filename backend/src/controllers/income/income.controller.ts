@@ -1,4 +1,5 @@
 import {
+  addincomeS,
   createIncomeCategoryS,
   deleteCategoryS,
   findIncomeCategoryS,
@@ -75,4 +76,14 @@ export const deleteCategory = async (req: CustomRequest, res: Response) => {
 export const getIncomes = async (req: CustomRequest, res: Response) => {
   const incomes = await getIncomesS();
   res.status(200).json({ incomes });
+};
+
+export const addincome = async (req: CustomRequest, res: Response) => {
+  const { description, category, amount } = req.body;
+  if (!description) throw new AppError("Description is required.", 400);
+  if (!category) throw new AppError("Category is required.", 400);
+  if (!Number(amount)) throw new AppError("Amount is required.", 400);
+
+  const newIncome = await addincomeS({ description, category, amount });
+  res.status(200).json({ message: "Income added.", newIncome });
 };

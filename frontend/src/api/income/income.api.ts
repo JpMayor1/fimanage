@@ -1,5 +1,8 @@
 import axiosInstance from "@/axios/axiosInstance";
-import type { IncomeCategoryType } from "@/types/income/income.type";
+import type {
+  IncomeCategoryType,
+  IncomeType,
+} from "@/types/income/income.type";
 
 // Income Category
 export const getCategoriesApi = async () =>
@@ -23,3 +26,6 @@ export const deleteCategoryApi = async (categoryId: string) =>
 
 // Income
 export const getIncomesApi = async () => await axiosInstance.get("income/all");
+
+export const addIncomeApi = async (data: Partial<IncomeType>) =>
+  await axiosInstance.post("/income/add", data);

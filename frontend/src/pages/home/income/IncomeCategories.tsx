@@ -58,44 +58,47 @@ const IncomeCategoriesPage = () => {
                 </p>
               </div>
             ) : (
-              categories.map((category, index) => {
-                return (
-                  <div
-                    key={index}
-                    className="w-full rounded-md bg-primary shadow-lg p-4 flex items-center justify-between"
-                  >
-                    {/* Left Section */}
-                    <div className="flex items-center gap-3">
-                      <div className="w-13.5 h-13.5 flex items-center justify-center rounded-md border border-white/20 bg-black text-yellow ">
-                        {(() => {
-                          const Icon =
-                            incomeIcons[category.icon as IncomeIconKey];
-                          return Icon ? <Icon className="text-2xl" /> : null;
-                        })()}
+              categories
+                .slice()
+                .reverse()
+                .map((category, index) => {
+                  return (
+                    <div
+                      key={index}
+                      className="w-full rounded-md bg-primary shadow-lg p-4 flex items-center justify-between"
+                    >
+                      {/* Left Section */}
+                      <div className="flex items-center gap-3">
+                        <div className="w-13.5 h-13.5 flex items-center justify-center rounded-md border border-white/20 bg-black text-yellow">
+                          {(() => {
+                            const Icon =
+                              incomeIcons[category.icon as IncomeIconKey];
+                            return Icon ? <Icon className="text-2xl" /> : null;
+                          })()}
+                        </div>
+                        <div>
+                          <p className="text-white text-sm">{category.name}</p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="text-white text-sm">{category.name}</p>
-                      </div>
-                    </div>
 
-                    {/* Right Section */}
-                    <div className="flex items-center justify-center gap-2">
-                      <button
-                        className="text-white bg-green/80 hover:bg-green rounded-md p-2 cursor-pointer"
-                        onClick={() => setShowUpdateCategoryModal(category)}
-                      >
-                        <MdEdit />
-                      </button>
-                      <button
-                        className="text-white bg-red/80 hover:bg-red rounded-md p-2 cursor-pointer"
-                        onClick={() => setShowDeleteCategoryModal(category)}
-                      >
-                        <MdDelete />
-                      </button>
+                      {/* Right Section */}
+                      <div className="flex items-center justify-center gap-2">
+                        <button
+                          className="text-white bg-green/80 hover:bg-green rounded-md p-2 cursor-pointer"
+                          onClick={() => setShowUpdateCategoryModal(category)}
+                        >
+                          <MdEdit />
+                        </button>
+                        <button
+                          className="text-white bg-red/80 hover:bg-red rounded-md p-2 cursor-pointer"
+                          onClick={() => setShowDeleteCategoryModal(category)}
+                        >
+                          <MdDelete />
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                );
-              })
+                  );
+                })
             )}
           </div>
         )}

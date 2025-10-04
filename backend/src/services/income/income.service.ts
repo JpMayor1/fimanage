@@ -1,9 +1,12 @@
 import Income from "@/models/income.model";
 import IncomeCategory from "@/models/IncomeCategory.model";
+import { IncomeType } from "@/types/models/income.type";
 import {
   IncomeCategoryFilterType,
   IncomeCategoryType,
 } from "@/types/models/IncomeCategoryType";
+import { getPhDt } from "@/utils/date&time/getPhDt";
+import { AppError } from "@/utils/error/appError";
 
 // Income Category
 export const findIncomeCategoryS = async (
@@ -43,3 +46,14 @@ export const deleteCategoryS = async (categoryId: string) =>
 
 // Income
 export const getIncomesS = async () => await Income.find().lean();
+
+export const addincomeS = async (data: Partial<IncomeType>) => {
+  const category = await IncomeCategory.findOne({ name: data.category });
+  if (!category) throw new AppError("Category not found", 404);
+  const newIncome = await Income.create({
+    ...data,
+    icon: category.icon,
+    dt: getPhDt(),
+  });
+  return newIncome;
+};

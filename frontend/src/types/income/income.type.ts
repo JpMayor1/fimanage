@@ -15,15 +15,6 @@ export type IncomeType = {
   dt: string;
 };
 
-export type CreateIncomeType = {
-  _id?: string;
-  icon: string;
-  description: string;
-  category: string;
-  amount: number;
-  dt: string;
-};
-
 export type incomeStoreType = {
   categories: IncomeCategoryType[];
   incomes: IncomeType[];
@@ -44,4 +35,5 @@ export type incomeStoreType = {
 
   // Income
   getIncomes: () => Promise<void>;
+  addIncome: (data: Partial<IncomeType>) => Promise<boolean>;
 };

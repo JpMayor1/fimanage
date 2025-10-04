@@ -1,4 +1,5 @@
 import {
+  addIncomeApi,
   createCategoriesApi,
   deleteCategoryApi,
   getCategoriesApi,
@@ -123,6 +124,27 @@ export const useIncomeStore = create<incomeStoreType>((set) => ({
       }
     } finally {
       set({ getLoading: false });
+    }
+  },
+  addIncome: async (data) => {
+    set({ createLoading: true });
+    try {
+      const response = await addIncomeApi(data);
+      set((state) => ({
+        incomes: [...state.incomes, response.data.newIncome],
+      }));
+      toast.success(response.data.message);
+      return true;
+    } catch (error) {
+      console.error("Error adding income", error);
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data?.message || error.message);
+      } else {
+        toast.error("An unexpected error occurred.");
+      }
+      return false;
+    } finally {
+      set({ createLoading: false });
     }
   },
 }));

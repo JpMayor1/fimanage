@@ -6,6 +6,10 @@
   --font-inter: "Inter", sans-serif;
   --font-poppins: "Poppins", sans-serif;
 
+  /* Font Size */
+  --text-xxs: 10px;
+  --leading-xxs: 1rem;
+
   /* Colors */
   --color-primary: #111827;
   --color-white: #ffffff;
@@ -28,6 +32,21 @@ input:-webkit-autofill:active {
   transition: background-color 5000s ease-in-out 0s;
   box-shadow: 0 0 0px 1000px transparent inset !important;
   caret-color: white;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+input[disabled] {
+  cursor: not-allowed;
 }
 
 ::-webkit-scrollbar {

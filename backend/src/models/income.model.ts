@@ -4,7 +4,10 @@ import { model, Model, Schema } from "mongoose";
 const incomeSchema = new Schema<IncomeDocumentType>(
   {
     icon: String,
-    description: String,
+    description: {
+      type: String,
+      required: true,
+    },
     category: {
       type: String,
       required: true,
