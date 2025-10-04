@@ -1,9 +1,11 @@
+import Income from "@/models/income.model";
 import IncomeCategory from "@/models/IncomeCategory.model";
 import {
   IncomeCategoryFilterType,
   IncomeCategoryType,
 } from "@/types/models/IncomeCategoryType";
 
+// Income Category
 export const findIncomeCategoryS = async (
   filter: IncomeCategoryFilterType
 ): Promise<IncomeCategoryType | null> => {
@@ -38,3 +40,6 @@ export const updateCategoryS = async (
 
 export const deleteCategoryS = async (categoryId: string) =>
   await IncomeCategory.findByIdAndDelete(categoryId);
+
+// Income
+export const getIncomesS = async () => await Income.find().lean();

@@ -1,7 +1,7 @@
 import { Document } from "mongoose";
 
 export type IncomeType = {
-  _id: string;
+  _id?: string;
   icon: string;
   description: string;
   category: string;

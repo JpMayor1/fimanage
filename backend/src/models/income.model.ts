@@ -8,7 +8,6 @@ const incomeSchema = new Schema<IncomeDocumentType>(
     category: {
       type: String,
       required: true,
-      enum: ["Salary", "Freelancing", "Gift"],
     },
     amount: { type: Number, required: true },
     dt: String,
@@ -16,9 +15,9 @@ const incomeSchema = new Schema<IncomeDocumentType>(
   { timestamps: true }
 );
 
-const AIncome: Model<IncomeDocumentType> = model<
+const Income: Model<IncomeDocumentType> = model<
   IncomeDocumentType,
   Model<IncomeDocumentType>
->("AIncome", incomeSchema);
+>("Income", incomeSchema);
 
-export default AIncome;
+export default Income;

@@ -3,12 +3,14 @@ import {
   deleteCategoryS,
   findIncomeCategoryS,
   getCategoriesS,
+  getIncomesS,
   updateCategoryS,
 } from "@/services/income/income.service";
 import { CustomRequest } from "@/types/express/express.type";
 import { AppError } from "@/utils/error/appError";
 import { Response } from "express";
 
+// Income Category
 export const getCategories = async (req: CustomRequest, res: Response) => {
   const categories = await getCategoriesS();
   res.status(200).json({ categories });
@@ -67,4 +69,10 @@ export const deleteCategory = async (req: CustomRequest, res: Response) => {
   const deleted = await deleteCategoryS(categoryId);
   if (!deleted) throw new AppError("Error deleting gategory", 400);
   res.status(200).json({ message: "Category deleted successfully." });
+};
+
+// Income
+export const getIncomes = async (req: CustomRequest, res: Response) => {
+  const incomes = await getIncomesS();
+  res.status(200).json({ incomes });
 };
