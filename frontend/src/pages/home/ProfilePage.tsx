@@ -1,6 +1,7 @@
 import BlurImage from "@/components/custom/BlurImage";
 import ShowImage from "@/components/image/ShowImage";
 import { useAuthStore } from "@/stores/auth/useAuthStore";
+import { getFullName } from "@/utils/fullName/getFullName";
 import Avatar from "avatox";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
@@ -34,7 +35,7 @@ const ProfilePage = () => {
       variants={overlayAnim}
       className="w-full flex items-center justify-center p-5"
     >
-      <div className="w-full max-w-3xl border border-primary/10 rounded-2xl shadow-2xl py-8 px-4 md:px-8 relative flex flex-col items-center">
+      <div className="w-full max-w-3xl border border-primary/10 bg-primary/90 rounded-2xl shadow-2xl py-8 px-4 md:px-8 relative flex flex-col items-center">
         {/* Profile Section */}
         <motion.div
           initial="initial"
@@ -47,7 +48,7 @@ const ProfilePage = () => {
             <BlurImage
               src={authUser.profilePicture}
               alt="Profile picture"
-              className="w-36 h-36 rounded-full border-4 border-primary/80 object-cover shadow-md mb-3 bg-white cursor-pointer"
+              className="w-36 h-36 rounded-full border-4 border-yellow/80 object-cover shadow-md mb-3 bg-white cursor-pointer"
               draggable={false}
               onClick={() => setShowImage(authUser.profilePicture)}
             />
@@ -60,14 +61,11 @@ const ProfilePage = () => {
             />
           )}
 
-          <h2 className="text-xl font-bold font-heading text-primary mb-1 flex items-center gap-2">
-            <FiUserCheck className="text-blue-400" />
-            {authUser.firstName}{" "}
-            {authUser.middleName ? authUser.middleName + " " : ""}
-            {authUser.lastName}
-            {authUser.suffix ? " " + authUser.suffix : ""}
+          <h2 className="text-xl font-bold font-heading text-white mb-1 flex items-center gap-2">
+            <FiUserCheck className="text-yellow" />
+            {getFullName(authUser)}
           </h2>
-          <span className="text-gray-400 font-mono text-sm mb-2">
+          <span className="text-yellow font-mono text-sm mb-2">
             @{authUser.username}
           </span>
         </motion.div>
@@ -76,13 +74,13 @@ const ProfilePage = () => {
         <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-6 mb-7">
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <FiMail className="text-blue-400" />
-              <span className="text-gray-700">{authUser.email}</span>
+              <FiMail className="text-yellow" />
+              <span className="text-white">{authUser.email}</span>
             </div>
 
             <div className="flex items-center gap-2">
-              <FiMapPin className="text-blue-400" />
-              <span className="text-gray-700">{authUser.address}</span>
+              <FiMapPin className="text-yellow" />
+              <span className="text-white">{authUser.address}</span>
             </div>
           </div>
         </div>
