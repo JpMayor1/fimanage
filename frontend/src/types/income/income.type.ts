@@ -36,4 +36,5 @@ export type incomeStoreType = {
   // Income
   getIncomes: () => Promise<void>;
   addIncome: (data: Partial<IncomeType>) => Promise<boolean>;
+  updateIncome: (id: string, data: Partial<IncomeType>) => Promise<boolean>;
 };

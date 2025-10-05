@@ -57,3 +57,22 @@ export const addincomeS = async (data: Partial<IncomeType>) => {
   });
   return newIncome;
 };
+
+export const updateIncomeS = async (id: string, data: Partial<IncomeType>) => {
+  const income = await Income.findById(id);
+  if (!income) throw new AppError("Income not found", 404);
+
+  if (data.category) {
+    const category = await IncomeCategory.findOne({ name: data.category });
+    if (!category) throw new AppError("Category not found", 404);
+    data.icon = category.icon;
+  }
+
+  const updatedIncome = await Income.findByIdAndUpdate(
+    id,
+    { ...data, dt: getPhDt() },
+    { new: true }
+  ).lean();
+
+  return updatedIncome;
+};

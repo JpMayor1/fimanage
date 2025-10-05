@@ -5,6 +5,7 @@ import {
   getCategoriesApi,
   getIncomesApi,
   updateCategoryApi,
+  updateIncomeApi,
 } from "@/api/income/income.api";
 import type {
   IncomeCategoryType,
@@ -145,6 +146,31 @@ export const useIncomeStore = create<incomeStoreType>((set) => ({
       return false;
     } finally {
       set({ createLoading: false });
+    }
+  },
+  updateIncome: async (id, data) => {
+    set({ updateLoading: true });
+    try {
+      const response = await updateIncomeApi(id, data);
+      set((state) => ({
+        incomes: state.incomes.map((income) =>
+          income._id === id
+            ? { ...income, ...response.data.updatedIncome }
+            : income
+        ),
+      }));
+      toast.success(response.data.message);
+      return true;
+    } catch (error) {
+      console.error("Error updating income", error);
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data?.message || error.message);
+      } else {
+        toast.error("An unexpected error occurred.");
+      }
+      return false;
+    } finally {
+      set({ updateLoading: false });
     }
   },
 }));

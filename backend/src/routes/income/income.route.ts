@@ -5,6 +5,7 @@ import {
   getCategories,
   getIncomes,
   updateCategory,
+  updateIncome,
 } from "@/controllers/income/income.controller";
 import verifier from "@/middlewares/verifier";
 import { Router } from "express";
@@ -19,5 +20,6 @@ router.delete("/category/delete/:categoryId", verifier, deleteCategory);
 // income
 router.get("/all", verifier, getIncomes);
 router.post("/add", verifier, addincome);
+router.patch("/update/:id", verifier, updateIncome);
 
 export default router;

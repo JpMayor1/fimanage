@@ -1,7 +1,9 @@
 import { incomeIcons } from "@/assets/icons/incomeIcons";
 import LoadingBig from "@/components/custom/loading/LoadingBig";
 import AddIncome from "@/components/income/main/AddIncome";
+import UpdateIncome from "@/components/income/main/UpdateIncome";
 import { useIncomeStore } from "@/stores/income/useIncomeStore";
+import type { IncomeType } from "@/types/income/income.type";
 import { AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
@@ -11,6 +13,7 @@ const IncomePage = () => {
   const { getIncomes, getLoading, incomes } = useIncomeStore();
 
   const [addIncome, setAddIncome] = useState(false);
+  const [updateIncome, seUpdateIncome] = useState<IncomeType | null>(null);
 
   useEffect(() => {
     const fetchincomes = async () => await getIncomes();
@@ -83,7 +86,10 @@ const IncomePage = () => {
                         <p className="text-green">
                           ₱{income.amount.toLocaleString()}
                         </p>
-                        <button className="text-white bg-green/80 hover:bg-green rounded-md p-2 cursor-pointer">
+                        <button
+                          className="text-white bg-green/80 hover:bg-green rounded-md p-2 cursor-pointer"
+                          onClick={() => seUpdateIncome(income)}
+                        >
                           <MdEdit />
                         </button>
                         <button className="text-white bg-red/80 hover:bg-red rounded-md p-2 cursor-pointer">
@@ -100,6 +106,12 @@ const IncomePage = () => {
 
       <AnimatePresence>
         {addIncome && <AddIncome onClose={() => setAddIncome(false)} />}
+        {updateIncome && (
+          <UpdateIncome
+            income={updateIncome}
+            onClose={() => seUpdateIncome(null)}
+          />
+        )}
       </AnimatePresence>
     </div>
   );

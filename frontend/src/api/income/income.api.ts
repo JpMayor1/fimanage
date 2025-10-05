@@ -29,3 +29,6 @@ export const getIncomesApi = async () => await axiosInstance.get("income/all");
 
 export const addIncomeApi = async (data: Partial<IncomeType>) =>
   await axiosInstance.post("/income/add", data);
+
+export const updateIncomeApi = async (id: string, data: Partial<IncomeType>) =>
+  await axiosInstance.patch(`/income/update/${id}`, data);

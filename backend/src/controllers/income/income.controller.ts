@@ -6,6 +6,7 @@ import {
   getCategoriesS,
   getIncomesS,
   updateCategoryS,
+  updateIncomeS,
 } from "@/services/income/income.service";
 import { CustomRequest } from "@/types/express/express.type";
 import { AppError } from "@/utils/error/appError";
@@ -86,4 +87,24 @@ export const addincome = async (req: CustomRequest, res: Response) => {
 
   const newIncome = await addincomeS({ description, category, amount });
   res.status(200).json({ message: "Income added.", newIncome });
+};
+
+export const updateIncome = async (req: CustomRequest, res: Response) => {
+  const { id } = req.params;
+  const { description, category, amount } = req.body;
+
+  if (!id) throw new AppError("Income ID is required.", 400);
+  if (!description) throw new AppError("Description is required.", 400);
+  if (!category) throw new AppError("Category is required.", 400);
+  if (!Number(amount)) throw new AppError("Amount is required.", 400);
+
+  const updatedIncome = await updateIncomeS(id, {
+    description,
+    category,
+    amount,
+  });
+
+  res
+    .status(200)
+    .json({ message: "Income updated successfully.", updatedIncome });
 };
