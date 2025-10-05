@@ -52,7 +52,7 @@ function App() {
           element: <DashboardPage />,
         },
         {
-          path: "/home/income",
+          path: "/home/incomes",
           element: <IncomePage />,
         },
         {

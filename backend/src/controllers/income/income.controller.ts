@@ -2,6 +2,7 @@ import {
   addincomeS,
   createIncomeCategoryS,
   deleteCategoryS,
+  deleteIncomeS,
   findIncomeCategoryS,
   getCategoriesS,
   getIncomesS,
@@ -107,4 +108,10 @@ export const updateIncome = async (req: CustomRequest, res: Response) => {
   res
     .status(200)
     .json({ message: "Income updated successfully.", updatedIncome });
+};
+
+export const deleteIncome = async (req: CustomRequest, res: Response) => {
+  const { id } = req.params;
+  const deletedIncome = await deleteIncomeS(id);
+  res.status(200).json({ message: "Income deleted.", deletedIncome });
 };

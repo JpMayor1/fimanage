@@ -76,3 +76,9 @@ export const updateIncomeS = async (id: string, data: Partial<IncomeType>) => {
 
   return updatedIncome;
 };
+
+export const deleteIncomeS = async (id: string) => {
+  const deletedIncome = await Income.findByIdAndDelete(id);
+  if (!deletedIncome) throw new AppError("Income not found", 404);
+  return deletedIncome;
+};

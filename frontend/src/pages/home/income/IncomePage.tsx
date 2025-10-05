@@ -1,6 +1,7 @@
 import { incomeIcons } from "@/assets/icons/incomeIcons";
 import LoadingBig from "@/components/custom/loading/LoadingBig";
 import AddIncome from "@/components/income/main/AddIncome";
+import DeleteIncome from "@/components/income/main/DeleteIncome";
 import UpdateIncome from "@/components/income/main/UpdateIncome";
 import { useIncomeStore } from "@/stores/income/useIncomeStore";
 import type { IncomeType } from "@/types/income/income.type";
@@ -14,6 +15,7 @@ const IncomePage = () => {
 
   const [addIncome, setAddIncome] = useState(false);
   const [updateIncome, seUpdateIncome] = useState<IncomeType | null>(null);
+  const [deleteIncome, seDeleteIncome] = useState<IncomeType | null>(null);
 
   useEffect(() => {
     const fetchincomes = async () => await getIncomes();
@@ -36,7 +38,7 @@ const IncomePage = () => {
           onClick={() => setAddIncome(true)}
         >
           <FaPlus className="text-xs" />
-          Income
+          Incomes
         </button>
       </div>
 
@@ -92,7 +94,10 @@ const IncomePage = () => {
                         >
                           <MdEdit />
                         </button>
-                        <button className="text-white bg-red/80 hover:bg-red rounded-md p-2 cursor-pointer">
+                        <button
+                          className="text-white bg-red/80 hover:bg-red rounded-md p-2 cursor-pointer"
+                          onClick={() => seDeleteIncome(income)}
+                        >
                           <MdDelete />
                         </button>
                       </div>
@@ -110,6 +115,12 @@ const IncomePage = () => {
           <UpdateIncome
             income={updateIncome}
             onClose={() => seUpdateIncome(null)}
+          />
+        )}
+        {deleteIncome && (
+          <DeleteIncome
+            income={deleteIncome}
+            onClose={() => seDeleteIncome(null)}
           />
         )}
       </AnimatePresence>

@@ -2,6 +2,7 @@ import {
   addincome,
   createIncomeCategory,
   deleteCategory,
+  deleteIncome,
   getCategories,
   getIncomes,
   updateCategory,
@@ -21,5 +22,6 @@ router.delete("/category/delete/:categoryId", verifier, deleteCategory);
 router.get("/all", verifier, getIncomes);
 router.post("/add", verifier, addincome);
 router.patch("/update/:id", verifier, updateIncome);
+router.delete("/delete/:id", verifier, deleteIncome);
 
 export default router;

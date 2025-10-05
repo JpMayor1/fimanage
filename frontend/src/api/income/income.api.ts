@@ -32,3 +32,6 @@ export const addIncomeApi = async (data: Partial<IncomeType>) =>
 
 export const updateIncomeApi = async (id: string, data: Partial<IncomeType>) =>
   await axiosInstance.patch(`/income/update/${id}`, data);
+
+export const deleteIncomeApi = async (id: string) =>
+  await axiosInstance.delete(`/income/delete/${id}`);

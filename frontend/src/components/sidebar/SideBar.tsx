@@ -32,7 +32,7 @@ const SideBar = () => {
       link: "/home/income/categories",
       icon: GrMoney,
     },
-    { name: "Income", link: "/home/income", icon: GrMoney },
+    { name: "Incomes", link: "/home/incomes", icon: GrMoney },
     { name: "Expenses", link: "/home/expenses", icon: GiExpense },
     { name: "Savings", link: "/home/savings", icon: MdOutlineSavings },
     {
