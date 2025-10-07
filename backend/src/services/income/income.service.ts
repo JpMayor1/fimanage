@@ -1,5 +1,5 @@
 import Income from "@/models/income.model";
-import IncomeCategory from "@/models/IncomeCategory.model";
+import IncomeCategory from "@/models/incomeCategory.model";
 import { IncomeType } from "@/types/models/income.type";
 import {
   IncomeCategoryFilterType,

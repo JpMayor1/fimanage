@@ -15,7 +15,7 @@ export type IncomeType = {
   dt: string;
 };
 
-export type incomeStoreType = {
+export type IncomeStoreType = {
   categories: IncomeCategoryType[];
   incomes: IncomeType[];
 

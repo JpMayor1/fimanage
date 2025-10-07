@@ -1,31 +1,27 @@
 import {
-  addIncomeApi,
   createCategoriesApi,
   deleteCategoryApi,
-  deleteIncomeApi,
   getCategoriesApi,
-  getIncomesApi,
   updateCategoryApi,
-  updateIncomeApi,
-} from "@/api/income/income.api";
+} from "@/api/expense/expense.api";
 import type {
-  IncomeCategoryType,
-  IncomeStoreType,
-} from "@/types/income/income.type";
+  ExpenseCategoryType,
+  ExpenseStoreType,
+} from "@/types/expense/expense.type";
 import { AxiosError } from "axios";
 import toast from "react-hot-toast";
 import { create } from "zustand";
 
-export const useIncomeStore = create<IncomeStoreType>((set) => ({
+export const useExpenseStore = create<ExpenseStoreType>((set) => ({
   categories: [],
-  incomes: [],
+  expenses: [],
 
   getLoading: false,
   createLoading: false,
   updateLoading: false,
   deleteLoading: false,
 
-  // Income Category
+  // Expense Category
   getCategories: async () => {
     set({ getLoading: true });
     try {
@@ -43,7 +39,7 @@ export const useIncomeStore = create<IncomeStoreType>((set) => ({
     }
   },
 
-  createCategories: async (categories: IncomeCategoryType[]) => {
+  createCategories: async (categories: ExpenseCategoryType[]) => {
     set({ createLoading: true });
     try {
       const response = await createCategoriesApi(categories);
@@ -100,91 +96,6 @@ export const useIncomeStore = create<IncomeStoreType>((set) => ({
       return true;
     } catch (error) {
       console.error("Error deleting category", error);
-      if (error instanceof AxiosError) {
-        toast.error(error.response?.data?.message || error.message);
-      } else {
-        toast.error("An unexpected error occurred.");
-      }
-      return false;
-    } finally {
-      set({ deleteLoading: false });
-    }
-  },
-
-  // Income
-  getIncomes: async () => {
-    set({ getLoading: true });
-    try {
-      const response = await getIncomesApi();
-      set({ incomes: response.data.incomes });
-    } catch (error) {
-      console.error("Error getting incomes", error);
-      if (error instanceof AxiosError) {
-        toast.error(error.response?.data?.message || error.message);
-      } else {
-        toast.error("An unexpected error occurred.");
-      }
-    } finally {
-      set({ getLoading: false });
-    }
-  },
-  addIncome: async (data) => {
-    set({ createLoading: true });
-    try {
-      const response = await addIncomeApi(data);
-      set((state) => ({
-        incomes: [...state.incomes, response.data.newIncome],
-      }));
-      toast.success(response.data.message);
-      return true;
-    } catch (error) {
-      console.error("Error adding income", error);
-      if (error instanceof AxiosError) {
-        toast.error(error.response?.data?.message || error.message);
-      } else {
-        toast.error("An unexpected error occurred.");
-      }
-      return false;
-    } finally {
-      set({ createLoading: false });
-    }
-  },
-  updateIncome: async (id, data) => {
-    set({ updateLoading: true });
-    try {
-      const response = await updateIncomeApi(id, data);
-      set((state) => ({
-        incomes: state.incomes.map((income) =>
-          income._id === id
-            ? { ...income, ...response.data.updatedIncome }
-            : income
-        ),
-      }));
-      toast.success(response.data.message);
-      return true;
-    } catch (error) {
-      console.error("Error updating income", error);
-      if (error instanceof AxiosError) {
-        toast.error(error.response?.data?.message || error.message);
-      } else {
-        toast.error("An unexpected error occurred.");
-      }
-      return false;
-    } finally {
-      set({ updateLoading: false });
-    }
-  },
-  deleteIncome: async (id) => {
-    set({ deleteLoading: true });
-    try {
-      const response = await deleteIncomeApi(id);
-      set((state) => ({
-        incomes: state.incomes.filter((income) => income._id !== id),
-      }));
-      toast.success(response.data.message);
-      return true;
-    } catch (error) {
-      console.error("Error deleting income", error);
       if (error instanceof AxiosError) {
         toast.error(error.response?.data?.message || error.message);
       } else {

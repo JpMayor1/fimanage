@@ -15,6 +15,7 @@ import { globalErrorHandler } from "./middlewares/globalErrorHandler";
 import cloudinary from "@/middlewares/cloudinary";
 
 import authRoute from "@/routes/auth/auth.route";
+import expenseRoute from "@/routes/expense/expense.route";
 import incomeRoute from "@/routes/income/income.route";
 
 const bootstrap = async () => {
@@ -48,6 +49,7 @@ const bootstrap = async () => {
 
   app.use("/api/auth", authRoute);
   app.use("/api/income", incomeRoute);
+  app.use("/api/expense", expenseRoute);
 
   app.use(globalErrorHandler);
 

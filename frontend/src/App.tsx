@@ -11,6 +11,7 @@ import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
 
 import DashboardPage from "./pages/home/DashboardPage";
+import ExpenseCategoriesPage from "./pages/home/expense/ExpenseCategories";
 import ExpensesPage from "./pages/home/ExpensesPage";
 import IncomeCategoriesPage from "./pages/home/income/IncomeCategories";
 import IncomePage from "./pages/home/income/IncomePage";
@@ -52,12 +53,16 @@ function App() {
           element: <DashboardPage />,
         },
         {
+          path: "/home/income/categories",
+          element: <IncomeCategoriesPage />,
+        },
+        {
           path: "/home/incomes",
           element: <IncomePage />,
         },
         {
-          path: "/home/income/categories",
-          element: <IncomeCategoriesPage />,
+          path: "/home/expense/categories",
+          element: <ExpenseCategoriesPage />,
         },
         {
           path: "/home/expenses",
