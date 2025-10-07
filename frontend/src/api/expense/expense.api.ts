@@ -1,5 +1,8 @@
 import axiosInstance from "@/axios/axiosInstance";
-import type { ExpenseCategoryType } from "@/types/expense/expense.type";
+import type {
+  ExpenseCategoryType,
+  ExpenseType,
+} from "@/types/expense/expense.type";
 
 // Expense Category
 export const getCategoriesApi = async () =>
@@ -22,3 +25,18 @@ export const updateCategoryApi = async (
 
 export const deleteCategoryApi = async (categoryId: string) =>
   await axiosInstance.delete(`/expense/category/delete/${categoryId}`);
+
+// Expense
+export const getExpensesApi = async () =>
+  await axiosInstance.get("expense/all");
+
+export const addExpenseApi = async (data: Partial<ExpenseType>) =>
+  await axiosInstance.post("/expense/add", data);
+
+export const updateExpenseApi = async (
+  id: string,
+  data: Partial<ExpenseType>
+) => await axiosInstance.patch(`/expense/update/${id}`, data);
+
+export const deleteExpenseApi = async (id: string) =>
+  await axiosInstance.delete(`/expense/delete/${id}`);

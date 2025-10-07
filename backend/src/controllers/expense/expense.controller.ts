@@ -1,9 +1,13 @@
 import {
+  addExpenseS,
   createExpenseCategoryS,
   deleteCategoryS,
+  deleteExpenseS,
   findExpenseCategoryS,
   getCategoriesS,
+  getExpensesS,
   updateCategoryS,
+  updateExpenseS,
 } from "@/services/expense/expense.service";
 
 import { CustomRequest } from "@/types/express/express.type";
@@ -37,7 +41,7 @@ export const createExpenseCategory = async (
   const newCategories = await createExpenseCategoryS(categories);
 
   if (!newCategories) {
-    throw new AppError("Error creating income categories", 400);
+    throw new AppError("Error creating expense categories", 400);
   }
 
   res.status(201).json({
@@ -69,4 +73,46 @@ export const deleteCategory = async (req: CustomRequest, res: Response) => {
   const deleted = await deleteCategoryS(categoryId);
   if (!deleted) throw new AppError("Error deleting gategory", 400);
   res.status(200).json({ message: "Category deleted successfully." });
+};
+
+// Expense
+export const getExpenses = async (req: CustomRequest, res: Response) => {
+  const expenses = await getExpensesS();
+  res.status(200).json({ expenses });
+};
+
+export const addExpense = async (req: CustomRequest, res: Response) => {
+  const { description, category, amount } = req.body;
+  if (!description) throw new AppError("Description is required.", 400);
+  if (!category) throw new AppError("Category is required.", 400);
+  if (!Number(amount)) throw new AppError("Amount is required.", 400);
+
+  const newExpense = await addExpenseS({ description, category, amount });
+  res.status(200).json({ message: "Expense added.", newExpense });
+};
+
+export const updateExpense = async (req: CustomRequest, res: Response) => {
+  const { id } = req.params;
+  const { description, category, amount } = req.body;
+
+  if (!id) throw new AppError("Expense ID is required.", 400);
+  if (!description) throw new AppError("Description is required.", 400);
+  if (!category) throw new AppError("Category is required.", 400);
+  if (!Number(amount)) throw new AppError("Amount is required.", 400);
+
+  const updatedExpense = await updateExpenseS(id, {
+    description,
+    category,
+    amount,
+  });
+
+  res
+    .status(200)
+    .json({ message: "Expense updated successfully.", updatedExpense });
+};
+
+export const deleteExpense = async (req: CustomRequest, res: Response) => {
+  const { id } = req.params;
+  const deletedExpense = await deleteExpenseS(id);
+  res.status(200).json({ message: "Expense deleted.", deletedExpense });
 };

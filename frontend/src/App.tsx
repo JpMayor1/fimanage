@@ -12,7 +12,7 @@ import RegisterPage from "./pages/auth/RegisterPage";
 
 import DashboardPage from "./pages/home/DashboardPage";
 import ExpenseCategoriesPage from "./pages/home/expense/ExpenseCategories";
-import ExpensesPage from "./pages/home/ExpensesPage";
+import ExpensesPage from "./pages/home/expense/ExpensesPage";
 import IncomeCategoriesPage from "./pages/home/income/IncomeCategories";
 import IncomePage from "./pages/home/income/IncomePage";
 import InvestmentsPage from "./pages/home/InvestmentsPage";

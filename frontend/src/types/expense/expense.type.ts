@@ -9,8 +9,8 @@ export type ExpenseCategoryType = {
 export type ExpenseType = {
   _id?: string;
   icon: ExpenseIconKey;
-  description: string;
   category: string;
+  description: string;
   amount: number;
   dt: string;
 };
@@ -32,4 +32,10 @@ export type ExpenseStoreType = {
     updatedCategory: ExpenseCategoryType
   ) => Promise<boolean>;
   deleteCategory: (categoryId: string) => Promise<boolean>;
+
+  // Expense
+  getExpenses: () => Promise<void>;
+  addExpense: (data: Partial<ExpenseType>) => Promise<boolean>;
+  updateExpense: (id: string, data: Partial<ExpenseType>) => Promise<boolean>;
+  deleteExpense: (id: string) => Promise<boolean>;
 };
