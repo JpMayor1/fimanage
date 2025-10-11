@@ -19,6 +19,7 @@ import { create } from "zustand";
 export const useExpenseStore = create<ExpenseStoreType>((set) => ({
   categories: [],
   expenses: [],
+  limit: 0,
 
   getLoading: false,
   createLoading: false,
@@ -117,6 +118,7 @@ export const useExpenseStore = create<ExpenseStoreType>((set) => ({
     try {
       const response = await getExpensesApi();
       set({ expenses: response.data.expenses });
+      set({ limit: response.data.limit });
     } catch (error) {
       console.error("Error getting expenses", error);
       if (error instanceof AxiosError) {

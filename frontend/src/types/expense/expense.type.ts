@@ -13,11 +13,13 @@ export type ExpenseType = {
   description: string;
   amount: number;
   dt: string;
+  createdAt: string;
 };
 
 export type ExpenseStoreType = {
   categories: ExpenseCategoryType[];
   expenses: ExpenseType[];
+  limit: number;
 
   getLoading: boolean;
   createLoading: boolean;

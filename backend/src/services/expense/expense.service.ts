@@ -1,5 +1,6 @@
 import Expense from "@/models/expense.model";
 import ExpenseCategory from "@/models/expenseCategory.model";
+import Limit from "@/models/limit.model";
 import { ExpenseType } from "@/types/models/expense.type";
 import {
   ExpenseCategoryFilterType,
@@ -45,7 +46,11 @@ export const deleteCategoryS = async (categoryId: string) =>
   await ExpenseCategory.findByIdAndDelete(categoryId);
 
 // Expense
-export const getExpensesS = async () => await Expense.find().lean();
+export const getExpensesS = async (userId: string) => {
+  const expenses = await Expense.find().lean();
+  const limit = await Limit.find({ _id: userId }).lean();
+  return { expenses, limit };
+};
 
 export const addExpenseS = async (data: Partial<ExpenseType>) => {
   const category = await ExpenseCategory.findOne({ name: data.category });

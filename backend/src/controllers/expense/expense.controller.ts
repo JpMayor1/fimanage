@@ -77,8 +77,9 @@ export const deleteCategory = async (req: CustomRequest, res: Response) => {
 
 // Expense
 export const getExpenses = async (req: CustomRequest, res: Response) => {
-  const expenses = await getExpensesS();
-  res.status(200).json({ expenses });
+  const account = req.account;
+  const { expenses, limit } = await getExpensesS(account._id);
+  res.status(200).json({ expenses, limit });
 };
 
 export const addExpense = async (req: CustomRequest, res: Response) => {

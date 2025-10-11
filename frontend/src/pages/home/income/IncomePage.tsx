@@ -27,7 +27,7 @@ const IncomePage = () => {
       {/* Header */}
       <div className="w-full flex items-center justify-between mb-5">
         <div>
-          <h1 className="text-white text-xl font-bold">Income</h1>
+          <h1 className="text-white text-xl font-bold">Incomes</h1>
           <p className="text-white/70 text-sm hidden md:block">
             Track & manage your income sources
           </p>
@@ -38,7 +38,7 @@ const IncomePage = () => {
           onClick={() => setAddIncome(true)}
         >
           <FaPlus className="text-xs" />
-          Incomes
+          Income
         </button>
       </div>
 
