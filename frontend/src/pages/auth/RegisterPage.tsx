@@ -69,7 +69,7 @@ const RegisterPage: React.FC = () => {
         password: "",
         address: "",
       });
-      navigate("/");
+      navigate("/home/dashboard");
     }
   };
   return (
