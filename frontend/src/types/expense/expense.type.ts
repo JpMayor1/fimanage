@@ -40,4 +40,7 @@ export type ExpenseStoreType = {
   addExpense: (data: Partial<ExpenseType>) => Promise<boolean>;
   updateExpense: (id: string, data: Partial<ExpenseType>) => Promise<boolean>;
   deleteExpense: (id: string) => Promise<boolean>;
+
+  // Limit
+  updateLimit: (limit: number) => Promise<boolean>;
 };

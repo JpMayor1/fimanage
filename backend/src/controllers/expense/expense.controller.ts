@@ -8,6 +8,7 @@ import {
   getExpensesS,
   updateCategoryS,
   updateExpenseS,
+  updateLimitS,
 } from "@/services/expense/expense.service";
 
 import { CustomRequest } from "@/types/express/express.type";
@@ -135,4 +136,16 @@ export const deleteExpense = async (req: CustomRequest, res: Response) => {
   const { id } = req.params;
   const deletedExpense = await deleteExpenseS(id);
   res.status(200).json({ message: "Expense deleted.", deletedExpense });
+};
+
+export const updateLimit = async (req: CustomRequest, res: Response) => {
+  const account = req.account;
+  const { limit } = req.body;
+
+  const updatedLimit = await updateLimitS(account._id, limit);
+  if (!updatedLimit) throw new AppError("Error updating limit", 400);
+
+  res
+    .status(200)
+    .json({ message: "Limit updated.", limit: updatedLimit.limit });
 };

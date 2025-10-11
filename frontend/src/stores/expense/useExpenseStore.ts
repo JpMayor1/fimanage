@@ -7,6 +7,7 @@ import {
   getExpensesApi,
   updateCategoryApi,
   updateExpenseApi,
+  updateLimitApi,
 } from "@/api/expense/expense.api";
 import type {
   ExpenseCategoryType,
@@ -43,7 +44,6 @@ export const useExpenseStore = create<ExpenseStoreType>((set) => ({
       set({ getLoading: false });
     }
   },
-
   createCategories: async (categories: ExpenseCategoryType[]) => {
     set({ createLoading: true });
     try {
@@ -65,7 +65,6 @@ export const useExpenseStore = create<ExpenseStoreType>((set) => ({
       set({ createLoading: false });
     }
   },
-
   updateCategory: async (categoryId, updatedCategory) => {
     set({ updateLoading: true });
     try {
@@ -89,7 +88,6 @@ export const useExpenseStore = create<ExpenseStoreType>((set) => ({
       set({ updateLoading: false });
     }
   },
-
   deleteCategory: async (categoryId) => {
     set({ deleteLoading: true });
     try {
@@ -117,7 +115,6 @@ export const useExpenseStore = create<ExpenseStoreType>((set) => ({
     set({ getLoading: true });
     try {
       const response = await getExpensesApi();
-      console.log("res: ", response);
       set({ expenses: response.data.expenses, limit: response.data.limit });
     } catch (error) {
       console.error("Error getting expenses", error);
@@ -195,6 +192,25 @@ export const useExpenseStore = create<ExpenseStoreType>((set) => ({
       return false;
     } finally {
       set({ deleteLoading: false });
+    }
+  },
+  updateLimit: async (limit) => {
+    set({ updateLoading: true });
+    try {
+      const response = await updateLimitApi(limit);
+      set({ limit: response.data.limit });
+      toast.success(response.data.message);
+      return true;
+    } catch (error) {
+      console.error("Error updating limit", error);
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data?.message || error.message);
+      } else {
+        toast.error("An unexpected error occurred.");
+      }
+      return false;
+    } finally {
+      set({ updateLoading: false });
     }
   },
 }));

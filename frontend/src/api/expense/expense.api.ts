@@ -40,3 +40,7 @@ export const updateExpenseApi = async (
 
 export const deleteExpenseApi = async (id: string) =>
   await axiosInstance.delete(`/expense/delete/${id}`);
+
+// Limit
+export const updateLimitApi = async (limit: number) =>
+  await axiosInstance.patch("/expense/limit/update", { limit });

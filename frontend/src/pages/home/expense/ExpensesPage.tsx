@@ -21,7 +21,6 @@ const ExpensePage = () => {
   const [updateLimit, setUpdateLimit] = useState(false);
   const [showLimitWarning, setShowLimitWarning] = useState(false);
 
-  const [dailyLimit, setDailyLimit] = useState(limit);
   const [todaySpent, setTodaySpent] = useState(0);
 
   const dismissedRef = useRef(false);
@@ -32,23 +31,24 @@ const ExpensePage = () => {
   }, [getExpenses]);
 
   useEffect(() => {
-    const today = new Date().toDateString();
+    const calculateTotal = () => {
+      const today = new Date().toDateString();
 
-    const total = expenses
-      .filter((expense) => new Date(expense.createdAt).toDateString() === today)
-      .reduce((sum, expense) => sum + expense.amount, 0);
+      const total = expenses
+        .filter(
+          (expense) => new Date(expense.createdAt).toDateString() === today
+        )
+        .reduce((sum, expense) => sum + expense.amount, 0);
 
-    setTodaySpent(total);
-
-    // ✅ only show modal if not dismissed yet
-    if (total >= dailyLimit && !showLimitWarning && !dismissedRef.current) {
-      setShowLimitWarning(true);
-    }
-  }, [expenses, dailyLimit, showLimitWarning]);
+      setTodaySpent(total);
+      if (total >= limit) setShowLimitWarning(true);
+    };
+    if (expenses.length > 0) calculateTotal();
+  }, [expenses, limit]);
 
   const handleCloseWarning = () => {
     setShowLimitWarning(false);
-    dismissedRef.current = true; // ✅ prevent re-triggering
+    dismissedRef.current = false;
   };
 
   return (
@@ -101,26 +101,23 @@ const ExpensePage = () => {
                   <div className="w-full h-3 bg-white/10 rounded-full overflow-hidden">
                     <div
                       className={`h-3 rounded-full transition-all duration-300 ${
-                        todaySpent > dailyLimit ? "bg-red" : "bg-green"
+                        todaySpent > limit ? "bg-red" : "bg-green"
                       }`}
                       style={{
-                        width: `${Math.min(
-                          (todaySpent / dailyLimit) * 100,
-                          100
-                        )}%`,
+                        width: `${Math.min((todaySpent / limit) * 100, 100)}%`,
                       }}
                     />
                   </div>
 
                   <div className="flex justify-between mt-2 text-white/70 text-xs">
                     <p>Spent Today: ₱{todaySpent.toLocaleString()}</p>
-                    <p>Limit: ₱{dailyLimit.toLocaleString()}</p>
+                    <p>Limit: ₱{limit.toLocaleString()}</p>
                   </div>
 
-                  {todaySpent > dailyLimit && (
+                  {todaySpent > limit && (
                     <p className="text-red text-xs mt-1">
                       ⚠ You’ve exceeded your daily limit by ₱
-                      {(todaySpent - dailyLimit).toLocaleString()}!
+                      {(todaySpent - limit).toLocaleString()}!
                     </p>
                   )}
                 </div>
@@ -196,12 +193,8 @@ const ExpensePage = () => {
             onClose={() => seDeleteExpense(null)}
           />
         )}
-        {updateLimit && (
-          <UpdateDailyLimit
-            currentLimit={dailyLimit}
-            onUpdate={(newLimit) => setDailyLimit(newLimit)}
-            onClose={() => setUpdateLimit(false)}
-          />
+        {updateLimit && !getLoading && (
+          <UpdateDailyLimit onClose={() => setUpdateLimit(false)} />
         )}
         {showLimitWarning && <DailyLimitReached onClose={handleCloseWarning} />}
       </AnimatePresence>

@@ -1,3 +1,4 @@
+import Account from "@/models/account.model";
 import Expense from "@/models/expense.model";
 import ExpenseCategory from "@/models/expenseCategory.model";
 import { ExpenseType } from "@/types/models/expense.type";
@@ -89,3 +90,7 @@ export const deleteExpenseS = async (id: string) => {
   if (!deletedExpense) throw new AppError("Expense not found", 404);
   return deletedExpense;
 };
+
+// Limit
+export const updateLimitS = async (userId: string, limit: number) =>
+  await Account.findByIdAndUpdate(userId, { limit });

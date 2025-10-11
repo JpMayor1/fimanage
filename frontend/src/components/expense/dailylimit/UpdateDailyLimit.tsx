@@ -1,12 +1,11 @@
 import LoadingSmall from "@/components/custom/loading/LoadingSmall";
 import TextField from "@/components/custom/TextField";
+import { useExpenseStore } from "@/stores/expense/useExpenseStore";
 import { motion } from "framer-motion";
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { FiX } from "react-icons/fi";
 
 interface UpdateDailyLimitI {
-  currentLimit: number;
-  onUpdate: (newLimit: number) => void;
   onClose: () => void;
 }
 
@@ -16,13 +15,10 @@ const overlayAnim = {
   exit: { opacity: 0, transition: { duration: 0.17 } },
 };
 
-const UpdateDailyLimit = ({
-  currentLimit,
-  onUpdate,
-  onClose,
-}: UpdateDailyLimitI) => {
+const UpdateDailyLimit = ({ onClose }: UpdateDailyLimitI) => {
+  const { limit: currentLimit, updateLimit, updateLoading } = useExpenseStore();
+
   const [limit, setLimit] = useState<number>(currentLimit);
-  const [loading, setLoading] = useState(false);
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     setLimit(Number(e.target.value));
@@ -31,14 +27,8 @@ const UpdateDailyLimit = ({
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (!limit || limit <= 0) return alert("Please enter a valid daily limit.");
-    setLoading(true);
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 400)); // simulate async update if needed
-      onUpdate(limit);
-      onClose();
-    } finally {
-      setLoading(false);
-    }
+    const success = await updateLimit(limit);
+    if (success) onClose();
   }
 
   return (
@@ -73,14 +63,14 @@ const UpdateDailyLimit = ({
 
           <button
             type="submit"
-            disabled={loading}
+            disabled={updateLoading}
             className={`${
-              loading
+              updateLoading
                 ? "cursor-not-allowed opacity-80"
                 : "cursor-pointer hover:scale-101 hover:shadow-xl transition-all"
             } w-full py-2 rounded-xl bg-gradient-to-r from-yellow to-yellow/80 text-black text-lg mt-2 shadow-md`}
           >
-            {loading ? <LoadingSmall /> : "Update Limit"}
+            {updateLoading ? <LoadingSmall /> : "Update Limit"}
           </button>
         </form>
       </div>
