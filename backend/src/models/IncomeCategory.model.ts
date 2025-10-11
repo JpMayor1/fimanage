@@ -3,6 +3,11 @@ import { model, Model, Schema } from "mongoose";
 
 const incomeCategorySchema = new Schema<IncomeCategoryDocumentType>(
   {
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: "Account",
+      required: true,
+    },
     icon: { type: String, required: true },
     name: { type: String, required: true },
   },

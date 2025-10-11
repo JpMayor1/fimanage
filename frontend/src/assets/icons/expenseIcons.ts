@@ -12,8 +12,8 @@ import { MdMoreHoriz, MdOutlineSchool } from "react-icons/md";
 import { TbBus, TbPigOff, TbReceipt } from "react-icons/tb";
 
 export const expenseIcons = {
-  FaShoppingCart, // Shopping / groceries
   FaUtensils, // Food & dining
+  FaShoppingCart, // Shopping / groceries
   FaMoneyBillWave, // Bills & utilities
   FaCar, // Car / transport
   FaHome, // Housing / rent

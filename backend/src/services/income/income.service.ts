@@ -21,10 +21,11 @@ export const findIncomeCategoryS = async (
   }
 };
 
-export const getCategoriesS = async () => await IncomeCategory.find().lean();
+export const getCategoriesS = async (userId: string) =>
+  await IncomeCategory.find({ userId }).lean();
 
 export const createIncomeCategoryS = async (
-  categories: { name: string; icon: string }[]
+  categories: IncomeCategoryType[]
 ) => {
   const newCategories = await IncomeCategory.insertMany(categories);
   return newCategories as IncomeCategoryType[];
@@ -45,9 +46,10 @@ export const deleteCategoryS = async (categoryId: string) =>
   await IncomeCategory.findByIdAndDelete(categoryId);
 
 // Income
-export const getIncomesS = async () => await Income.find().lean();
+export const getIncomesS = async (userId: string) =>
+  await Income.find({ userId }).lean();
 
-export const addincomeS = async (data: Partial<IncomeType>) => {
+export const addIncomeS = async (data: Partial<IncomeType>) => {
   const category = await IncomeCategory.findOne({ name: data.category });
   if (!category) throw new AppError("Category not found", 404);
   const newIncome = await Income.create({

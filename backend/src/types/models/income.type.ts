@@ -1,10 +1,11 @@
-import { Document } from "mongoose";
+import { Document, Schema } from "mongoose";
 
 export type IncomeType = {
   _id?: string;
+  userId: Schema.Types.ObjectId;
   icon: string;
-  description: string;
   category: string;
+  description: string;
   amount: number;
   dt: string;
 };

@@ -1,5 +1,4 @@
 import Account from "@/models/account.model";
-import Limit from "@/models/limit.model";
 import {
   AccountFilterType,
   AccountType,
@@ -39,9 +38,6 @@ export const registerAccountS = async ({
     email,
     username,
     password,
-  });
-  await Limit.create({
-    userId: account._id,
   });
   return account;
 };

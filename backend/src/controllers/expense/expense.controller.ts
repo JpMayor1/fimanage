@@ -11,12 +11,14 @@ import {
 } from "@/services/expense/expense.service";
 
 import { CustomRequest } from "@/types/express/express.type";
+import { ExpenseCategoryType } from "@/types/models/expenseCategoryType";
 import { AppError } from "@/utils/error/appError";
 import { Response } from "express";
 
 // Expense Category
 export const getCategories = async (req: CustomRequest, res: Response) => {
-  const categories = await getCategoriesS();
+  const account = req.account;
+  const categories = await getCategoriesS(account._id);
   res.status(200).json({ categories });
 };
 
@@ -24,21 +26,32 @@ export const createExpenseCategory = async (
   req: CustomRequest,
   res: Response
 ) => {
+  const account = req.account;
   const { categories } = req.body;
 
   if (!categories || !Array.isArray(categories) || categories.length === 0) {
     throw new AppError("Categories array (name + icon) is required", 400);
   }
 
+  const processedCategories = [];
   for (const { name, icon } of categories) {
     if (!name || !icon) {
       throw new AppError("Each category must have a name and icon", 400);
     }
-    const existing = await findExpenseCategoryS({ name });
+
+    const existing = await findExpenseCategoryS({ name, userId: account._id });
     if (existing) throw new AppError(`Category "${name}" already exists`, 400);
+
+    processedCategories.push({
+      name,
+      icon,
+      userId: account._id,
+    });
   }
 
-  const newCategories = await createExpenseCategoryS(categories);
+  const newCategories = await createExpenseCategoryS(
+    processedCategories as ExpenseCategoryType[]
+  );
 
   if (!newCategories) {
     throw new AppError("Error creating expense categories", 400);
@@ -78,17 +91,23 @@ export const deleteCategory = async (req: CustomRequest, res: Response) => {
 // Expense
 export const getExpenses = async (req: CustomRequest, res: Response) => {
   const account = req.account;
-  const { expenses, limit } = await getExpensesS(account._id);
-  res.status(200).json({ expenses, limit });
+  const expenses = await getExpensesS(account._id);
+  res.status(200).json({ expenses, limit: account.limit });
 };
 
 export const addExpense = async (req: CustomRequest, res: Response) => {
+  const account = req.account;
   const { description, category, amount } = req.body;
   if (!description) throw new AppError("Description is required.", 400);
   if (!category) throw new AppError("Category is required.", 400);
   if (!Number(amount)) throw new AppError("Amount is required.", 400);
 
-  const newExpense = await addExpenseS({ description, category, amount });
+  const newExpense = await addExpenseS({
+    userId: account._id,
+    description,
+    category,
+    amount,
+  });
   res.status(200).json({ message: "Expense added.", newExpense });
 };
 

@@ -117,8 +117,8 @@ export const useExpenseStore = create<ExpenseStoreType>((set) => ({
     set({ getLoading: true });
     try {
       const response = await getExpensesApi();
-      set({ expenses: response.data.expenses });
-      set({ limit: response.data.limit });
+      console.log("res: ", response);
+      set({ expenses: response.data.expenses, limit: response.data.limit });
     } catch (error) {
       console.error("Error getting expenses", error);
       if (error instanceof AxiosError) {

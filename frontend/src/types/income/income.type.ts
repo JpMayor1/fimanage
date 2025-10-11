@@ -9,8 +9,8 @@ export type IncomeCategoryType = {
 export type IncomeType = {
   _id?: string;
   icon: IncomeIconKey;
-  description: string;
   category: string;
+  description: string;
   amount: number;
   dt: string;
 };

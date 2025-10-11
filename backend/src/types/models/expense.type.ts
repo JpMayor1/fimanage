@@ -1,7 +1,8 @@
-import { Document } from "mongoose";
+import { Document, Schema } from "mongoose";
 
 export type ExpenseType = {
   _id?: string;
+  userId: Schema.Types.ObjectId;
   icon: string;
   description: string;
   category: string;

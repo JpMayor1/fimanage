@@ -12,6 +12,7 @@ export type AccountType = {
   password: string;
   address: string;
   recoveryCode?: string;
+  limit: number;
   createdAt: Date;
   updatedAt: Date;
 };

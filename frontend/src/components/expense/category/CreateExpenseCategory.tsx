@@ -21,12 +21,12 @@ const CreateExpenseCategory = ({ onClose }: CreateExpenseCategoryI) => {
 
   const [categories, setCategories] = useState<
     { name: string; icon: ExpenseIconKey; showIcons: boolean }[]
-  >([{ name: "", icon: "FaShoppingCart", showIcons: false }]);
+  >([{ name: "", icon: "FaUtensils", showIcons: false }]);
 
   const handleAddCategory = () =>
     setCategories((prev) => [
       ...prev,
-      { name: "", icon: "FaShoppingCart", showIcons: false },
+      { name: "", icon: "FaUtensils", showIcons: false },
     ]);
 
   const handleNameChange = (idx: number, value: string) =>
@@ -65,7 +65,11 @@ const CreateExpenseCategory = ({ onClose }: CreateExpenseCategoryI) => {
 
   return (
     <motion.div
-      className="fixed inset-0 z-30 flex items-center justify-center bg-black/70 p-5"
+      className={`fixed inset-0 z-30 flex justify-center bg-black/70 p-5 ${
+        categories.length > 6
+          ? "items-start overflow-y-scroll no-scrollbar"
+          : " items-center"
+      }`}
       initial="initial"
       animate="animate"
       exit="exit"

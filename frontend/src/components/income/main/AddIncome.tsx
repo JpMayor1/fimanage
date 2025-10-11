@@ -19,8 +19,8 @@ const overlayAnim = {
 };
 
 const initialState: Partial<IncomeType> = {
-  description: "",
   category: "",
+  description: "",
   amount: 0,
 };
 
@@ -72,15 +72,6 @@ const AddIncome = ({ onClose }: AddIncomeI) => {
                 Add Income
               </label>
 
-              <TextField
-                name="description"
-                value={form.description}
-                onChange={handleChange}
-                placeholder="Description *"
-                containerClassName="flex-1"
-                className="bg-black text-white border focus:border-yellow"
-              />
-
               <CustomSelect
                 name="category"
                 value={form.category}
@@ -100,6 +91,15 @@ const AddIncome = ({ onClose }: AddIncomeI) => {
                   </option>
                 ))}
               </CustomSelect>
+
+              <TextField
+                name="description"
+                value={form.description}
+                onChange={handleChange}
+                placeholder="Description *"
+                containerClassName="flex-1"
+                className="bg-black text-white border focus:border-yellow"
+              />
 
               <TextField
                 type="number"

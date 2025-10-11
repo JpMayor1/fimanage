@@ -1,5 +1,5 @@
 import {
-  addincome,
+  addIncome,
   createIncomeCategory,
   deleteCategory,
   deleteIncome,
@@ -20,7 +20,7 @@ router.delete("/category/delete/:categoryId", verifier, deleteCategory);
 
 // income
 router.get("/all", verifier, getIncomes);
-router.post("/add", verifier, addincome);
+router.post("/add", verifier, addIncome);
 router.patch("/update/:id", verifier, updateIncome);
 router.delete("/delete/:id", verifier, deleteIncome);
 
