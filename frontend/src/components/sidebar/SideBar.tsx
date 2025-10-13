@@ -39,6 +39,11 @@ const SideBar = () => {
       icon: GiExpense,
     },
     { name: "Expenses", link: "/home/expenses", icon: GiExpense },
+    {
+      name: "Savings Categories",
+      link: "/home/savings/categories",
+      icon: MdOutlineSavings,
+    },
     { name: "Savings", link: "/home/savings", icon: MdOutlineSavings },
     {
       name: "Investments",

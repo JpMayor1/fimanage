@@ -18,6 +18,7 @@ import IncomePage from "./pages/home/income/IncomePage";
 import InvestmentsPage from "./pages/home/InvestmentsPage";
 import ProfilePage from "./pages/home/ProfilePage";
 import ReportPage from "./pages/home/ReportPage";
+import SavingCategoriesPage from "./pages/home/savings/SavingCategories";
 import SavingsPage from "./pages/home/SavingsPage";
 
 function App() {
@@ -67,6 +68,10 @@ function App() {
         {
           path: "/home/expenses",
           element: <ExpensesPage />,
+        },
+        {
+          path: "/home/savings/categories",
+          element: <SavingCategoriesPage />,
         },
         {
           path: "/home/savings",

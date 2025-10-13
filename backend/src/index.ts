@@ -17,6 +17,7 @@ import cloudinary from "@/middlewares/cloudinary";
 import authRoute from "@/routes/auth/auth.route";
 import expenseRoute from "@/routes/expense/expense.route";
 import incomeRoute from "@/routes/income/income.route";
+import savingsRoute from "@/routes/savings/savings.route";
 
 const bootstrap = async () => {
   const app = express();
@@ -50,6 +51,7 @@ const bootstrap = async () => {
   app.use("/api/auth", authRoute);
   app.use("/api/income", incomeRoute);
   app.use("/api/expense", expenseRoute);
+  app.use("/api/saving", savingsRoute);
 
   app.use(globalErrorHandler);
 
