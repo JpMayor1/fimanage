@@ -62,7 +62,11 @@ const SavingPage = () => {
                   return (
                     <div
                       key={index}
-                      className="w-full rounded-md bg-primary shadow-lg p-4 flex items-center justify-between"
+                      className={`w-full rounded-md bg-primary shadow-lg p-4 flex justify-between ${
+                        saving.annualRate || saving.frequency
+                          ? "items-start"
+                          : "items-center"
+                      }`}
                     >
                       {/* Left Section */}
                       <div className="flex items-center gap-3">
@@ -83,22 +87,28 @@ const SavingPage = () => {
                       </div>
 
                       {/* Right Section */}
-                      <div className="flex items-center justify-center gap-2">
-                        <p className="text-green">
-                          ₱{saving.amount.toLocaleString()}
+                      <div className="space-y-2">
+                        <p className="text-yellow text-xs text-end">
+                          {saving.annualRate && `${saving.annualRate}%`}{" "}
+                          {saving.frequency}
                         </p>
-                        <button
-                          className="text-white bg-green/80 hover:bg-green rounded-md p-2 cursor-pointer"
-                          onClick={() => seUpdateSaving(saving)}
-                        >
-                          <MdEdit />
-                        </button>
-                        <button
-                          className="text-white bg-red/80 hover:bg-red rounded-md p-2 cursor-pointer"
-                          onClick={() => seDeleteSaving(saving)}
-                        >
-                          <MdDelete />
-                        </button>
+                        <div className="flex items-center justify-center gap-2">
+                          <p className="text-green">
+                            ₱{saving.amount.toLocaleString()}
+                          </p>
+                          <button
+                            className="text-white bg-green/80 hover:bg-green rounded-md p-2 cursor-pointer"
+                            onClick={() => seUpdateSaving(saving)}
+                          >
+                            <MdEdit />
+                          </button>
+                          <button
+                            className="text-white bg-red/80 hover:bg-red rounded-md p-2 cursor-pointer"
+                            onClick={() => seDeleteSaving(saving)}
+                          >
+                            <MdDelete />
+                          </button>
+                        </div>
                       </div>
                     </div>
                   );

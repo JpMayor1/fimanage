@@ -2,6 +2,7 @@ import CustomSelect from "@/components/custom/CustomSelect";
 import LoadingBig from "@/components/custom/loading/LoadingBig";
 import LoadingSmall from "@/components/custom/loading/LoadingSmall";
 import TextField from "@/components/custom/TextField";
+import { frequencies } from "@/constants/savings.constant";
 import { useSavingStore } from "@/stores/savings/useSavingsStore";
 import type { SavingType } from "@/types/savings/savings.type";
 import { motion } from "framer-motion";
@@ -27,6 +28,8 @@ const UpdateSaving = ({ saving, onClose }: UpdateSavingI) => {
     description: saving.description,
     category: saving.category,
     amount: saving.amount,
+    annualRate: saving.annualRate,
+    frequency: saving.frequency,
   });
 
   useEffect(() => {
@@ -108,6 +111,37 @@ const UpdateSaving = ({ saving, onClose }: UpdateSavingI) => {
                 containerClassName="flex-1"
                 className="bg-black text-white border focus:border-yellow"
               />
+
+              {/* Annual Rate (Optional) */}
+              <TextField
+                type="number"
+                name="annualRate"
+                value={form.annualRate}
+                onChange={handleChange}
+                placeholder="Annual Rate (Optional, in %)"
+                containerClassName="flex-1"
+                className="bg-black text-white border focus:border-yellow"
+              />
+
+              {/* Frequency (Optional) */}
+              <div className="flex flex-col space-y-2">
+                <TextField
+                  list="frequency-options"
+                  name="frequency"
+                  value={form.frequency}
+                  onChange={handleChange}
+                  placeholder="Select or type frequency"
+                  containerClassName="flex-1"
+                  className="bg-black text-white border focus:border-yellow"
+                />
+                <datalist id="frequency-options">
+                  {frequencies.map((freq) => (
+                    <option key={freq} value={freq} className="bg-primary">
+                      {freq}
+                    </option>
+                  ))}
+                </datalist>
+              </div>
 
               <button
                 type="submit"

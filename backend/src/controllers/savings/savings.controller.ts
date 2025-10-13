@@ -95,7 +95,7 @@ export const getSavings = async (req: CustomRequest, res: Response) => {
 
 export const addSaving = async (req: CustomRequest, res: Response) => {
   const account = req.account;
-  const { description, category, amount } = req.body;
+  const { description, category, amount, annualRate, frequency } = req.body;
   if (!description) throw new AppError("Description is required.", 400);
   if (!category) throw new AppError("Category is required.", 400);
   if (!Number(amount)) throw new AppError("Amount is required.", 400);
@@ -105,13 +105,15 @@ export const addSaving = async (req: CustomRequest, res: Response) => {
     category,
     description,
     amount,
+    annualRate,
+    frequency,
   });
   res.status(200).json({ message: "Saving added.", newSaving });
 };
 
 export const updateSaving = async (req: CustomRequest, res: Response) => {
   const { id } = req.params;
-  const { description, category, amount } = req.body;
+  const { description, category, amount, annualRate, frequency } = req.body;
 
   if (!id) throw new AppError("Saving ID is required.", 400);
   if (!description) throw new AppError("Description is required.", 400);
@@ -122,6 +124,8 @@ export const updateSaving = async (req: CustomRequest, res: Response) => {
     description,
     category,
     amount,
+    annualRate,
+    frequency,
   });
 
   res

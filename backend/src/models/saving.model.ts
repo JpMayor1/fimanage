@@ -17,6 +17,8 @@ const savingSchema = new Schema<SavingDocumentType>(
       required: true,
     },
     amount: { type: Number, required: true },
+    annualRate: String,
+    frequency: String,
     dt: String,
   },
   { timestamps: true }

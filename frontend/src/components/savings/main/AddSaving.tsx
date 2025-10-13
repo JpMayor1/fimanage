@@ -2,6 +2,7 @@ import CustomSelect from "@/components/custom/CustomSelect";
 import LoadingBig from "@/components/custom/loading/LoadingBig";
 import LoadingSmall from "@/components/custom/loading/LoadingSmall";
 import TextField from "@/components/custom/TextField";
+import { frequencies } from "@/constants/savings.constant";
 import { useSavingStore } from "@/stores/savings/useSavingsStore";
 import type { SavingType } from "@/types/savings/savings.type";
 import { motion } from "framer-motion";
@@ -22,6 +23,8 @@ const initialState: Partial<SavingType> = {
   category: "",
   description: "",
   amount: 0,
+  annualRate: "",
+  frequency: "",
 };
 
 const AddSaving = ({ onClose }: AddSavingI) => {
@@ -42,7 +45,6 @@ const AddSaving = ({ onClose }: AddSavingI) => {
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-
     const success = await addSaving(form);
     if (success) return onClose();
   }
@@ -68,10 +70,11 @@ const AddSaving = ({ onClose }: AddSavingI) => {
         ) : (
           <>
             <form className="space-y-4 w-full" onSubmit={handleSubmit}>
-              <label className="block font-semibold text-white">
+              <label className="block font-semibold text-white text-lg">
                 Add Saving
               </label>
 
+              {/* Category */}
               <CustomSelect
                 name="category"
                 value={form.category}
@@ -92,6 +95,7 @@ const AddSaving = ({ onClose }: AddSavingI) => {
                 ))}
               </CustomSelect>
 
+              {/* Description */}
               <TextField
                 name="description"
                 value={form.description}
@@ -101,6 +105,7 @@ const AddSaving = ({ onClose }: AddSavingI) => {
                 className="bg-black text-white border focus:border-yellow"
               />
 
+              {/* Amount */}
               <TextField
                 type="number"
                 name="amount"
@@ -111,6 +116,38 @@ const AddSaving = ({ onClose }: AddSavingI) => {
                 className="bg-black text-white border focus:border-yellow"
               />
 
+              {/* Annual Rate (Optional) */}
+              <TextField
+                type="number"
+                name="annualRate"
+                value={form.annualRate}
+                onChange={handleChange}
+                placeholder="Annual Rate (Optional, in %)"
+                containerClassName="flex-1"
+                className="bg-black text-white border focus:border-yellow"
+              />
+
+              {/* Frequency (Optional) */}
+              <div className="flex flex-col space-y-2">
+                <TextField
+                  list="frequency-options"
+                  name="frequency"
+                  value={form.frequency}
+                  onChange={handleChange}
+                  placeholder="Select or type frequency"
+                  containerClassName="flex-1"
+                  className="bg-black text-white border focus:border-yellow"
+                />
+                <datalist id="frequency-options">
+                  {frequencies.map((freq) => (
+                    <option key={freq} value={freq} className="bg-primary">
+                      {freq}
+                    </option>
+                  ))}
+                </datalist>
+              </div>
+
+              {/* Submit */}
               <button
                 type="submit"
                 disabled={createLoading}
