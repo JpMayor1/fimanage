@@ -33,7 +33,7 @@ const ProfilePage = () => {
       animate="animate"
       exit="exit"
       variants={overlayAnim}
-      className="w-full flex items-center justify-center p-5"
+      className="w-full h-full flex items-center justify-center p-5"
     >
       <div className="w-full max-w-3xl border border-primary/10 bg-primary/90 rounded-2xl shadow-2xl py-8 px-4 md:px-8 relative flex flex-col items-center">
         {/* Profile Section */}
