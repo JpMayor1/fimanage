@@ -63,89 +63,87 @@ const SideBar = () => {
   return (
     <div
       className={`
-        fixed top-0 left-0 h-full w-60 bg-primary flex flex-col justify-between z-20 transform 
-        transition-transform duration-300 ease-in-out 
+        fixed top-0 left-0 h-full max-h-screen w-60 bg-primary flex flex-col z-20 transform 
+        transition-transform duration-300 ease-in-out overflow-hidden
         ${open ? "translate-x-0" : "-translate-x-full"} 
         md:translate-x-0
       `}
     >
-      <div className="w-full">
-        {/* Header */}
-        <div className="w-full flex items-center justify-between p-4">
-          <div className="flex items-center gap-2">
-            <p className="text-black bg-yellow font-bold rounded-full px-3 py-1">
-              F
-            </p>
-            <p className="text-yellow text-lg font-bold">Fimanage</p>
-          </div>
-
-          <IoMdClose
-            className="block md:hidden text-white text-2xl cursor-pointer"
-            onClick={() => setOpen(false)}
-          />
+      {/* Header */}
+      <div className="w-full flex items-center justify-between p-4">
+        <div className="flex items-center gap-2">
+          <p className="text-black bg-yellow font-bold rounded-full px-3 py-1">
+            F
+          </p>
+          <p className="text-yellow text-lg font-bold">Fimanage</p>
         </div>
 
-        {/* Profile Link */}
-        <Link
-          to="/home/profile"
-          className={`${
-            isActive("/home/profile")
-              ? "bg-yellow text-black"
-              : "text-white hover:bg-gray-800"
-          } 
-            w-full flex items-center gap-2 p-4 border-t border-b border-gray-50/10 cursor-pointer`}
+        <IoMdClose
+          className="block md:hidden text-white text-2xl cursor-pointer"
           onClick={() => setOpen(false)}
-        >
-          {authUser.profilePicture ? (
-            <BlurImage
-              src={authUser.profilePicture}
-              alt="Profile picture"
-              className="h-10 w-10 rounded-full object-cover border border-primary"
-              draggable={false}
-            />
-          ) : (
-            <Avatar
-              key={authUser._id}
-              name={`${authUser.firstName} ${authUser.lastName}`}
-              size="lg"
-              className="bg-primary p-4 rounded-full h-10 w-10"
-            />
-          )}
-          <div>
-            <p className="font-bold">
-              {authUser.firstName} {authUser.lastName}
-            </p>
-            <p
-              className={`text-xs ${
-                isActive("/home/profile") ? "text-black/50" : "text-gray-50/50"
-              }`}
-            >
-              {authUser.email}
-            </p>
-          </div>
-        </Link>
-
-        {/* Navigation Links */}
-        <nav className="w-full p-4 mt-4 space-y-2">
-          {navLinks.map(({ name, link, icon: Icon }) => (
-            <Link
-              key={link}
-              to={link}
-              className={`${linkBase} ${
-                isActive(link) ? linkActive : linkInactive
-              }`}
-              onClick={() => setOpen(false)}
-            >
-              <Icon
-                className={`text-lg ${
-                  isActive(link) ? "text-black" : "text-yellow"
-                }`}
-              />
-              <span>{name}</span>
-            </Link>
-          ))}
-        </nav>
+        />
       </div>
+
+      {/* Profile Link */}
+      <Link
+        to="/home/profile"
+        className={`${
+          isActive("/home/profile")
+            ? "bg-yellow text-black"
+            : "text-white hover:bg-gray-800"
+        } 
+            w-full flex items-center gap-2 p-4 border-t border-b border-gray-50/10 cursor-pointer`}
+        onClick={() => setOpen(false)}
+      >
+        {authUser.profilePicture ? (
+          <BlurImage
+            src={authUser.profilePicture}
+            alt="Profile picture"
+            className="h-10 w-10 rounded-full object-cover border border-primary"
+            draggable={false}
+          />
+        ) : (
+          <Avatar
+            key={authUser._id}
+            name={`${authUser.firstName} ${authUser.lastName}`}
+            size="lg"
+            className="bg-primary p-4 rounded-full h-10 w-10"
+          />
+        )}
+        <div>
+          <p className="font-bold">
+            {authUser.firstName} {authUser.lastName}
+          </p>
+          <p
+            className={`text-xs ${
+              isActive("/home/profile") ? "text-black/50" : "text-gray-50/50"
+            }`}
+          >
+            {authUser.email}
+          </p>
+        </div>
+      </Link>
+
+      {/* Navigation Links */}
+      <nav className="w-full p-4 mt-4 space-y-2 overflow-y-scroll no-scrollbar">
+        {navLinks.map(({ name, link, icon: Icon }) => (
+          <Link
+            key={link}
+            to={link}
+            className={`${linkBase} ${
+              isActive(link) ? linkActive : linkInactive
+            }`}
+            onClick={() => setOpen(false)}
+          >
+            <Icon
+              className={`text-lg ${
+                isActive(link) ? "text-black" : "text-yellow"
+              }`}
+            />
+            <span>{name}</span>
+          </Link>
+        ))}
+      </nav>
 
       {/* Sign out */}
       <button
