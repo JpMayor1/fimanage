@@ -1,8 +1,12 @@
 import {
+  addSaving,
   createSavingCategory,
   deleteCategory,
+  deleteSaving,
   getCategories,
+  getSavings,
   updateCategory,
+  updateSaving,
 } from "@/controllers/savings/savings.controller";
 import verifier from "@/middlewares/verifier";
 import { Router } from "express";
@@ -15,5 +19,9 @@ router.put("/category/update", verifier, updateCategory);
 router.delete("/category/delete/:categoryId", verifier, deleteCategory);
 
 // Saving
+router.get("/all", verifier, getSavings);
+router.post("/add", verifier, addSaving);
+router.patch("/update/:id", verifier, updateSaving);
+router.delete("/delete/:id", verifier, deleteSaving);
 
 export default router;

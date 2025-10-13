@@ -1,8 +1,12 @@
 import {
+  addSavingApi,
   createCategoriesApi,
   deleteCategoryApi,
+  deleteSavingApi,
   getCategoriesApi,
+  getSavingsApi,
   updateCategoryApi,
+  updateSavingApi,
 } from "@/api/savings/savings.api";
 import type {
   SavingCategoryType,
@@ -108,4 +112,87 @@ export const useSavingStore = create<SavingStoreType>((set) => ({
   },
 
   // Saving
+  getSavings: async () => {
+    set({ getLoading: true });
+    try {
+      const response = await getSavingsApi();
+      set({ savings: response.data.savings });
+    } catch (error) {
+      console.error("Error getting savings", error);
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data?.message || error.message);
+      } else {
+        toast.error("An unexpected error occurred.");
+      }
+    } finally {
+      set({ getLoading: false });
+    }
+  },
+  addSaving: async (data) => {
+    set({ createLoading: true });
+    try {
+      const response = await addSavingApi(data);
+      set((state) => ({
+        savings: [...state.savings, response.data.newSaving],
+      }));
+      toast.success(response.data.message);
+      return true;
+    } catch (error) {
+      console.error("Error adding saving", error);
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data?.message || error.message);
+      } else {
+        toast.error("An unexpected error occurred.");
+      }
+      return false;
+    } finally {
+      set({ createLoading: false });
+    }
+  },
+  updateSaving: async (id, data) => {
+    set({ updateLoading: true });
+    try {
+      const response = await updateSavingApi(id, data);
+      set((state) => ({
+        savings: state.savings.map((saving) =>
+          saving._id === id
+            ? { ...saving, ...response.data.updatedSaving }
+            : saving
+        ),
+      }));
+      toast.success(response.data.message);
+      return true;
+    } catch (error) {
+      console.error("Error updating saving", error);
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data?.message || error.message);
+      } else {
+        toast.error("An unexpected error occurred.");
+      }
+      return false;
+    } finally {
+      set({ updateLoading: false });
+    }
+  },
+  deleteSaving: async (id) => {
+    set({ deleteLoading: true });
+    try {
+      const response = await deleteSavingApi(id);
+      set((state) => ({
+        savings: state.savings.filter((saving) => saving._id !== id),
+      }));
+      toast.success(response.data.message);
+      return true;
+    } catch (error) {
+      console.error("Error deleting saving", error);
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data?.message || error.message);
+      } else {
+        toast.error("An unexpected error occurred.");
+      }
+      return false;
+    } finally {
+      set({ deleteLoading: false });
+    }
+  },
 }));

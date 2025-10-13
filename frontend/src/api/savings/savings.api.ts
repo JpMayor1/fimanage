@@ -1,5 +1,8 @@
 import axiosInstance from "@/axios/axiosInstance";
-import type { SavingCategoryType } from "@/types/savings/savings.type";
+import type {
+  SavingCategoryType,
+  SavingType,
+} from "@/types/savings/savings.type";
 
 // Savings Category
 export const getCategoriesApi = async () =>
@@ -22,3 +25,13 @@ export const deleteCategoryApi = async (categoryId: string) =>
   await axiosInstance.delete(`/saving/category/delete/${categoryId}`);
 
 // Savings
+export const getSavingsApi = async () => await axiosInstance.get("saving/all");
+
+export const addSavingApi = async (data: Partial<SavingType>) =>
+  await axiosInstance.post("/saving/add", data);
+
+export const updateSavingApi = async (id: string, data: Partial<SavingType>) =>
+  await axiosInstance.patch(`/saving/update/${id}`, data);
+
+export const deleteSavingApi = async (id: string) =>
+  await axiosInstance.delete(`/saving/delete/${id}`);

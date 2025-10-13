@@ -30,4 +30,8 @@ export type SavingStoreType = {
   deleteCategory: (categoryId: string) => Promise<boolean>;
 
   // Saving
+  getSavings: () => Promise<void>;
+  addSaving: (data: Partial<SavingType>) => Promise<boolean>;
+  updateSaving: (id: string, data: Partial<SavingType>) => Promise<boolean>;
+  deleteSaving: (id: string) => Promise<boolean>;
 };

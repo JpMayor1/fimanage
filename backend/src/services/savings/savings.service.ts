@@ -1,8 +1,12 @@
+import Saving from "@/models/saving.model";
 import SavingCategory from "@/models/savingsCategory.model";
+import { SavingType } from "@/types/models/saving.type";
 import {
   SavingCategoryFilterType,
   SavingCategoryType,
 } from "@/types/models/savingsCategory.type";
+import { getPhDt } from "@/utils/date&time/getPhDt";
+import { AppError } from "@/utils/error/appError";
 
 // Saving Category
 export const findSavingCategoryS = async (
@@ -42,3 +46,39 @@ export const deleteCategoryS = async (categoryId: string) =>
   await SavingCategory.findByIdAndDelete(categoryId);
 
 // Saving
+export const getSavingsS = async (userId: string) =>
+  await Saving.find({ userId }).lean();
+
+export const addSavingS = async (data: Partial<SavingType>) => {
+  const category = await SavingCategory.findOne({ name: data.category });
+  if (!category) throw new AppError("Category not found", 404);
+  const newSaving = await Saving.create({
+    ...data,
+    dt: getPhDt(),
+  });
+  return newSaving;
+};
+
+export const updateSavingS = async (id: string, data: Partial<SavingType>) => {
+  const saving = await Saving.findById(id);
+  if (!saving) throw new AppError("Saving not found", 404);
+
+  if (data.category) {
+    const category = await SavingCategory.findOne({ name: data.category });
+    if (!category) throw new AppError("Category not found", 404);
+  }
+
+  const updatedSaving = await Saving.findByIdAndUpdate(
+    id,
+    { ...data, dt: getPhDt() },
+    { new: true }
+  ).lean();
+
+  return updatedSaving;
+};
+
+export const deleteSavingS = async (id: string) => {
+  const deletedSaving = await Saving.findByIdAndDelete(id);
+  if (!deletedSaving) throw new AppError("Saving not found", 404);
+  return deletedSaving;
+};

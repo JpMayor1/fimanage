@@ -2,14 +2,14 @@ import CustomSelect from "@/components/custom/CustomSelect";
 import LoadingBig from "@/components/custom/loading/LoadingBig";
 import LoadingSmall from "@/components/custom/loading/LoadingSmall";
 import TextField from "@/components/custom/TextField";
-import { useIncomeStore } from "@/stores/income/useIncomeStore";
-import type { IncomeType } from "@/types/income/income.type";
+import { useSavingStore } from "@/stores/savings/useSavingsStore";
+import type { SavingType } from "@/types/savings/savings.type";
 import { motion } from "framer-motion";
 import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
 import { FiX } from "react-icons/fi";
 
-interface UpdateIncomeI {
-  income: IncomeType;
+interface UpdateSavingI {
+  saving: SavingType;
   onClose: () => void;
 }
 
@@ -19,14 +19,14 @@ const overlayAnim = {
   exit: { opacity: 0, transition: { duration: 0.17 } },
 };
 
-const UpdateIncome = ({ income, onClose }: UpdateIncomeI) => {
-  const { getCategories, getLoading, categories, updateIncome, updateLoading } =
-    useIncomeStore();
+const UpdateSaving = ({ saving, onClose }: UpdateSavingI) => {
+  const { getCategories, getLoading, categories, updateSaving, updateLoading } =
+    useSavingStore();
 
-  const [form, setForm] = useState<Partial<IncomeType>>({
-    description: income.description,
-    category: income.category,
-    amount: income.amount,
+  const [form, setForm] = useState<Partial<SavingType>>({
+    description: saving.description,
+    category: saving.category,
+    amount: saving.amount,
   });
 
   useEffect(() => {
@@ -41,7 +41,7 @@ const UpdateIncome = ({ income, onClose }: UpdateIncomeI) => {
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    const success = await updateIncome(income._id!, form);
+    const success = await updateSaving(saving._id!, form);
     if (success) return onClose();
   }
 
@@ -67,7 +67,7 @@ const UpdateIncome = ({ income, onClose }: UpdateIncomeI) => {
           <>
             <form className="space-y-4 w-full" onSubmit={handleSubmit}>
               <label className="block font-semibold text-white">
-                Update Income
+                Update Saving
               </label>
 
               <CustomSelect
@@ -118,7 +118,7 @@ const UpdateIncome = ({ income, onClose }: UpdateIncomeI) => {
                     : "cursor-pointer hover:scale-101 hover:shadow-xl transition-all"
                 } w-full py-2 rounded-xl bg-gradient-to-r from-yellow to-yellow/80 text-black text-lg mt-2 shadow-md`}
               >
-                {updateLoading ? <LoadingSmall /> : "Update Income"}
+                {updateLoading ? <LoadingSmall /> : "Update Saving"}
               </button>
             </form>
           </>
@@ -128,4 +128,4 @@ const UpdateIncome = ({ income, onClose }: UpdateIncomeI) => {
   );
 };
 
-export default UpdateIncome;
+export default UpdateSaving;

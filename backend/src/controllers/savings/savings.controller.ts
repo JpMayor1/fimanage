@@ -1,9 +1,13 @@
 import {
+  addSavingS,
   createSavingCategoryS,
   deleteCategoryS,
+  deleteSavingS,
   findSavingCategoryS,
   getCategoriesS,
+  getSavingsS,
   updateCategoryS,
+  updateSavingS,
 } from "@/services/savings/savings.service";
 import { CustomRequest } from "@/types/express/express.type";
 import { SavingCategoryType } from "@/types/models/savingsCategory.type";
@@ -83,3 +87,50 @@ export const deleteCategory = async (req: CustomRequest, res: Response) => {
 };
 
 // Saving
+export const getSavings = async (req: CustomRequest, res: Response) => {
+  const account = req.account;
+  const savings = await getSavingsS(account._id);
+  res.status(200).json({ savings });
+};
+
+export const addSaving = async (req: CustomRequest, res: Response) => {
+  const account = req.account;
+  const { description, category, amount } = req.body;
+  if (!description) throw new AppError("Description is required.", 400);
+  if (!category) throw new AppError("Category is required.", 400);
+  if (!Number(amount)) throw new AppError("Amount is required.", 400);
+
+  const newSaving = await addSavingS({
+    userId: account._id,
+    category,
+    description,
+    amount,
+  });
+  res.status(200).json({ message: "Saving added.", newSaving });
+};
+
+export const updateSaving = async (req: CustomRequest, res: Response) => {
+  const { id } = req.params;
+  const { description, category, amount } = req.body;
+
+  if (!id) throw new AppError("Saving ID is required.", 400);
+  if (!description) throw new AppError("Description is required.", 400);
+  if (!category) throw new AppError("Category is required.", 400);
+  if (!Number(amount)) throw new AppError("Amount is required.", 400);
+
+  const updatedSaving = await updateSavingS(id, {
+    description,
+    category,
+    amount,
+  });
+
+  res
+    .status(200)
+    .json({ message: "Saving updated successfully.", updatedSaving });
+};
+
+export const deleteSaving = async (req: CustomRequest, res: Response) => {
+  const { id } = req.params;
+  const deletedSaving = await deleteSavingS(id);
+  res.status(200).json({ message: "Saving deleted.", deletedSaving });
+};
