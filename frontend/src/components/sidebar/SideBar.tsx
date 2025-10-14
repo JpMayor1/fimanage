@@ -10,7 +10,6 @@ import {
   MdOutlineSavings,
   MdOutlineSpaceDashboard,
 } from "react-icons/md";
-import { TbReportAnalytics } from "react-icons/tb";
 import { Link, useLocation } from "react-router-dom";
 import BlurImage from "../custom/BlurImage";
 
@@ -55,7 +54,6 @@ const SideBar = () => {
       link: "/home/investments",
       icon: FaMoneyBillTrendUp,
     },
-    { name: "Reports", link: "/home/report", icon: TbReportAnalytics },
   ];
 
   const isActive = (path: string) => location.pathname === path;
