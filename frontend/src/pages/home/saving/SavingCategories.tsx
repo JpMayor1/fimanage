@@ -45,7 +45,7 @@ const SavingCategoriesPage = () => {
       </div>
 
       {/* Saving List */}
-      <div className="h-full w-full overflow-y-scroll no-scrollbar">
+      <div className="h-[calc(100%-48px)] w-full overflow-y-scroll no-scrollbar">
         {getLoading ? (
           <LoadingBig />
         ) : (
