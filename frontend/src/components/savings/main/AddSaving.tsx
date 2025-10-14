@@ -2,7 +2,7 @@ import CustomSelect from "@/components/custom/CustomSelect";
 import LoadingBig from "@/components/custom/loading/LoadingBig";
 import LoadingSmall from "@/components/custom/loading/LoadingSmall";
 import TextField from "@/components/custom/TextField";
-import { frequencies } from "@/constants/savings.constant";
+import { frequencies } from "@/constants/frequencies.constant";
 import { useSavingStore } from "@/stores/savings/useSavingsStore";
 import type { SavingType } from "@/types/savings/savings.type";
 import { motion } from "framer-motion";

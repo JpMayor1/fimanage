@@ -3,14 +3,13 @@ import LoadingBig from "@/components/custom/loading/LoadingBig";
 import LoadingSmall from "@/components/custom/loading/LoadingSmall";
 import TextField from "@/components/custom/TextField";
 import { frequencies } from "@/constants/frequencies.constant";
-import { useSavingStore } from "@/stores/savings/useSavingsStore";
-import type { SavingType } from "@/types/savings/savings.type";
+import { useInvestmentStore } from "@/stores/investment/useInvestmentStore";
+import type { InvestmentType } from "@/types/investment/investment.type";
 import { motion } from "framer-motion";
 import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
 import { FiX } from "react-icons/fi";
 
-interface UpdateSavingI {
-  saving: SavingType;
+interface AddInvestmentI {
   onClose: () => void;
 }
 
@@ -20,17 +19,24 @@ const overlayAnim = {
   exit: { opacity: 0, transition: { duration: 0.17 } },
 };
 
-const UpdateSaving = ({ saving, onClose }: UpdateSavingI) => {
-  const { getCategories, getLoading, categories, updateSaving, updateLoading } =
-    useSavingStore();
+const initialState: Partial<InvestmentType> = {
+  category: "",
+  description: "",
+  amount: 0,
+  annualRate: "",
+  frequency: "",
+};
 
-  const [form, setForm] = useState<Partial<SavingType>>({
-    description: saving.description,
-    category: saving.category,
-    amount: saving.amount,
-    annualRate: saving.annualRate,
-    frequency: saving.frequency,
-  });
+const AddInvestment = ({ onClose }: AddInvestmentI) => {
+  const {
+    getCategories,
+    getLoading,
+    categories,
+    addInvestment,
+    createLoading,
+  } = useInvestmentStore();
+
+  const [form, setForm] = useState<Partial<InvestmentType>>(initialState);
 
   useEffect(() => {
     const fetchCategories = async () => await getCategories();
@@ -44,7 +50,7 @@ const UpdateSaving = ({ saving, onClose }: UpdateSavingI) => {
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    const success = await updateSaving(saving._id!, form);
+    const success = await addInvestment(form);
     if (success) return onClose();
   }
 
@@ -69,10 +75,11 @@ const UpdateSaving = ({ saving, onClose }: UpdateSavingI) => {
         ) : (
           <>
             <form className="space-y-4 w-full" onSubmit={handleSubmit}>
-              <label className="block font-semibold text-white">
-                Update Saving
+              <label className="block font-semibold text-white text-lg">
+                Add Investment
               </label>
 
+              {/* Category */}
               <CustomSelect
                 name="category"
                 value={form.category}
@@ -93,6 +100,7 @@ const UpdateSaving = ({ saving, onClose }: UpdateSavingI) => {
                 ))}
               </CustomSelect>
 
+              {/* Description */}
               <TextField
                 name="description"
                 value={form.description}
@@ -102,6 +110,7 @@ const UpdateSaving = ({ saving, onClose }: UpdateSavingI) => {
                 className="bg-black text-white border focus:border-yellow"
               />
 
+              {/* Amount */}
               <TextField
                 type="number"
                 name="amount"
@@ -143,16 +152,17 @@ const UpdateSaving = ({ saving, onClose }: UpdateSavingI) => {
                 </datalist>
               </div>
 
+              {/* Submit */}
               <button
                 type="submit"
-                disabled={updateLoading}
+                disabled={createLoading}
                 className={`${
-                  updateLoading
+                  createLoading
                     ? "cursor-not-allowed opacity-80"
                     : "cursor-pointer hover:scale-101 hover:shadow-xl transition-all"
                 } w-full py-2 rounded-xl bg-gradient-to-r from-yellow to-yellow/80 text-black text-lg mt-2 shadow-md`}
               >
-                {updateLoading ? <LoadingSmall /> : "Update Saving"}
+                {createLoading ? <LoadingSmall /> : "Add Investment"}
               </button>
             </form>
           </>
@@ -162,4 +172,4 @@ const UpdateSaving = ({ saving, onClose }: UpdateSavingI) => {
   );
 };
 
-export default UpdateSaving;
+export default AddInvestment;
