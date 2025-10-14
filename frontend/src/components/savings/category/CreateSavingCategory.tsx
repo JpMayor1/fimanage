@@ -1,5 +1,5 @@
 import LoadingSmall from "@/components/custom/loading/LoadingSmall";
-import { useSavingStore } from "@/stores/savings/useSavingsStore";
+import { useSavingStore } from "@/stores/saving/useSavingStore";
 import { motion } from "framer-motion";
 import { useState, type FormEvent } from "react";
 import { FiPlus, FiTrash2, FiX } from "react-icons/fi";

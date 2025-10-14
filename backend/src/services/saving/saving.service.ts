@@ -1,10 +1,10 @@
 import Saving from "@/models/saving.model";
-import SavingCategory from "@/models/savingsCategory.model";
+import SavingCategory from "@/models/savingCategory.model";
 import { SavingType } from "@/types/models/saving.type";
 import {
   SavingCategoryFilterType,
   SavingCategoryType,
-} from "@/types/models/savingsCategory.type";
+} from "@/types/models/savingCategory.type";
 import { getPhDt } from "@/utils/date&time/getPhDt";
 import { AppError } from "@/utils/error/appError";
 

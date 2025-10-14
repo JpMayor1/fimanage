@@ -8,9 +8,9 @@ import {
   getSavingsS,
   updateCategoryS,
   updateSavingS,
-} from "@/services/savings/savings.service";
+} from "@/services/saving/saving.service";
 import { CustomRequest } from "@/types/express/express.type";
-import { SavingCategoryType } from "@/types/models/savingsCategory.type";
+import { SavingCategoryType } from "@/types/models/savingCategory.type";
 import { AppError } from "@/utils/error/appError";
 import { Response } from "express";
 

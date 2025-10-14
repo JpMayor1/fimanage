@@ -1,6 +1,6 @@
 import LoadingSmall from "@/components/custom/loading/LoadingSmall";
-import { useSavingStore } from "@/stores/savings/useSavingsStore";
-import type { SavingType } from "@/types/savings/savings.type";
+import { useSavingStore } from "@/stores/saving/useSavingStore";
+import type { SavingType } from "@/types/saving/saving.type";
 import { motion } from "framer-motion";
 import { type FormEvent } from "react";
 import { FiX } from "react-icons/fi";

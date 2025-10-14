@@ -1,4 +1,4 @@
-import { SavingCategoryDocumentType } from "@/types/models/savingsCategory.type";
+import { SavingCategoryDocumentType } from "@/types/models/savingCategory.type";
 import { model, Model, Schema } from "mongoose";
 
 const savingCategorySchema = new Schema<SavingCategoryDocumentType>(
@@ -13,9 +13,9 @@ const savingCategorySchema = new Schema<SavingCategoryDocumentType>(
   { timestamps: true }
 );
 
-const SavingsCategory: Model<SavingCategoryDocumentType> = model<
+const SavingCategory: Model<SavingCategoryDocumentType> = model<
   SavingCategoryDocumentType,
   Model<SavingCategoryDocumentType>
 >("SavingCategory", savingCategorySchema);
 
-export default SavingsCategory;
+export default SavingCategory;

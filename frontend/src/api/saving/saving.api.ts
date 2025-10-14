@@ -2,7 +2,7 @@ import axiosInstance from "@/axios/axiosInstance";
 import type {
   SavingCategoryType,
   SavingType,
-} from "@/types/savings/savings.type";
+} from "@/types/saving/saving.type";
 
 // Savings Category
 export const getCategoriesApi = async () =>

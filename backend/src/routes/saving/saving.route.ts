@@ -7,7 +7,7 @@ import {
   getSavings,
   updateCategory,
   updateSaving,
-} from "@/controllers/savings/savings.controller";
+} from "@/controllers/saving/saving.controller";
 import verifier from "@/middlewares/verifier";
 import { Router } from "express";
 

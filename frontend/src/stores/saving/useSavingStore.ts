@@ -7,11 +7,11 @@ import {
   getSavingsApi,
   updateCategoryApi,
   updateSavingApi,
-} from "@/api/savings/savings.api";
+} from "@/api/saving/saving.api";
 import type {
   SavingCategoryType,
   SavingStoreType,
-} from "@/types/savings/savings.type";
+} from "@/types/saving/saving.type";
 import { AxiosError } from "axios";
 import toast from "react-hot-toast";
 import { create } from "zustand";

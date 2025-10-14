@@ -18,8 +18,8 @@ import IncomePage from "./pages/home/income/IncomePage";
 import InvestmentCategoriesPage from "./pages/home/investment/InvestmentCategories";
 import InvestmentsPage from "./pages/home/investment/InvestmentsPage";
 import ProfilePage from "./pages/home/profile/ProfilePage";
-import SavingCategoriesPage from "./pages/home/savings/SavingCategories";
-import SavingsPage from "./pages/home/savings/SavingsPage";
+import SavingCategoriesPage from "./pages/home/saving/SavingCategories";
+import SavingPage from "./pages/home/saving/SavingPage";
 
 function App() {
   const router = createBrowserRouter([
@@ -75,7 +75,7 @@ function App() {
         },
         {
           path: "/home/savings",
-          element: <SavingsPage />,
+          element: <SavingPage />,
         },
         {
           path: "/home/investments/categories",
