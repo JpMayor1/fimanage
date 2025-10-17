@@ -1,3 +1,4 @@
+import { useSideBar } from "@/stores/sidebar/useSideBar";
 import { useMemo } from "react";
 import {
   MdBusinessCenter,
@@ -5,8 +6,10 @@ import {
   MdHome,
   MdOutlineSupportAgent,
 } from "react-icons/md";
+import { RxHamburgerMenu } from "react-icons/rx";
 
 const DashboardPage = () => {
+  const { setOpen } = useSideBar();
   // Dummy Data
   const totalIncomes = [
     {
@@ -19,6 +22,54 @@ const DashboardPage = () => {
     },
     {
       _id: "2",
+      icon: MdOutlineSupportAgent,
+      category: "Freelance",
+      description: "Freelance from WES.",
+      amount: 20000,
+      dt: "September 21, 2025, 1:33 PM",
+    },
+    {
+      _id: "3",
+      icon: MdBusinessCenter,
+      category: "Work",
+      description: "Salary from Quantum Cloud Corp.",
+      amount: 7500,
+      dt: "October 11, 2025, 4:43 PM",
+    },
+    {
+      _id: "4",
+      icon: MdOutlineSupportAgent,
+      category: "Freelance",
+      description: "Freelance from WES.",
+      amount: 20000,
+      dt: "September 21, 2025, 1:33 PM",
+    },
+    {
+      _id: "15",
+      icon: MdBusinessCenter,
+      category: "Work",
+      description: "Salary from Quantum Cloud Corp.",
+      amount: 7500,
+      dt: "October 11, 2025, 4:43 PM",
+    },
+    {
+      _id: "26",
+      icon: MdOutlineSupportAgent,
+      category: "Freelance",
+      description: "Freelance from WES.",
+      amount: 20000,
+      dt: "September 21, 2025, 1:33 PM",
+    },
+    {
+      _id: "17",
+      icon: MdBusinessCenter,
+      category: "Work",
+      description: "Salary from Quantum Cloud Corp.",
+      amount: 7500,
+      dt: "October 11, 2025, 4:43 PM",
+    },
+    {
+      _id: "28",
       icon: MdOutlineSupportAgent,
       category: "Freelance",
       description: "Freelance from WES.",
@@ -90,8 +141,14 @@ const DashboardPage = () => {
   const remainingBalance = incomeTotal - expenseTotal;
 
   return (
-    <div className="h-full w-full overflow-y-scroll no-scrollbar">
-      <h1 className="text-white text-2xl font-bold mb-4">Dashboard Overview</h1>
+    <div className="h-screen w-full overflow-y-scroll no-scrollbar p-1">
+      <div className="w-full flex items-center gap-2 my-2 mb-3">
+        <RxHamburgerMenu
+          className="md:hidden text-white text-2xl"
+          onClick={() => setOpen(true)}
+        />
+        <h1 className="text-white text-lg font-bold">Dashboard Overview</h1>
+      </div>
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
@@ -138,120 +195,6 @@ const DashboardPage = () => {
       </div>
 
       {/* Recent Activity */}
-      <div className="bg-primary rounded-2xl p-5 shadow-md mt-8">
-        <h2 className="text-lg font-bold mb-4 text-white">Recent Activity</h2>
-        <div className="grid md:grid-cols-2 gap-4">
-          {/* Recent Incomes */}
-          <div>
-            <h3 className="font-semibold text-card-income mb-2">
-              Recent Incomes
-            </h3>
-            <ul className="space-y-2">
-              {totalIncomes.map((inc) => (
-                <li
-                  key={inc._id}
-                  className="flex justify-between bg-black/30 rounded-lg p-2 items-center hover:bg-black/50 transition"
-                >
-                  <div className="flex items-center gap-2">
-                    <inc.icon size={20} className="text-card-income" />
-                    <div>
-                      <p className="text-white font-medium">{inc.category}</p>
-                      <p className="text-xs text-gray-400">{inc.description}</p>
-                    </div>
-                  </div>
-                  <p className="font-semibold text-card-income">
-                    +₱{inc.amount.toLocaleString()}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Recent Expenses */}
-          <div>
-            <h3 className="font-semibold text-card-expense mb-2">
-              Recent Expenses
-            </h3>
-            <ul className="space-y-2">
-              {totalExpenses.map((exp) => (
-                <li
-                  key={exp._id}
-                  className="flex justify-between bg-black/30 rounded-lg p-2 items-center hover:bg-black/50 transition"
-                >
-                  <div className="flex items-center gap-2">
-                    <exp.icon size={20} className="text-card-expense" />
-                    <div>
-                      <p className="text-white font-medium">{exp.category}</p>
-                      <p className="text-xs text-gray-400">{exp.description}</p>
-                    </div>
-                  </div>
-                  <p className="font-semibold text-card-expense">
-                    -₱{exp.amount.toLocaleString()}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <div className="bg-primary rounded-2xl p-5 shadow-md mt-8">
-        <h2 className="text-lg font-bold mb-4 text-white">Recent Activity</h2>
-        <div className="grid md:grid-cols-2 gap-4">
-          {/* Recent Incomes */}
-          <div>
-            <h3 className="font-semibold text-card-income mb-2">
-              Recent Incomes
-            </h3>
-            <ul className="space-y-2">
-              {totalIncomes.map((inc) => (
-                <li
-                  key={inc._id}
-                  className="flex justify-between bg-black/30 rounded-lg p-2 items-center hover:bg-black/50 transition"
-                >
-                  <div className="flex items-center gap-2">
-                    <inc.icon size={20} className="text-card-income" />
-                    <div>
-                      <p className="text-white font-medium">{inc.category}</p>
-                      <p className="text-xs text-gray-400">{inc.description}</p>
-                    </div>
-                  </div>
-                  <p className="font-semibold text-card-income">
-                    +₱{inc.amount.toLocaleString()}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Recent Expenses */}
-          <div>
-            <h3 className="font-semibold text-card-expense mb-2">
-              Recent Expenses
-            </h3>
-            <ul className="space-y-2">
-              {totalExpenses.map((exp) => (
-                <li
-                  key={exp._id}
-                  className="flex justify-between bg-black/30 rounded-lg p-2 items-center hover:bg-black/50 transition"
-                >
-                  <div className="flex items-center gap-2">
-                    <exp.icon size={20} className="text-card-expense" />
-                    <div>
-                      <p className="text-white font-medium">{exp.category}</p>
-                      <p className="text-xs text-gray-400">{exp.description}</p>
-                    </div>
-                  </div>
-                  <p className="font-semibold text-card-expense">
-                    -₱{exp.amount.toLocaleString()}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </div>
-
       <div className="bg-primary rounded-2xl p-5 shadow-md mt-8">
         <h2 className="text-lg font-bold mb-4 text-white">Recent Activity</h2>
         <div className="grid md:grid-cols-2 gap-4">

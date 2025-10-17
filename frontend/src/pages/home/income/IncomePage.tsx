@@ -4,13 +4,16 @@ import AddIncome from "@/components/income/main/AddIncome";
 import DeleteIncome from "@/components/income/main/DeleteIncome";
 import UpdateIncome from "@/components/income/main/UpdateIncome";
 import { useIncomeStore } from "@/stores/income/useIncomeStore";
+import { useSideBar } from "@/stores/sidebar/useSideBar";
 import type { IncomeType } from "@/types/income/income.type";
 import { AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { MdDelete, MdEdit } from "react-icons/md";
+import { RxHamburgerMenu } from "react-icons/rx";
 
 const IncomePage = () => {
+  const { setOpen } = useSideBar();
   const { getIncomes, getLoading, incomes } = useIncomeStore();
 
   const [addIncome, setAddIncome] = useState(false);
@@ -23,14 +26,20 @@ const IncomePage = () => {
   }, [getIncomes]);
 
   return (
-    <div className="h-full w-full">
+    <div className="h-screen w-full p-1">
       {/* Header */}
-      <div className="w-full flex items-center justify-between mb-5">
-        <div>
-          <h1 className="text-white text-xl font-bold">Incomes</h1>
-          <p className="text-white/70 text-sm hidden md:block">
-            Track & manage your income sources
-          </p>
+      <div className="w-full flex items-center justify-between my-2 mb-3">
+        <div className="flex items-center gap-2">
+          <RxHamburgerMenu
+            className="md:hidden text-white text-2xl"
+            onClick={() => setOpen(true)}
+          />
+          <div>
+            <h1 className="text-white text-lg font-bold">Incomes</h1>
+            <p className="text-white/70 text-sm hidden md:block">
+              Track & manage your income sources
+            </p>
+          </div>
         </div>
 
         <button
@@ -43,7 +52,7 @@ const IncomePage = () => {
       </div>
 
       {/* Income List */}
-      <div className="h-[calc(100%-48px)] w-full overflow-y-scroll no-scrollbar">
+      <div className="h-[calc(100%-50px)] md:h-[calc(100%-70px)] w-full overflow-y-scroll no-scrollbar">
         {getLoading ? (
           <LoadingBig />
         ) : (

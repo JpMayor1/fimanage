@@ -4,13 +4,16 @@ import CreateExpenseCategory from "@/components/expense/category/CreateExpenseCa
 import DeleteExpenseCategory from "@/components/expense/category/DeleteExpenseCategory";
 import UpdateExpenseCategory from "@/components/expense/category/UpdateExpenseCategory";
 import { useExpenseStore } from "@/stores/expense/useExpenseStore";
+import { useSideBar } from "@/stores/sidebar/useSideBar";
 import type { ExpenseCategoryType } from "@/types/expense/expense.type";
 import { AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { MdDelete, MdEdit } from "react-icons/md";
+import { RxHamburgerMenu } from "react-icons/rx";
 
 const ExpenseCategoriesPage = () => {
+  const { setOpen } = useSideBar();
   const { getCategories, getLoading, categories } = useExpenseStore();
 
   const [showAddCategoryModal, setShowAddCategoryModal] = useState(false);
@@ -25,14 +28,20 @@ const ExpenseCategoriesPage = () => {
   }, [getCategories]);
 
   return (
-    <div className="h-full w-full">
+    <div className="h-screen w-full p-1">
       {/* Header */}
-      <div className="w-full flex items-center justify-between mb-5">
-        <div>
-          <h1 className="text-white text-xl font-bold">Expense Categories</h1>
-          <p className="text-white/70 text-sm hidden md:block">
-            Manage your expense categories
-          </p>
+      <div className="w-full flex items-center justify-between my-2 mb-3">
+        <div className="flex items-center gap-2">
+          <RxHamburgerMenu
+            className="md:hidden text-white text-2xl"
+            onClick={() => setOpen(true)}
+          />
+          <div>
+            <h1 className="text-white text-lg font-bold">Expense Categories</h1>
+            <p className="text-white/70 text-sm hidden md:block">
+              Manage your expense categories
+            </p>
+          </div>
         </div>
 
         <button
@@ -45,7 +54,7 @@ const ExpenseCategoriesPage = () => {
       </div>
 
       {/* Expense List */}
-      <div className="h-[calc(100%-48px)] w-full overflow-y-scroll no-scrollbar">
+      <div className="h-[calc(100%-50px)] md:h-[calc(100%-70px)] w-full overflow-y-scroll no-scrollbar">
         {getLoading ? (
           <LoadingBig />
         ) : (

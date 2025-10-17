@@ -1,11 +1,13 @@
 import BlurImage from "@/components/custom/BlurImage";
 import ShowImage from "@/components/image/ShowImage";
 import { useAuthStore } from "@/stores/auth/useAuthStore";
+import { useSideBar } from "@/stores/sidebar/useSideBar";
 import { getFullName } from "@/utils/fullName/getFullName";
 import Avatar from "avatox";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import { FiMail, FiMapPin, FiUserCheck } from "react-icons/fi";
+import { RxHamburgerMenu } from "react-icons/rx";
 
 const imgAnim = {
   initial: { opacity: 0, scale: 0.93 },
@@ -21,6 +23,7 @@ const overlayAnim = {
 };
 
 const ProfilePage = () => {
+  const { setOpen } = useSideBar();
   const { authUser } = useAuthStore();
 
   const [showImage, setShowImage] = useState<string | undefined>("");
@@ -35,6 +38,10 @@ const ProfilePage = () => {
       variants={overlayAnim}
       className="w-full h-full flex items-center justify-center p-5"
     >
+      <RxHamburgerMenu
+        className="md:hidden text-white text-2xl absolute top-3.5 left-3"
+        onClick={() => setOpen(true)}
+      />
       <div className="w-full max-w-3xl border border-primary/10 bg-primary/90 rounded-2xl shadow-2xl py-8 px-4 md:px-8 relative flex flex-col items-center">
         {/* Profile Section */}
         <motion.div

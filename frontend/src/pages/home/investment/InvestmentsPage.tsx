@@ -3,13 +3,16 @@ import AddInvestment from "@/components/investment/main/AddInvestment";
 import DeleteInvestment from "@/components/investment/main/DeleteInvestment";
 import UpdateInvestment from "@/components/investment/main/UpdateInvestment";
 import { useInvestmentStore } from "@/stores/investment/useInvestmentStore";
+import { useSideBar } from "@/stores/sidebar/useSideBar";
 import type { InvestmentType } from "@/types/investment/investment.type";
 import { AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { FaMoneyBillTrendUp, FaPlus } from "react-icons/fa6";
 import { MdDelete, MdEdit } from "react-icons/md";
+import { RxHamburgerMenu } from "react-icons/rx";
 
 const InvestmentPage = () => {
+  const { setOpen } = useSideBar();
   const { getInvestments, getLoading, investments } = useInvestmentStore();
 
   const [addInvestment, setAddInvestment] = useState(false);
@@ -24,14 +27,20 @@ const InvestmentPage = () => {
   }, [getInvestments]);
 
   return (
-    <div className="h-full w-full">
+    <div className="h-screen w-full p-1">
       {/* Header */}
-      <div className="w-full flex items-center justify-between mb-5">
-        <div>
-          <h1 className="text-white text-xl font-bold">Investments</h1>
-          <p className="text-white/70 text-sm hidden md:block">
-            Track & manage your investment sources
-          </p>
+      <div className="w-full flex items-center justify-between my-2 mb-3">
+        <div className="flex items-center gap-2">
+          <RxHamburgerMenu
+            className="md:hidden text-white text-2xl"
+            onClick={() => setOpen(true)}
+          />
+          <div>
+            <h1 className="text-white text-lg font-bold">Investments</h1>
+            <p className="text-white/70 text-sm hidden md:block">
+              Track & manage your investment sources
+            </p>
+          </div>
         </div>
 
         <button
@@ -44,7 +53,7 @@ const InvestmentPage = () => {
       </div>
 
       {/* Investment List */}
-      <div className="h-[calc(100%-48px)] w-full overflow-y-scroll no-scrollbar">
+      <div className="h-[calc(100%-50px)] md:h-[calc(100%-70px)] w-full overflow-y-scroll no-scrollbar">
         {getLoading ? (
           <LoadingBig />
         ) : (
