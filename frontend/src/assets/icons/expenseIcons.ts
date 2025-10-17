@@ -8,11 +8,12 @@ import {
   FaUtensils,
 } from "react-icons/fa";
 import { GiClothes, GiPayMoney, GiTakeMyMoney } from "react-icons/gi";
-import { MdMoreHoriz, MdOutlineSchool } from "react-icons/md";
+import { MdFastfood, MdMoreHoriz, MdOutlineSchool } from "react-icons/md";
 import { TbBus, TbPigOff, TbReceipt } from "react-icons/tb";
 
 export const expenseIcons = {
   FaUtensils, // Food & dining
+  MdFastfood, // Food & dining
   FaShoppingCart, // Shopping / groceries
   FaMoneyBillWave, // Bills & utilities
   FaCar, // Car / transport
