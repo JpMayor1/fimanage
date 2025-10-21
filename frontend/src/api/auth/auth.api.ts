@@ -1,6 +1,6 @@
 import axiosInstance from "@/axios/axiosInstance";
 import type { RegisterAccountType } from "@/types/auth/auth.type";
-import { uploadFile } from "@/utils/upload/uploadFile";
+import { uploadFile } from "@/utils/file/uploadFile";
 
 export const registerApi = async ({
   profilePicture,

@@ -1,6 +1,8 @@
 export type AccountType = {
   _id: string;
+  publicId?: string;
   profilePicture?: string;
+  newProfilePicture?: File | null;
   firstName: string;
   middleName?: string;
   lastName: string;
@@ -29,9 +31,7 @@ export type RegisterAccountType = {
 export type AuthStateType = {
   authUser: AccountType | null;
 
-  registerLoading: boolean;
-  loginLoading: boolean;
-  logoutLoading: boolean;
+  loading: boolean;
 
   registerccount: ({
     profilePicture,
@@ -52,4 +52,6 @@ export type AuthStateType = {
     password: string;
   }) => Promise<boolean>;
   logout: () => Promise<void>;
+
+  updateProfile: (profile: Partial<AccountType>) => Promise<boolean>;
 };

@@ -17,7 +17,7 @@ import { IoLocationOutline } from "react-icons/io5";
 import { Link, useNavigate } from "react-router-dom";
 
 const RegisterPage: React.FC = () => {
-  const { registerccount, registerLoading } = useAuthStore();
+  const { registerccount, loading } = useAuthStore();
   const navigate = useNavigate();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -231,16 +231,16 @@ const RegisterPage: React.FC = () => {
           </div>
 
           <motion.button
-            disabled={registerLoading}
+            disabled={loading}
             type="submit"
             whileTap={{ scale: 0.97 }}
             className={`${
-              registerLoading
+              loading
                 ? "cursor-not-allowed opacity-80"
                 : "cursor-pointer hover:scale-101 hover:shadow-xl transition-all"
             } w-full py-3 rounded-xl bg-gradient-to-r from-yellow-700 to-yellow-500 text-white font-bold text-lg mt-2 shadow-md`}
           >
-            {registerLoading ? <LoadingSmall /> : "Register"}
+            {loading ? <LoadingSmall /> : "Register"}
           </motion.button>
         </form>
       </motion.div>

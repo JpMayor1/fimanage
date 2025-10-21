@@ -51,6 +51,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
 
   // 4. Create account
   const account = await registerAccountS({
+    publicId,
     profilePicture,
     firstName,
     middleName,
@@ -75,12 +76,14 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     message: "Account registered successfully.",
     user: {
       _id: account._id,
+      publicId: account.publicId,
       profilePicture: account.profilePicture,
       firstName: account.firstName,
       middleName: account.middleName,
       lastName: account.lastName,
       email: account.email,
       username: account.username,
+      address: account.address,
     },
   });
 };
@@ -111,6 +114,7 @@ export const login = async (req: Request, res: Response) => {
 
   const user = {
     _id: account._id,
+    publicId: account.publicId,
     profilePicture: account.profilePicture,
     firstName: account.firstName,
     middleName: account.middleName,

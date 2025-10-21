@@ -2,6 +2,7 @@ import { Document } from "mongoose";
 
 export type AccountType = {
   _id: string;
+  publicId?: string;
   profilePicture?: string;
   firstName: string;
   middleName?: string;
@@ -25,6 +26,7 @@ export type AccountFilterType = Partial<
 export type AccountDocumentType = AccountType & Document;
 
 export type RegisterAccountType = {
+  publicId?: string;
   profilePicture?: string;
   firstName: string;
   middleName?: string;

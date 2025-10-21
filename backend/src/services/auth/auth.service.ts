@@ -18,6 +18,7 @@ export const findAccountS = async (
 };
 
 export const registerAccountS = async ({
+  publicId,
   profilePicture,
   firstName,
   middleName,

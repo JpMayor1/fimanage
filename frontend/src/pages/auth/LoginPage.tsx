@@ -12,7 +12,7 @@ interface FormData {
 }
 
 const LoginPage: React.FC = () => {
-  const { loginAccount, loginLoading } = useAuthStore();
+  const { loginAccount, loading } = useAuthStore();
 
   const [form, setForm] = useState<FormData>({
     username: "",
@@ -126,15 +126,15 @@ const LoginPage: React.FC = () => {
           >
             <motion.button
               type="submit"
-              disabled={loginLoading}
+              disabled={loading}
               className={`${
-                loginLoading
+                loading
                   ? "cursor-not-allowed opacity-80"
                   : "cursor-pointer hover:scale-101 hover:shadow-xl transition-all"
               } w-full py-3 rounded-xl bg-gradient-to-r from-yellow-700 to-yellow-500 text-white font-bold text-lg mt-2 shadow-md`}
               whileTap={{ scale: 0.98 }}
             >
-              {loginLoading ? <LoadingSmall /> : "Sign In"}
+              {loading ? <LoadingSmall /> : "Sign In"}
             </motion.button>
           </motion.div>
         </form>

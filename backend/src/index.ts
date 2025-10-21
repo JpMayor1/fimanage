@@ -17,8 +17,10 @@ import cloudinary from "@/middlewares/cloudinary";
 import authRoute from "@/routes/auth/auth.route";
 import dashboardRoute from "@/routes/dashboard/dashboard.route";
 import expenseRoute from "@/routes/expense/expense.route";
+import fileRoute from "@/routes/file/file.route";
 import incomeRoute from "@/routes/income/income.route";
 import investmentRoute from "@/routes/investment/investment.route";
+import profileRoute from "@/routes/profile/profile.route";
 import savingRoute from "@/routes/saving/saving.route";
 
 const bootstrap = async () => {
@@ -51,6 +53,8 @@ const bootstrap = async () => {
   app.use("/api/cloudinary", cloudinary);
 
   app.use("/api/auth", authRoute);
+  app.use("/api/profile", profileRoute);
+  app.use("/api/file", fileRoute);
   app.use("/api/dashboard", dashboardRoute);
   app.use("/api/income", incomeRoute);
   app.use("/api/expense", expenseRoute);
