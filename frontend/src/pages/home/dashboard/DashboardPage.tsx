@@ -111,30 +111,33 @@ const DashboardPage = () => {
                   Recent Incomes
                 </h3>
                 <ul className="space-y-2">
-                  {totalIncomes.map((inc) => {
-                    const Icon = incomeIcons[inc.icon];
-                    return (
-                      <li
-                        key={inc._id}
-                        className="flex justify-between bg-black/30 rounded-lg p-2 items-center hover:bg-black/50 transition"
-                      >
-                        <div className="flex items-center gap-2">
-                          <Icon size={20} className="text-card-income" />
-                          <div>
-                            <p className="text-white font-medium">
-                              {inc.category}
-                            </p>
-                            <p className="text-xs text-gray-400">
-                              {inc.description}
-                            </p>
+                  {totalIncomes
+                    .slice(-6)
+                    .reverse()
+                    .map((inc) => {
+                      const Icon = incomeIcons[inc.icon];
+                      return (
+                        <li
+                          key={inc._id}
+                          className="flex justify-between bg-black/30 rounded-lg p-2 items-center hover:bg-black/50 transition"
+                        >
+                          <div className="flex items-center gap-2">
+                            <Icon size={20} className="text-card-income" />
+                            <div>
+                              <p className="text-white font-medium">
+                                {inc.category}
+                              </p>
+                              <p className="text-xs text-gray-400">
+                                {inc.description}
+                              </p>
+                            </div>
                           </div>
-                        </div>
-                        <p className="font-semibold text-card-income">
-                          +₱{inc.amount.toLocaleString()}
-                        </p>
-                      </li>
-                    );
-                  })}
+                          <p className="font-semibold text-card-income">
+                            +₱{inc.amount.toLocaleString()}
+                          </p>
+                        </li>
+                      );
+                    })}
                 </ul>
               </div>
 
@@ -144,30 +147,33 @@ const DashboardPage = () => {
                   Recent Expenses
                 </h3>
                 <ul className="space-y-2">
-                  {totalExpenses.map((exp) => {
-                    const Icon = expenseIcons[exp.icon];
-                    return (
-                      <li
-                        key={exp._id}
-                        className="flex justify-between bg-black/30 rounded-lg p-2 items-center hover:bg-black/50 transition"
-                      >
-                        <div className="flex items-center gap-2">
-                          <Icon size={20} className="text-card-expense" />
-                          <div>
-                            <p className="text-white font-medium">
-                              {exp.category}
-                            </p>
-                            <p className="text-xs text-gray-400">
-                              {exp.description}
-                            </p>
+                  {totalExpenses
+                    .slice(-6)
+                    .reverse()
+                    .map((exp) => {
+                      const Icon = expenseIcons[exp.icon];
+                      return (
+                        <li
+                          key={exp._id}
+                          className="flex justify-between bg-black/30 rounded-lg p-2 items-center hover:bg-black/50 transition"
+                        >
+                          <div className="flex items-center gap-2">
+                            <Icon size={20} className="text-card-expense" />
+                            <div>
+                              <p className="text-white font-medium">
+                                {exp.category}
+                              </p>
+                              <p className="text-xs text-gray-400">
+                                {exp.description}
+                              </p>
+                            </div>
                           </div>
-                        </div>
-                        <p className="font-semibold text-card-expense">
-                          -₱{exp.amount.toLocaleString()}
-                        </p>
-                      </li>
-                    );
-                  })}
+                          <p className="font-semibold text-card-expense">
+                            -₱{exp.amount.toLocaleString()}
+                          </p>
+                        </li>
+                      );
+                    })}
                 </ul>
               </div>
             </div>
