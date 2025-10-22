@@ -3,8 +3,9 @@ import { CustomRequest } from "@/types/express/express.type";
 import { Response } from "express";
 
 export const getDashboardData = async (req: CustomRequest, res: Response) => {
+  const account = req.account;
   const { totalIncomes, totalExpenses, totalSavings, totalInvestments } =
-    await getDashboardDataS();
+    await getDashboardDataS(account._id);
 
   res
     .status(200)
