@@ -12,7 +12,7 @@ import type {
   SavingCategoryType,
   SavingStoreType,
 } from "@/types/saving/saving.type";
-import { AxiosError } from "axios";
+import { showError } from "@/utils/error/error.util";
 import toast from "react-hot-toast";
 import { create } from "zustand";
 
@@ -33,11 +33,7 @@ export const useSavingStore = create<SavingStoreType>((set) => ({
       set({ categories: response.data.categories });
     } catch (error) {
       console.error("Error getting categories", error);
-      if (error instanceof AxiosError) {
-        toast.error(error.response?.data?.message || error.message);
-      } else {
-        toast.error("An unexpected error occurred.");
-      }
+      showError(error);
     } finally {
       set({ getLoading: false });
     }
@@ -54,11 +50,7 @@ export const useSavingStore = create<SavingStoreType>((set) => ({
       return true;
     } catch (error) {
       console.error("Error creating categories", error);
-      if (error instanceof AxiosError) {
-        toast.error(error.response?.data?.message || error.message);
-      } else {
-        toast.error("An unexpected error occurred.");
-      }
+      showError(error);
       return false;
     } finally {
       set({ createLoading: false });
@@ -78,11 +70,7 @@ export const useSavingStore = create<SavingStoreType>((set) => ({
       return true;
     } catch (error) {
       console.error("Error updating category", error);
-      if (error instanceof AxiosError) {
-        toast.error(error.response?.data?.message || error.message);
-      } else {
-        toast.error("An unexpected error occurred.");
-      }
+      showError(error);
       return false;
     } finally {
       set({ updateLoading: false });
@@ -100,11 +88,7 @@ export const useSavingStore = create<SavingStoreType>((set) => ({
       return true;
     } catch (error) {
       console.error("Error deleting category", error);
-      if (error instanceof AxiosError) {
-        toast.error(error.response?.data?.message || error.message);
-      } else {
-        toast.error("An unexpected error occurred.");
-      }
+      showError(error);
       return false;
     } finally {
       set({ deleteLoading: false });
@@ -119,11 +103,7 @@ export const useSavingStore = create<SavingStoreType>((set) => ({
       set({ savings: response.data.savings });
     } catch (error) {
       console.error("Error getting savings", error);
-      if (error instanceof AxiosError) {
-        toast.error(error.response?.data?.message || error.message);
-      } else {
-        toast.error("An unexpected error occurred.");
-      }
+      showError(error);
     } finally {
       set({ getLoading: false });
     }
@@ -139,11 +119,7 @@ export const useSavingStore = create<SavingStoreType>((set) => ({
       return true;
     } catch (error) {
       console.error("Error adding saving", error);
-      if (error instanceof AxiosError) {
-        toast.error(error.response?.data?.message || error.message);
-      } else {
-        toast.error("An unexpected error occurred.");
-      }
+      showError(error);
       return false;
     } finally {
       set({ createLoading: false });
@@ -164,11 +140,7 @@ export const useSavingStore = create<SavingStoreType>((set) => ({
       return true;
     } catch (error) {
       console.error("Error updating saving", error);
-      if (error instanceof AxiosError) {
-        toast.error(error.response?.data?.message || error.message);
-      } else {
-        toast.error("An unexpected error occurred.");
-      }
+      showError(error);
       return false;
     } finally {
       set({ updateLoading: false });
@@ -185,11 +157,7 @@ export const useSavingStore = create<SavingStoreType>((set) => ({
       return true;
     } catch (error) {
       console.error("Error deleting saving", error);
-      if (error instanceof AxiosError) {
-        toast.error(error.response?.data?.message || error.message);
-      } else {
-        toast.error("An unexpected error occurred.");
-      }
+      showError(error);
       return false;
     } finally {
       set({ deleteLoading: false });

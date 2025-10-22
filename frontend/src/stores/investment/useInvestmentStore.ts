@@ -12,7 +12,7 @@ import type {
   InvestmentCategoryType,
   InvestmentStoreType,
 } from "@/types/investment/investment.type";
-import { AxiosError } from "axios";
+import { showError } from "@/utils/error/error.util";
 import toast from "react-hot-toast";
 import { create } from "zustand";
 
@@ -33,11 +33,7 @@ export const useInvestmentStore = create<InvestmentStoreType>((set) => ({
       set({ categories: response.data.categories });
     } catch (error) {
       console.error("Error getting categories", error);
-      if (error instanceof AxiosError) {
-        toast.error(error.response?.data?.message || error.message);
-      } else {
-        toast.error("An unexpected error occurred.");
-      }
+      showError(error);
     } finally {
       set({ getLoading: false });
     }
@@ -54,11 +50,7 @@ export const useInvestmentStore = create<InvestmentStoreType>((set) => ({
       return true;
     } catch (error) {
       console.error("Error creating categories", error);
-      if (error instanceof AxiosError) {
-        toast.error(error.response?.data?.message || error.message);
-      } else {
-        toast.error("An unexpected error occurred.");
-      }
+      showError(error);
       return false;
     } finally {
       set({ createLoading: false });
@@ -78,11 +70,7 @@ export const useInvestmentStore = create<InvestmentStoreType>((set) => ({
       return true;
     } catch (error) {
       console.error("Error updating category", error);
-      if (error instanceof AxiosError) {
-        toast.error(error.response?.data?.message || error.message);
-      } else {
-        toast.error("An unexpected error occurred.");
-      }
+      showError(error);
       return false;
     } finally {
       set({ updateLoading: false });
@@ -100,11 +88,7 @@ export const useInvestmentStore = create<InvestmentStoreType>((set) => ({
       return true;
     } catch (error) {
       console.error("Error deleting category", error);
-      if (error instanceof AxiosError) {
-        toast.error(error.response?.data?.message || error.message);
-      } else {
-        toast.error("An unexpected error occurred.");
-      }
+      showError(error);
       return false;
     } finally {
       set({ deleteLoading: false });
@@ -119,11 +103,7 @@ export const useInvestmentStore = create<InvestmentStoreType>((set) => ({
       set({ investments: response.data.investments });
     } catch (error) {
       console.error("Error getting investments", error);
-      if (error instanceof AxiosError) {
-        toast.error(error.response?.data?.message || error.message);
-      } else {
-        toast.error("An unexpected error occurred.");
-      }
+      showError(error);
     } finally {
       set({ getLoading: false });
     }
@@ -139,11 +119,7 @@ export const useInvestmentStore = create<InvestmentStoreType>((set) => ({
       return true;
     } catch (error) {
       console.error("Error adding investment", error);
-      if (error instanceof AxiosError) {
-        toast.error(error.response?.data?.message || error.message);
-      } else {
-        toast.error("An unexpected error occurred.");
-      }
+      showError(error);
       return false;
     } finally {
       set({ createLoading: false });
@@ -164,11 +140,7 @@ export const useInvestmentStore = create<InvestmentStoreType>((set) => ({
       return true;
     } catch (error) {
       console.error("Error updating investment", error);
-      if (error instanceof AxiosError) {
-        toast.error(error.response?.data?.message || error.message);
-      } else {
-        toast.error("An unexpected error occurred.");
-      }
+      showError(error);
       return false;
     } finally {
       set({ updateLoading: false });
@@ -187,11 +159,7 @@ export const useInvestmentStore = create<InvestmentStoreType>((set) => ({
       return true;
     } catch (error) {
       console.error("Error deleting investment", error);
-      if (error instanceof AxiosError) {
-        toast.error(error.response?.data?.message || error.message);
-      } else {
-        toast.error("An unexpected error occurred.");
-      }
+      showError(error);
       return false;
     } finally {
       set({ deleteLoading: false });

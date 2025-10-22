@@ -1,7 +1,6 @@
 import { getDashboardDataApi } from "@/api/dashboard/dashboard.api";
 import type { DashboardStoreType } from "@/types/dashboard/dashboard.type";
-import { AxiosError } from "axios";
-import toast from "react-hot-toast";
+import { showError } from "@/utils/error/error.util";
 import { create } from "zustand";
 
 export const useDashboardStore = create<DashboardStoreType>((set) => ({
@@ -24,11 +23,7 @@ export const useDashboardStore = create<DashboardStoreType>((set) => ({
       });
     } catch (error) {
       console.error("Error getting data", error);
-      if (error instanceof AxiosError) {
-        toast.error(error.response?.data?.message || error.message);
-      } else {
-        toast.error("An unexpected error occurred.");
-      }
+      showError(error);
     } finally {
       set({ getLoading: false });
     }

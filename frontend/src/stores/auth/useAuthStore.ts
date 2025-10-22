@@ -1,7 +1,7 @@
 import { loginApi, logoutApi, registerApi } from "@/api/auth/auth.api";
 import { updateProfileApi } from "@/api/profile/profile.api";
 import type { AuthStateType } from "@/types/auth/auth.type";
-import { AxiosError } from "axios";
+import { showError } from "@/utils/error/error.util";
 import toast from "react-hot-toast";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
@@ -41,15 +41,7 @@ export const useAuthStore = create(
           return true;
         } catch (error) {
           console.error("Error registering in account", error);
-          if (error instanceof AxiosError) {
-            if (error.response && error.response.data.message) {
-              toast.error(error.response.data.message);
-            } else {
-              toast.error(error.message);
-            }
-          } else {
-            toast.error("An unexpected error occurred.");
-          }
+          showError(error);
           return false;
         } finally {
           set({ loading: false });
@@ -63,15 +55,7 @@ export const useAuthStore = create(
           return true;
         } catch (error) {
           console.error("Error logging in account", error);
-          if (error instanceof AxiosError) {
-            if (error.response && error.response.data.message) {
-              toast.error(error.response.data.message);
-            } else {
-              toast.error(error.message);
-            }
-          } else {
-            toast.error("An unexpected error occurred.");
-          }
+          showError(error);
           return false;
         } finally {
           set({ loading: false });
@@ -85,15 +69,7 @@ export const useAuthStore = create(
           sessionStorage.clear();
         } catch (error) {
           console.error("Error logging out", error);
-          if (error instanceof AxiosError) {
-            if (error.response && error.response.data.message) {
-              toast.error(error.response.data.message);
-            } else {
-              toast.error(error.message);
-            }
-          } else {
-            toast.error("An unexpected error occurred.");
-          }
+          showError(error);
         } finally {
           set({ loading: false });
         }
@@ -106,16 +82,8 @@ export const useAuthStore = create(
           toast.success(response.data.message);
           return true;
         } catch (error) {
-          console.error("Error logging out", error);
-          if (error instanceof AxiosError) {
-            if (error.response && error.response.data.message) {
-              toast.error(error.response.data.message);
-            } else {
-              toast.error(error.message);
-            }
-          } else {
-            toast.error("An unexpected error occurred.");
-          }
+          console.error("Error updating profile", error);
+          showError(error);
           return false;
         } finally {
           set({ loading: false });

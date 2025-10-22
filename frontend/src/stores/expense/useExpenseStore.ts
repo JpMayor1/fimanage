@@ -13,6 +13,7 @@ import type {
   ExpenseCategoryType,
   ExpenseStoreType,
 } from "@/types/expense/expense.type";
+import { showError } from "@/utils/error/error.util";
 import { AxiosError } from "axios";
 import toast from "react-hot-toast";
 import { create } from "zustand";
@@ -55,11 +56,7 @@ export const useExpenseStore = create<ExpenseStoreType>((set) => ({
       return true;
     } catch (error) {
       console.error("Error creating categories", error);
-      if (error instanceof AxiosError) {
-        toast.error(error.response?.data?.message || error.message);
-      } else {
-        toast.error("An unexpected error occurred.");
-      }
+      showError(error);
       return false;
     } finally {
       set({ createLoading: false });
@@ -78,11 +75,7 @@ export const useExpenseStore = create<ExpenseStoreType>((set) => ({
       return true;
     } catch (error) {
       console.error("Error updating category", error);
-      if (error instanceof AxiosError) {
-        toast.error(error.response?.data?.message || error.message);
-      } else {
-        toast.error("An unexpected error occurred.");
-      }
+      showError(error);
       return false;
     } finally {
       set({ updateLoading: false });
@@ -99,11 +92,7 @@ export const useExpenseStore = create<ExpenseStoreType>((set) => ({
       return true;
     } catch (error) {
       console.error("Error deleting category", error);
-      if (error instanceof AxiosError) {
-        toast.error(error.response?.data?.message || error.message);
-      } else {
-        toast.error("An unexpected error occurred.");
-      }
+      showError(error);
       return false;
     } finally {
       set({ deleteLoading: false });
@@ -118,11 +107,7 @@ export const useExpenseStore = create<ExpenseStoreType>((set) => ({
       set({ expenses: response.data.expenses, limit: response.data.limit });
     } catch (error) {
       console.error("Error getting expenses", error);
-      if (error instanceof AxiosError) {
-        toast.error(error.response?.data?.message || error.message);
-      } else {
-        toast.error("An unexpected error occurred.");
-      }
+      showError(error);
     } finally {
       set({ getLoading: false });
     }
@@ -138,11 +123,7 @@ export const useExpenseStore = create<ExpenseStoreType>((set) => ({
       return true;
     } catch (error) {
       console.error("Error adding expense", error);
-      if (error instanceof AxiosError) {
-        toast.error(error.response?.data?.message || error.message);
-      } else {
-        toast.error("An unexpected error occurred.");
-      }
+      showError(error);
       return false;
     } finally {
       set({ createLoading: false });
@@ -163,11 +144,7 @@ export const useExpenseStore = create<ExpenseStoreType>((set) => ({
       return true;
     } catch (error) {
       console.error("Error updating expense", error);
-      if (error instanceof AxiosError) {
-        toast.error(error.response?.data?.message || error.message);
-      } else {
-        toast.error("An unexpected error occurred.");
-      }
+      showError(error);
       return false;
     } finally {
       set({ updateLoading: false });
@@ -184,11 +161,7 @@ export const useExpenseStore = create<ExpenseStoreType>((set) => ({
       return true;
     } catch (error) {
       console.error("Error deleting expense", error);
-      if (error instanceof AxiosError) {
-        toast.error(error.response?.data?.message || error.message);
-      } else {
-        toast.error("An unexpected error occurred.");
-      }
+      showError(error);
       return false;
     } finally {
       set({ deleteLoading: false });
@@ -203,11 +176,7 @@ export const useExpenseStore = create<ExpenseStoreType>((set) => ({
       return true;
     } catch (error) {
       console.error("Error updating limit", error);
-      if (error instanceof AxiosError) {
-        toast.error(error.response?.data?.message || error.message);
-      } else {
-        toast.error("An unexpected error occurred.");
-      }
+      showError(error);
       return false;
     } finally {
       set({ updateLoading: false });
