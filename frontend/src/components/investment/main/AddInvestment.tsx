@@ -74,7 +74,7 @@ const AddInvestment = ({ onClose }: AddInvestmentI) => {
           <LoadingBig />
         ) : (
           <>
-            <form className="space-y-4 w-full" onSubmit={handleSubmit}>
+            <form className="space-y-2 w-full" onSubmit={handleSubmit}>
               <label className="block font-semibold text-white text-lg">
                 Add Investment
               </label>
@@ -100,40 +100,46 @@ const AddInvestment = ({ onClose }: AddInvestmentI) => {
                 ))}
               </CustomSelect>
 
-              {/* Description */}
-              <TextField
-                name="description"
-                value={form.description}
-                onChange={handleChange}
-                placeholder="Description *"
-                containerClassName="flex-1"
-                className="bg-black text-white border focus:border-yellow"
-              />
+              <div className="flex flex-col gap-1">
+                <label className="text-white/80">Description *</label>
+                <TextField
+                  name="description"
+                  value={form.description}
+                  onChange={handleChange}
+                  placeholder="Description"
+                  containerClassName="flex-1"
+                  className="bg-black text-white border focus:border-yellow"
+                />
+              </div>
 
-              {/* Amount */}
-              <TextField
-                type="number"
-                name="amount"
-                value={form.amount}
-                onChange={handleChange}
-                placeholder="Amount *"
-                containerClassName="flex-1"
-                className="bg-black text-white border focus:border-yellow"
-              />
+              <div className="flex flex-col gap-1">
+                <label className="text-white/80">Amount *</label>
+                <TextField
+                  type="number"
+                  name="amount"
+                  value={form.amount}
+                  onChange={handleChange}
+                  placeholder="Amount *"
+                  containerClassName="flex-1"
+                  className="bg-black text-white border focus:border-yellow"
+                />
+              </div>
 
-              {/* Annual Rate (Optional) */}
-              <TextField
-                type="number"
-                name="annualRate"
-                value={form.annualRate}
-                onChange={handleChange}
-                placeholder="Annual Rate (Optional, in %)"
-                containerClassName="flex-1"
-                className="bg-black text-white border focus:border-yellow"
-              />
+              <div className="flex flex-col gap-1">
+                <label className="text-white/80">Interest Rate</label>
+                <TextField
+                  type="number"
+                  name="annualRate"
+                  value={form.annualRate}
+                  onChange={handleChange}
+                  placeholder="Interest Rate (in %)"
+                  containerClassName="flex-1"
+                  className="bg-black text-white border focus:border-yellow"
+                />
+              </div>
 
-              {/* Frequency (Optional) */}
               <div className="flex flex-col space-y-2">
+                <label className="text-white/80">Frequency</label>
                 <TextField
                   list="frequency-options"
                   name="frequency"

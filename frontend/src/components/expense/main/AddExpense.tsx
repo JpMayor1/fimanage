@@ -67,7 +67,7 @@ const AddExpense = ({ onClose }: AddExpenseI) => {
           <LoadingBig />
         ) : (
           <>
-            <form className="space-y-4 w-full" onSubmit={handleSubmit}>
+            <form className="space-y-2 w-full" onSubmit={handleSubmit}>
               <label className="block font-semibold text-white">
                 Add Expense
               </label>
@@ -92,24 +92,30 @@ const AddExpense = ({ onClose }: AddExpenseI) => {
                 ))}
               </CustomSelect>
 
-              <TextField
-                name="description"
-                value={form.description}
-                onChange={handleChange}
-                placeholder="Description *"
-                containerClassName="flex-1"
-                className="bg-black text-white border focus:border-yellow"
-              />
+              <div className="flex flex-col gap-1">
+                <label className="text-white/80">Description *</label>
+                <TextField
+                  name="description"
+                  value={form.description}
+                  onChange={handleChange}
+                  placeholder="Description"
+                  containerClassName="flex-1"
+                  className="bg-black text-white border focus:border-yellow"
+                />
+              </div>
 
-              <TextField
-                type="number"
-                name="amount"
-                value={form.amount}
-                onChange={handleChange}
-                placeholder="Amount *"
-                containerClassName="flex-1"
-                className="bg-black text-white border focus:border-yellow"
-              />
+              <div className="flex flex-col gap-1">
+                <label className="text-white/80">Amount *</label>
+                <TextField
+                  type="number"
+                  name="amount"
+                  value={form.amount}
+                  onChange={handleChange}
+                  placeholder="Amount *"
+                  containerClassName="flex-1"
+                  className="bg-black text-white border focus:border-yellow"
+                />
+              </div>
 
               <button
                 type="submit"
