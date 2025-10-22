@@ -1,4 +1,5 @@
 import LoadingSmall from "@/components/custom/loading/LoadingSmall";
+import { overlayAnim } from "@/constants/overlay.animation.constant";
 import { useSavingStore } from "@/stores/saving/useSavingStore";
 import type { SavingCategoryType } from "@/types/saving/saving.type";
 import { motion } from "framer-motion";
@@ -11,16 +12,9 @@ interface UpdateSavingCategoryI {
   onClose: () => void;
 }
 
-const overlayAnim = {
-  initial: { opacity: 0 },
-  animate: { opacity: 1, transition: { duration: 0.23 } },
-  exit: { opacity: 0, transition: { duration: 0.17 } },
-};
-
 const UpdateSavingCategory = ({ category, onClose }: UpdateSavingCategoryI) => {
   const { updateCategory, updateLoading } = useSavingStore();
 
-  // now structured like CreateSavingCategory but for single item
   const [cat, setCat] = useState<{
     name: string;
     showIcons: boolean;

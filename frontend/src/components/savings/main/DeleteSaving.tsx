@@ -1,4 +1,5 @@
 import LoadingSmall from "@/components/custom/loading/LoadingSmall";
+import { overlayAnim } from "@/constants/overlay.animation.constant";
 import { useSavingStore } from "@/stores/saving/useSavingStore";
 import type { SavingType } from "@/types/saving/saving.type";
 import { motion } from "framer-motion";
@@ -9,12 +10,6 @@ interface DeleteSavingI {
   saving: SavingType;
   onClose: () => void;
 }
-
-const overlayAnim = {
-  initial: { opacity: 0 },
-  animate: { opacity: 1, transition: { duration: 0.23 } },
-  exit: { opacity: 0, transition: { duration: 0.17 } },
-};
 
 const DeleteSaving = ({ saving, onClose }: DeleteSavingI) => {
   const { deleteSaving, deleteLoading } = useSavingStore();

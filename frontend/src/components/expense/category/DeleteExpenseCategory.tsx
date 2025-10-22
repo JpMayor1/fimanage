@@ -1,4 +1,5 @@
 import LoadingSmall from "@/components/custom/loading/LoadingSmall";
+import { overlayAnim } from "@/constants/overlay.animation.constant";
 import { useExpenseStore } from "@/stores/expense/useExpenseStore";
 import type { ExpenseCategoryType } from "@/types/expense/expense.type";
 import { motion } from "framer-motion";
@@ -9,12 +10,6 @@ interface DeleteExpenseCategoryI {
   category: ExpenseCategoryType;
   onClose: () => void;
 }
-
-const overlayAnim = {
-  initial: { opacity: 0 },
-  animate: { opacity: 1, transition: { duration: 0.23 } },
-  exit: { opacity: 0, transition: { duration: 0.17 } },
-};
 
 const DeleteExpenseCategory = ({
   category,

@@ -1,3 +1,5 @@
+import { imgAnim } from "@/constants/image.animation.constant";
+import { overlayAnim } from "@/constants/overlay.animation.constant";
 import { motion } from "framer-motion";
 import { useEffect } from "react";
 import { IoClose } from "react-icons/io5";
@@ -7,21 +9,6 @@ interface ShowImageI {
   image: string;
   onClose: () => void;
 }
-
-const overlayAnim = {
-  initial: { opacity: 0 },
-  animate: { opacity: 1, transition: { duration: 0.23 } },
-  exit: { opacity: 0, transition: { duration: 0.17 } },
-};
-const imgAnim = {
-  initial: { opacity: 0, scale: 0.93 },
-  animate: {
-    opacity: 1,
-    scale: 1,
-  },
-  exit: { opacity: 0, scale: 0.93, transition: { duration: 0.2 } },
-  transition: { duration: 0.33, ease: "easeOut" },
-};
 
 const ShowImage = ({ image, onClose }: ShowImageI) => {
   useEffect(() => {

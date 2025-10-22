@@ -1,3 +1,4 @@
+import { overlayAnim } from "@/constants/overlay.animation.constant";
 import { motion } from "framer-motion";
 import { FiX } from "react-icons/fi";
 import { GiWallet } from "react-icons/gi";
@@ -5,12 +6,6 @@ import { GiWallet } from "react-icons/gi";
 interface DailyLimitReachedI {
   onClose: () => void;
 }
-
-const overlayAnim = {
-  initial: { opacity: 0 },
-  animate: { opacity: 1, transition: { duration: 0.25 } },
-  exit: { opacity: 0, transition: { duration: 0.2 } },
-};
 
 const popupAnim = {
   initial: { scale: 0.8, opacity: 0 },

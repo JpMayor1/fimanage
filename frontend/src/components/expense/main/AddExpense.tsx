@@ -2,6 +2,7 @@ import CustomSelect from "@/components/custom/CustomSelect";
 import LoadingBig from "@/components/custom/loading/LoadingBig";
 import LoadingSmall from "@/components/custom/loading/LoadingSmall";
 import TextField from "@/components/custom/TextField";
+import { overlayAnim } from "@/constants/overlay.animation.constant";
 import { useExpenseStore } from "@/stores/expense/useExpenseStore";
 import type { ExpenseType } from "@/types/expense/expense.type";
 import { motion } from "framer-motion";
@@ -11,12 +12,6 @@ import { FiX } from "react-icons/fi";
 interface AddExpenseI {
   onClose: () => void;
 }
-
-const overlayAnim = {
-  initial: { opacity: 0 },
-  animate: { opacity: 1, transition: { duration: 0.23 } },
-  exit: { opacity: 0, transition: { duration: 0.17 } },
-};
 
 const initialState: Partial<ExpenseType> = {
   category: "",

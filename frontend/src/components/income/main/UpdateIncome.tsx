@@ -2,6 +2,7 @@ import CustomSelect from "@/components/custom/CustomSelect";
 import LoadingBig from "@/components/custom/loading/LoadingBig";
 import LoadingSmall from "@/components/custom/loading/LoadingSmall";
 import TextField from "@/components/custom/TextField";
+import { overlayAnim } from "@/constants/overlay.animation.constant";
 import { useIncomeStore } from "@/stores/income/useIncomeStore";
 import type { IncomeType } from "@/types/income/income.type";
 import { motion } from "framer-motion";
@@ -12,12 +13,6 @@ interface UpdateIncomeI {
   income: IncomeType;
   onClose: () => void;
 }
-
-const overlayAnim = {
-  initial: { opacity: 0 },
-  animate: { opacity: 1, transition: { duration: 0.23 } },
-  exit: { opacity: 0, transition: { duration: 0.17 } },
-};
 
 const UpdateIncome = ({ income, onClose }: UpdateIncomeI) => {
   const { getCategories, getLoading, categories, updateIncome, updateLoading } =

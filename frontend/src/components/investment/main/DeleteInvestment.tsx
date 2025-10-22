@@ -1,4 +1,5 @@
 import LoadingSmall from "@/components/custom/loading/LoadingSmall";
+import { overlayAnim } from "@/constants/overlay.animation.constant";
 import { useInvestmentStore } from "@/stores/investment/useInvestmentStore";
 import type { InvestmentType } from "@/types/investment/investment.type";
 import { motion } from "framer-motion";
@@ -9,12 +10,6 @@ interface DeleteInvestmentI {
   investment: InvestmentType;
   onClose: () => void;
 }
-
-const overlayAnim = {
-  initial: { opacity: 0 },
-  animate: { opacity: 1, transition: { duration: 0.23 } },
-  exit: { opacity: 0, transition: { duration: 0.17 } },
-};
 
 const DeleteInvestment = ({ investment, onClose }: DeleteInvestmentI) => {
   const { deleteInvestment, deleteLoading } = useInvestmentStore();

@@ -1,5 +1,6 @@
 import { expenseIcons, type ExpenseIconKey } from "@/assets/icons/expenseIcons";
 import LoadingSmall from "@/components/custom/loading/LoadingSmall";
+import { overlayAnim } from "@/constants/overlay.animation.constant";
 import { useExpenseStore } from "@/stores/expense/useExpenseStore";
 import { motion } from "framer-motion";
 import { useState, type FormEvent } from "react";
@@ -9,12 +10,6 @@ import TextField from "../../custom/TextField";
 interface CreateExpenseCategoryI {
   onClose: () => void;
 }
-
-const overlayAnim = {
-  initial: { opacity: 0 },
-  animate: { opacity: 1, transition: { duration: 0.23 } },
-  exit: { opacity: 0, transition: { duration: 0.17 } },
-};
 
 const CreateExpenseCategory = ({ onClose }: CreateExpenseCategoryI) => {
   const { createCategories, createLoading } = useExpenseStore();

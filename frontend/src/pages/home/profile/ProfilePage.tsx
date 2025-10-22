@@ -2,6 +2,8 @@ import BlurImage from "@/components/custom/BlurImage";
 import LoadingSmall from "@/components/custom/loading/LoadingSmall";
 import TextField from "@/components/custom/TextField";
 import ShowImage from "@/components/image/ShowImage";
+import { imgAnim } from "@/constants/image.animation.constant";
+import { overlayAnim } from "@/constants/overlay.animation.constant";
 import { useAuthStore } from "@/stores/auth/useAuthStore";
 import { useSideBar } from "@/stores/sidebar/useSideBar";
 import type { AccountType } from "@/types/auth/auth.type";
@@ -20,19 +22,6 @@ import {
 } from "react-icons/fi";
 import { IoLocationOutline } from "react-icons/io5";
 import { RxHamburgerMenu } from "react-icons/rx";
-
-const imgAnim = {
-  initial: { opacity: 0, scale: 0.93 },
-  animate: { opacity: 1, scale: 1 },
-  exit: { opacity: 0, scale: 0.93, transition: { duration: 0.2 } },
-  transition: { duration: 0.33, ease: "easeOut" },
-};
-
-const overlayAnim = {
-  initial: { opacity: 0 },
-  animate: { opacity: 1, transition: { duration: 0.23 } },
-  exit: { opacity: 0, transition: { duration: 0.17 } },
-};
 
 const ProfilePage = () => {
   const { setOpen } = useSideBar();
