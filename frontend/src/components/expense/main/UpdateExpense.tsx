@@ -7,7 +7,7 @@ import { useExpenseStore } from "@/stores/expense/useExpenseStore";
 import type { ExpenseType } from "@/types/expense/expense.type";
 import { motion } from "framer-motion";
 import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
-import { FiX } from "react-icons/fi";
+import { FiHelpCircle, FiX } from "react-icons/fi";
 
 interface UpdateExpenseI {
   expense: ExpenseType;
@@ -27,7 +27,15 @@ const UpdateExpense = ({ expense, onClose }: UpdateExpenseI) => {
     description: expense.description,
     category: expense.category,
     amount: expense.amount,
+    countable: expense.countable,
   });
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+
+  useEffect(() => {
+    const checkTouch = () => setIsTouchDevice("ontouchstart" in window);
+    checkTouch();
+  }, []);
 
   useEffect(() => {
     const fetchCategories = async () => await getCategories();
@@ -37,6 +45,10 @@ const UpdateExpense = ({ expense, onClose }: UpdateExpenseI) => {
   function handleChange(e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
+  }
+
+  function handleCheckboxChange(e: ChangeEvent<HTMLInputElement>) {
+    setForm((prev) => ({ ...prev, countable: e.target.checked }));
   }
 
   async function handleSubmit(e: FormEvent) {
@@ -113,6 +125,47 @@ const UpdateExpense = ({ expense, onClose }: UpdateExpenseI) => {
                   containerClassName="flex-1"
                   className="bg-black text-white border focus:border-yellow"
                 />
+              </div>
+
+              <div className="flex items-center gap-2 mt-3 relative">
+                <input
+                  type="checkbox"
+                  id="countable"
+                  name="countable"
+                  checked={form.countable}
+                  onChange={handleCheckboxChange}
+                  className="w-5 h-5 accent-yellow cursor-pointer"
+                />
+                <label
+                  htmlFor="countable"
+                  className="text-white/90 select-none cursor-pointer"
+                >
+                  Countable
+                </label>
+                <div className="relative flex items-center">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (isTouchDevice) setShowTooltip((prev) => !prev);
+                    }}
+                    onMouseEnter={() => {
+                      if (!isTouchDevice) setShowTooltip(true);
+                    }}
+                    onMouseLeave={() => {
+                      if (!isTouchDevice) setShowTooltip(false);
+                    }}
+                    className="text-yellow cursor-pointer"
+                  >
+                    <FiHelpCircle size={18} />
+                  </button>
+
+                  {showTooltip && (
+                    <div className="absolute left-6 bottom-5 bg-black/80 text-white text-xs p-2 rounded-lg shadow-md w-56 z-20">
+                      If checked, this expense will be included in your daily
+                      limit calculations.
+                    </div>
+                  )}
+                </div>
               </div>
 
               <button

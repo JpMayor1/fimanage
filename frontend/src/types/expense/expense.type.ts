@@ -13,6 +13,7 @@ export type ExpenseType = {
   description: string;
   amount: number;
   dt: string;
+  countable: boolean;
   createdAt: string;
 };
 

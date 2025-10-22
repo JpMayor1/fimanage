@@ -8,6 +8,7 @@ export type ExpenseType = {
   category: string;
   amount: number;
   dt: string;
+  countable: boolean;
 };
 
 export type ExpenseFilterType = Partial<

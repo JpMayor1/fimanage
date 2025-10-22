@@ -98,7 +98,7 @@ export const getExpenses = async (req: CustomRequest, res: Response) => {
 
 export const addExpense = async (req: CustomRequest, res: Response) => {
   const account = req.account;
-  const { description, category, amount } = req.body;
+  const { description, category, amount, countable } = req.body;
   if (!description) throw new AppError("Description is required.", 400);
   if (!category) throw new AppError("Category is required.", 400);
   if (!Number(amount)) throw new AppError("Amount is required.", 400);
@@ -108,13 +108,14 @@ export const addExpense = async (req: CustomRequest, res: Response) => {
     description,
     category,
     amount,
+    countable,
   });
   res.status(200).json({ message: "Expense added.", newExpense });
 };
 
 export const updateExpense = async (req: CustomRequest, res: Response) => {
   const { id } = req.params;
-  const { description, category, amount } = req.body;
+  const { description, category, amount, countable } = req.body;
 
   if (!id) throw new AppError("Expense ID is required.", 400);
   if (!description) throw new AppError("Description is required.", 400);
@@ -125,6 +126,7 @@ export const updateExpense = async (req: CustomRequest, res: Response) => {
     description,
     category,
     amount,
+    countable,
   });
 
   res

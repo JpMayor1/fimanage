@@ -39,7 +39,9 @@ const ExpensePage = () => {
 
       const total = expenses
         .filter(
-          (expense) => new Date(expense.createdAt).toDateString() === today
+          (expense) =>
+            expense.countable &&
+            new Date(expense.createdAt).toDateString() === today
         )
         .reduce((sum, expense) => sum + expense.amount, 0);
 
