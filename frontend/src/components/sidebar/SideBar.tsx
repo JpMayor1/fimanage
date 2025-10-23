@@ -64,104 +64,115 @@ const SideBar = () => {
   const linkInactive = "text-gray-300 hover:bg-gray-800 hover:text-white";
 
   return (
-    <div
-      className={`
+    <>
+      <div
+        className={`
+        fixed top-0 left-0 h-full bg-none z-20 transform 
+        transition-transform duration-300 ease-in-out overflow-hidden
+        ${open ? "w-full translate-x-0" : "-translate-x-full"} 
+        md:translate-x-0
+      `}
+        onClick={() => setOpen(false)}
+      ></div>
+      <div
+        className={`
         fixed top-0 left-0 h-full w-70 bg-primary flex flex-col z-20 transform 
         transition-transform duration-300 ease-in-out overflow-hidden
         ${open ? "translate-x-0" : "-translate-x-full"} 
         md:translate-x-0
       `}
-    >
-      {/* Header */}
-      <div className="w-full flex items-center justify-between p-4">
-        <div className="flex items-center gap-2">
-          <p className="text-black bg-yellow font-bold rounded-full px-3 py-1">
-            F
-          </p>
-          <p className="text-yellow text-lg font-bold">Fimanage</p>
-        </div>
-
-        <IoMdClose
-          className="block md:hidden text-white text-2xl cursor-pointer"
-          onClick={() => setOpen(false)}
-        />
-      </div>
-
-      {/* Profile Link */}
-      <Link
-        to="/home/profile"
-        className={`${
-          isActive("/home/profile")
-            ? "bg-yellow text-black"
-            : "text-white hover:bg-gray-800"
-        } 
-            w-full flex items-center gap-2 p-4 border-t border-b border-gray-50/10 cursor-pointer`}
-        onClick={() => setOpen(false)}
       >
-        {authUser.profilePicture ? (
-          <BlurImage
-            src={authUser.profilePicture}
-            alt="Profile picture"
-            className="h-10 w-10 rounded-full object-cover border border-primary"
-            draggable={false}
-          />
-        ) : (
-          <Avatar
-            key={authUser._id}
-            name={`${authUser.firstName} ${authUser.lastName}`}
-            size="lg"
-            className="bg-primary p-4 rounded-full h-10 w-10"
-          />
-        )}
-        <div>
-          <p className="font-bold">
-            {authUser.firstName} {authUser.lastName}
-          </p>
-          <p
-            className={`text-xs ${
-              isActive("/home/profile") ? "text-black/50" : "text-gray-50/50"
-            }`}
-          >
-            {authUser.email}
-          </p>
-        </div>
-      </Link>
+        {/* Header */}
+        <div className="w-full flex items-center justify-between p-4">
+          <div className="flex items-center gap-2">
+            <p className="text-black bg-yellow font-bold rounded-full px-3 py-1">
+              F
+            </p>
+            <p className="text-yellow text-lg font-bold">Fimanage</p>
+          </div>
 
-      {/* Navigation Links */}
-      <nav className="flex-1 w-full p-4 mt-4 space-y-2 overflow-y-scroll no-scrollbar">
-        {navLinks.map(({ name, link, icon: Icon }) => (
-          <Link
-            key={link}
-            to={link}
-            className={`${linkBase} ${
-              isActive(link) ? linkActive : linkInactive
-            }`}
+          <IoMdClose
+            className="block md:hidden text-white text-2xl cursor-pointer"
             onClick={() => setOpen(false)}
-          >
-            <Icon
-              className={`text-lg ${
-                isActive(link) ? "text-black" : "text-yellow"
-              }`}
-            />
-            <span>{name}</span>
-          </Link>
-        ))}
-      </nav>
+          />
+        </div>
 
-      {/* Sign out */}
-      <button
-        onClick={logout}
-        disabled={loading}
-        className={`${
-          loading
-            ? "cursor-not-allowed opacity-80"
-            : "cursor-pointer hover:scale-101 hover:shadow-xl transition-all"
-        } w-full py-6 pl-6 border-t text-gray-300 border-gray-50/10 hover:bg-red-600 flex items-center gap-2 transition-colors`}
-      >
-        <MdLogout className="text-lg" />
-        {loading ? "Loading..." : "Logout"}
-      </button>
-    </div>
+        {/* Profile Link */}
+        <Link
+          to="/home/profile"
+          className={`${
+            isActive("/home/profile")
+              ? "bg-yellow text-black"
+              : "text-white hover:bg-gray-800"
+          } 
+            w-full flex items-center gap-2 p-4 border-t border-b border-gray-50/10 cursor-pointer`}
+          onClick={() => setOpen(false)}
+        >
+          {authUser.profilePicture ? (
+            <BlurImage
+              src={authUser.profilePicture}
+              alt="Profile picture"
+              className="h-10 w-10 rounded-full object-cover border border-primary"
+              draggable={false}
+            />
+          ) : (
+            <Avatar
+              key={authUser._id}
+              name={`${authUser.firstName} ${authUser.lastName}`}
+              size="lg"
+              className="bg-primary p-4 rounded-full h-10 w-10"
+            />
+          )}
+          <div>
+            <p className="font-bold">
+              {authUser.firstName} {authUser.lastName}
+            </p>
+            <p
+              className={`text-xs ${
+                isActive("/home/profile") ? "text-black/50" : "text-gray-50/50"
+              }`}
+            >
+              {authUser.email}
+            </p>
+          </div>
+        </Link>
+
+        {/* Navigation Links */}
+        <nav className="flex-1 w-full p-4 mt-4 space-y-2 overflow-y-scroll no-scrollbar">
+          {navLinks.map(({ name, link, icon: Icon }) => (
+            <Link
+              key={link}
+              to={link}
+              className={`${linkBase} ${
+                isActive(link) ? linkActive : linkInactive
+              }`}
+              onClick={() => setOpen(false)}
+            >
+              <Icon
+                className={`text-lg ${
+                  isActive(link) ? "text-black" : "text-yellow"
+                }`}
+              />
+              <span>{name}</span>
+            </Link>
+          ))}
+        </nav>
+
+        {/* Sign out */}
+        <button
+          onClick={logout}
+          disabled={loading}
+          className={`${
+            loading
+              ? "cursor-not-allowed opacity-80"
+              : "cursor-pointer hover:scale-101 hover:shadow-xl transition-all"
+          } w-full py-6 pl-6 border-t text-gray-300 border-gray-50/10 hover:bg-red-600 flex items-center gap-2 transition-colors`}
+        >
+          <MdLogout className="text-lg" />
+          {loading ? "Loading..." : "Logout"}
+        </button>
+      </div>
+    </>
   );
 };
 
