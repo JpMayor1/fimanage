@@ -14,7 +14,7 @@ import { Link, useLocation } from "react-router-dom";
 import BlurImage from "../custom/BlurImage";
 
 const SideBar = () => {
-  const { authUser, logout } = useAuthStore();
+  const { authUser, logout, loading } = useAuthStore();
   const { open, setOpen } = useSideBar();
   const location = useLocation();
 
@@ -128,7 +128,7 @@ const SideBar = () => {
       </Link>
 
       {/* Navigation Links */}
-      <nav className="w-full p-4 mt-4 space-y-2 overflow-y-scroll no-scrollbar">
+      <nav className="flex-1 w-full p-4 mt-4 space-y-2 overflow-y-scroll no-scrollbar">
         {navLinks.map(({ name, link, icon: Icon }) => (
           <Link
             key={link}
@@ -151,10 +151,15 @@ const SideBar = () => {
       {/* Sign out */}
       <button
         onClick={logout}
-        className="w-full py-6 pl-6 border-t text-gray-300 border-gray-50/10 hover:bg-red-600 flex items-center gap-2 transition-colors cursor-pointer"
+        disabled={loading}
+        className={`${
+          loading
+            ? "cursor-not-allowed opacity-80"
+            : "cursor-pointer hover:scale-101 hover:shadow-xl transition-all"
+        } w-full py-6 pl-6 border-t text-gray-300 border-gray-50/10 hover:bg-red-600 flex items-center gap-2 transition-colors`}
       >
         <MdLogout className="text-lg" />
-        Logout
+        {loading ? "Loading..." : "Logout"}
       </button>
     </div>
   );
