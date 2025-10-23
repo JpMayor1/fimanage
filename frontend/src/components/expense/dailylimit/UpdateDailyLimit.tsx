@@ -13,16 +13,17 @@ interface UpdateDailyLimitI {
 const UpdateDailyLimit = ({ onClose }: UpdateDailyLimitI) => {
   const { limit: currentLimit, updateLimit, updateLoading } = useExpenseStore();
 
-  const [limit, setLimit] = useState<number>(currentLimit);
+  const [limit, setLimit] = useState<string | number>(currentLimit);
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
-    setLimit(Number(e.target.value));
+    setLimit(e.target.value);
   }
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    if (!limit || limit <= 0) return alert("Please enter a valid daily limit.");
-    const success = await updateLimit(limit);
+    if (!limit || Number(limit) <= 0)
+      return alert("Please enter a valid daily limit.");
+    const success = await updateLimit(Number(limit));
     if (success) onClose();
   }
 
@@ -49,7 +50,7 @@ const UpdateDailyLimit = ({ onClose }: UpdateDailyLimitI) => {
 
           <TextField
             type="number"
-            name="dailyLimit"
+            name="limit"
             value={limit}
             onChange={handleChange}
             placeholder="Enter new limit (₱)"

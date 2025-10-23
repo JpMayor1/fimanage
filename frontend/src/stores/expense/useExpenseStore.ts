@@ -21,7 +21,7 @@ import { create } from "zustand";
 export const useExpenseStore = create<ExpenseStoreType>((set) => ({
   categories: [],
   expenses: [],
-  limit: 0,
+  limit: 500,
 
   getLoading: false,
   createLoading: false,
@@ -171,7 +171,7 @@ export const useExpenseStore = create<ExpenseStoreType>((set) => ({
     set({ updateLoading: true });
     try {
       const response = await updateLimitApi(limit);
-      set({ limit: response.data.limit });
+      set({ limit });
       toast.success(response.data.message);
       return true;
     } catch (error) {

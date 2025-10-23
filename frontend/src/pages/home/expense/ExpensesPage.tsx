@@ -34,21 +34,16 @@ const ExpensePage = () => {
   }, [getExpenses]);
 
   useEffect(() => {
-    const calculateTotal = () => {
-      const today = new Date().toDateString();
-
-      const total = expenses
-        .filter(
-          (expense) =>
-            expense.countable &&
-            new Date(expense.createdAt).toDateString() === today
-        )
-        .reduce((sum, expense) => sum + expense.amount, 0);
-
-      setTodaySpent(total);
-      if (total >= limit) setShowLimitWarning(true);
-    };
-    if (expenses.length > 0) calculateTotal();
+    const today = new Date().toDateString();
+    const total = expenses
+      .filter(
+        (expense) =>
+          expense.countable &&
+          new Date(expense.createdAt).toDateString() === today
+      )
+      .reduce((sum, expense) => sum + expense.amount, 0);
+    setTodaySpent(total);
+    setShowLimitWarning(total >= limit);
   }, [expenses, limit]);
 
   const handleCloseWarning = () => {
@@ -122,7 +117,7 @@ const ExpensePage = () => {
 
                   <div className="flex justify-between mt-2 text-white/70 text-xs">
                     <p>Spent Today: ₱{todaySpent.toLocaleString()}</p>
-                    <p>Limit: ₱{limit.toLocaleString()}</p>
+                    <p>Limit: ₱{limit}</p>
                   </div>
 
                   {todaySpent > limit && (
