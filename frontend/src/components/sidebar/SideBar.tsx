@@ -1,6 +1,7 @@
 import { useAuthStore } from "@/stores/auth/useAuthStore";
 import { useSideBar } from "@/stores/sidebar/useSideBar";
 import Avatar from "avatox";
+import { BiSolidReport } from "react-icons/bi";
 import { FaMoneyBillTrendUp } from "react-icons/fa6";
 import { GiExpense } from "react-icons/gi";
 import { GrMoney } from "react-icons/gr";
@@ -33,6 +34,11 @@ const SideBar = () => {
       name: "Investments",
       link: "/home/investments",
       icon: FaMoneyBillTrendUp,
+    },
+    {
+      name: "Reports",
+      link: "/home/reports",
+      icon: BiSolidReport,
     },
   ];
 

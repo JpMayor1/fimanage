@@ -50,7 +50,7 @@ const DashboardPage = () => {
   );
 
   return (
-    <div className="h-screen w-full overflow-y-scroll no-scrollbar p-1">
+    <div className="h-screen w-full overflow-y-scroll no-scrollbar p-1 px-2 md:px-4">
       <div className="w-full flex items-center gap-2 my-2 mb-3">
         <RxHamburgerMenu
           className="md:hidden text-white text-2xl"
