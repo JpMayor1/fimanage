@@ -38,7 +38,10 @@ const CreateExpenseCategory = ({ onClose }: CreateExpenseCategoryI) => {
 
   const toggleShowIcons = (idx: number) =>
     setCategories((prev) =>
-      prev.map((c, i) => (i === idx ? { ...c, showIcons: !c.showIcons } : c))
+      prev.map((c, i) => ({
+        ...c,
+        showIcons: i === idx ? !c.showIcons : false,
+      }))
     );
 
   const handleRemoveCategory = (idx: number) =>
