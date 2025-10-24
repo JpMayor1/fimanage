@@ -38,6 +38,7 @@ export const useDashboardStore = create<DashboardStoreType>((set) => ({
     }
   },
   updateBalance: async (balance) => {
+    set({ updateLoading: true });
     try {
       const response = await updateBalanceApi(balance);
       set({ balance });
