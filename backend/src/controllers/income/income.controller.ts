@@ -101,7 +101,7 @@ export const addIncome = async (req: CustomRequest, res: Response) => {
   if (!category) throw new AppError("Category is required.", 400);
   if (!Number(amount)) throw new AppError("Amount is required.", 400);
 
-  const newIncome = await addIncomeS({
+  const newIncome = await addIncomeS(account, {
     userId: account._id,
     category,
     description,
@@ -111,6 +111,7 @@ export const addIncome = async (req: CustomRequest, res: Response) => {
 };
 
 export const updateIncome = async (req: CustomRequest, res: Response) => {
+  const account = req.account;
   const { id } = req.params;
   const { description, category, amount } = req.body;
 
@@ -119,7 +120,7 @@ export const updateIncome = async (req: CustomRequest, res: Response) => {
   if (!category) throw new AppError("Category is required.", 400);
   if (!Number(amount)) throw new AppError("Amount is required.", 400);
 
-  const updatedIncome = await updateIncomeS(id, {
+  const updatedIncome = await updateIncomeS(account, id, {
     description,
     category,
     amount,
@@ -131,7 +132,8 @@ export const updateIncome = async (req: CustomRequest, res: Response) => {
 };
 
 export const deleteIncome = async (req: CustomRequest, res: Response) => {
+  const account = req.account;
   const { id } = req.params;
-  const deletedIncome = await deleteIncomeS(id);
+  const deletedIncome = await deleteIncomeS(account, id);
   res.status(200).json({ message: "Income deleted.", deletedIncome });
 };

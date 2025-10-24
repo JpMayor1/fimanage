@@ -103,7 +103,7 @@ export const addExpense = async (req: CustomRequest, res: Response) => {
   if (!category) throw new AppError("Category is required.", 400);
   if (!Number(amount)) throw new AppError("Amount is required.", 400);
 
-  const newExpense = await addExpenseS({
+  const newExpense = await addExpenseS(account, {
     userId: account._id,
     description,
     category,
@@ -114,6 +114,7 @@ export const addExpense = async (req: CustomRequest, res: Response) => {
 };
 
 export const updateExpense = async (req: CustomRequest, res: Response) => {
+  const account = req.account;
   const { id } = req.params;
   const { description, category, amount, countable } = req.body;
 
@@ -122,7 +123,7 @@ export const updateExpense = async (req: CustomRequest, res: Response) => {
   if (!category) throw new AppError("Category is required.", 400);
   if (!Number(amount)) throw new AppError("Amount is required.", 400);
 
-  const updatedExpense = await updateExpenseS(id, {
+  const updatedExpense = await updateExpenseS(account, id, {
     description,
     category,
     amount,
@@ -135,8 +136,9 @@ export const updateExpense = async (req: CustomRequest, res: Response) => {
 };
 
 export const deleteExpense = async (req: CustomRequest, res: Response) => {
+  const account = req.account;
   const { id } = req.params;
-  const deletedExpense = await deleteExpenseS(id);
+  const deletedExpense = await deleteExpenseS(account, id);
   res.status(200).json({ message: "Expense deleted.", deletedExpense });
 };
 

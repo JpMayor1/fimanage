@@ -38,7 +38,12 @@ const UpdateBalanceModal = ({ onClose }: UpdateBalanceModalI) => {
     >
       <div className="w-full max-w-md bg-primary rounded-2xl shadow-2xl py-8 px-6 relative">
         <button
-          className="absolute top-3 right-3 p-2 rounded-full hover:bg-red/20 cursor-pointer"
+          disabled={Number(newBalance) < 1}
+          className={`${
+            Number(newBalance) < 1
+              ? "cursor-not-allowed opacity-80"
+              : "cursor-pointer ransition-all"
+          } absolute top-3 right-3 p-2 rounded-full hover:bg-red/20 t`}
           onClick={onClose}
         >
           <FiX className="text-2xl text-red" />

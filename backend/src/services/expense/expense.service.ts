@@ -1,6 +1,7 @@
 import Account from "@/models/account.model";
 import Expense from "@/models/expense.model";
 import ExpenseCategory from "@/models/expenseCategory.model";
+import { AccountDocumentType } from "@/types/models/account.type";
 import { ExpenseType } from "@/types/models/expense.type";
 import {
   ExpenseCategoryFilterType,
@@ -52,7 +53,10 @@ export const getExpensesS = async (userId: string) => {
   return expenses;
 };
 
-export const addExpenseS = async (data: Partial<ExpenseType>) => {
+export const addExpenseS = async (
+  account: AccountDocumentType,
+  data: Partial<ExpenseType>
+) => {
   const category = await ExpenseCategory.findOne({ name: data.category });
   if (!category) throw new AppError("Category not found", 404);
   const newExpense = await Expense.create({
@@ -60,10 +64,15 @@ export const addExpenseS = async (data: Partial<ExpenseType>) => {
     icon: category.icon,
     dt: getPhDt(),
   });
+  if (data.amount && data.amount > 0) {
+    account.balance -= Number(data.amount);
+    account.save();
+  }
   return newExpense;
 };
 
 export const updateExpenseS = async (
+  account: AccountDocumentType,
   id: string,
   data: Partial<ExpenseType>
 ) => {
@@ -76,6 +85,15 @@ export const updateExpenseS = async (
     data.icon = category.icon;
   }
 
+  if (data.amount !== undefined) {
+    const oldAmount = expense.amount;
+    const newAmount = data.amount;
+    const difference = oldAmount - newAmount;
+
+    account.balance += difference;
+    await account.save();
+  }
+
   const updatedExpense = await Expense.findByIdAndUpdate(
     id,
     { ...data, dt: getPhDt() },
@@ -85,9 +103,16 @@ export const updateExpenseS = async (
   return updatedExpense;
 };
 
-export const deleteExpenseS = async (id: string) => {
+export const deleteExpenseS = async (
+  account: AccountDocumentType,
+  id: string
+) => {
   const deletedExpense = await Expense.findByIdAndDelete(id);
   if (!deletedExpense) throw new AppError("Expense not found", 404);
+
+  account.balance += deletedExpense.amount;
+  await account.save();
+
   return deletedExpense;
 };
 

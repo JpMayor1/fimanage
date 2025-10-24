@@ -1,5 +1,6 @@
 import Income from "@/models/income.model";
 import IncomeCategory from "@/models/incomeCategory.model";
+import { AccountDocumentType } from "@/types/models/account.type";
 import { IncomeType } from "@/types/models/income.type";
 import {
   IncomeCategoryFilterType,
@@ -49,18 +50,32 @@ export const deleteCategoryS = async (categoryId: string) =>
 export const getIncomesS = async (userId: string) =>
   await Income.find({ userId }).lean();
 
-export const addIncomeS = async (data: Partial<IncomeType>) => {
+export const addIncomeS = async (
+  account: AccountDocumentType,
+  data: Partial<IncomeType>
+) => {
   const category = await IncomeCategory.findOne({ name: data.category });
   if (!category) throw new AppError("Category not found", 404);
+
   const newIncome = await Income.create({
     ...data,
     icon: category.icon,
     dt: getPhDt(),
   });
+
+  if (data.amount && data.amount > 0) {
+    account.balance += Number(data.amount);
+    await account.save();
+  }
+
   return newIncome;
 };
 
-export const updateIncomeS = async (id: string, data: Partial<IncomeType>) => {
+export const updateIncomeS = async (
+  account: AccountDocumentType,
+  id: string,
+  data: Partial<IncomeType>
+) => {
   const income = await Income.findById(id);
   if (!income) throw new AppError("Income not found", 404);
 
@@ -68,6 +83,14 @@ export const updateIncomeS = async (id: string, data: Partial<IncomeType>) => {
     const category = await IncomeCategory.findOne({ name: data.category });
     if (!category) throw new AppError("Category not found", 404);
     data.icon = category.icon;
+  }
+
+  if (data.amount !== undefined) {
+    const oldAmount = income.amount;
+    const newAmount = data.amount;
+    const difference = newAmount - oldAmount;
+    account.balance += difference;
+    await account.save();
   }
 
   const updatedIncome = await Income.findByIdAndUpdate(
@@ -79,8 +102,15 @@ export const updateIncomeS = async (id: string, data: Partial<IncomeType>) => {
   return updatedIncome;
 };
 
-export const deleteIncomeS = async (id: string) => {
+export const deleteIncomeS = async (
+  account: AccountDocumentType,
+  id: string
+) => {
   const deletedIncome = await Income.findByIdAndDelete(id);
   if (!deletedIncome) throw new AppError("Income not found", 404);
+
+  account.balance -= deletedIncome.amount;
+  await account.save();
+
   return deletedIncome;
 };
