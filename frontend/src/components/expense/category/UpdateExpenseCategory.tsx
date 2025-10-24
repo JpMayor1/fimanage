@@ -39,6 +39,8 @@ const UpdateExpenseCategory = ({
   const toggleShowIcons = () =>
     setCat((prev) => ({ ...prev, showIcons: !prev.showIcons }));
 
+  const closeIcons = () => setCat((prev) => ({ ...prev, showIcons: false }));
+
   const handleReset = () =>
     setCat({ name: "", icon: "FaShoppingCart", showIcons: false });
 
@@ -119,6 +121,7 @@ const UpdateExpenseCategory = ({
             <TextField
               value={cat.name}
               onChange={(e) => handleNameChange(e.target.value)}
+              onFocus={closeIcons}
               placeholder="Category Name"
               containerClassName="flex-1"
               className="bg-black text-white border border-white/20 focus:border-yellow"

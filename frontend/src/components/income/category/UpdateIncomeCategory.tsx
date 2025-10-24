@@ -36,6 +36,8 @@ const UpdateIncomeCategory = ({ category, onClose }: UpdateIncomeCategoryI) => {
   const toggleShowIcons = () =>
     setCat((prev) => ({ ...prev, showIcons: !prev.showIcons }));
 
+  const closeIcons = () => setCat((prev) => ({ ...prev, showIcons: false }));
+
   const handleReset = () =>
     setCat({ name: "", icon: "MdBusinessCenter", showIcons: false });
 
@@ -116,6 +118,7 @@ const UpdateIncomeCategory = ({ category, onClose }: UpdateIncomeCategoryI) => {
             <TextField
               value={cat.name}
               onChange={(e) => handleNameChange(e.target.value)}
+              onFocus={closeIcons}
               placeholder="Category Name"
               containerClassName="flex-1"
               className="bg-black text-white border border-white/20 focus:border-yellow"

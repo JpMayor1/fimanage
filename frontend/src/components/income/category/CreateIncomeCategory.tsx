@@ -44,6 +44,9 @@ const CreateIncomeCategory = ({ onClose }: CreateIncomeCategoryI) => {
       }))
     );
 
+  const closeAllIconPickers = () =>
+    setCategories((prev) => prev.map((c) => ({ ...c, showIcons: false })));
+
   const handleRemoveCategory = (idx: number) =>
     setCategories((prev) => prev.filter((_, i) => i !== idx));
 
@@ -133,6 +136,7 @@ const CreateIncomeCategory = ({ onClose }: CreateIncomeCategoryI) => {
               <TextField
                 value={cat.name}
                 onChange={(e) => handleNameChange(idx, e.target.value)}
+                onFocus={closeAllIconPickers}
                 placeholder={`Name ${idx + 1}`}
                 containerClassName="flex-1"
                 className="bg-black text-white border border-white/20 focus:border-yellow"
