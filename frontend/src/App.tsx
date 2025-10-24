@@ -54,7 +54,7 @@ function App() {
           element: <DashboardPage />,
         },
         {
-          path: "/home/income/categories",
+          path: "/home/incomes/categories",
           element: <IncomeCategoriesPage />,
         },
         {
@@ -62,7 +62,7 @@ function App() {
           element: <IncomePage />,
         },
         {
-          path: "/home/expense/categories",
+          path: "/home/expenses/categories",
           element: <ExpenseCategoriesPage />,
         },
         {

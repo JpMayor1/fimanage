@@ -3,17 +3,16 @@ import CreateSavingCategory from "@/components/savings/category/CreateSavingCate
 import DeleteSavingCategory from "@/components/savings/category/DeleteSavingCategory";
 import UpdateSavingCategory from "@/components/savings/category/UpdateSavingCategory";
 import { useSavingStore } from "@/stores/saving/useSavingStore";
-import { useSideBar } from "@/stores/sidebar/useSideBar";
 import type { SavingCategoryType } from "@/types/saving/saving.type";
 import { AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
+import { IoArrowBackCircle } from "react-icons/io5";
 import { MdDelete, MdEdit } from "react-icons/md";
-import { RxHamburgerMenu } from "react-icons/rx";
 import { TbPigMoney } from "react-icons/tb";
+import { Link } from "react-router-dom";
 
 const SavingCategoriesPage = () => {
-  const { setOpen } = useSideBar();
   const { getCategories, getLoading, categories } = useSavingStore();
 
   const [showAddCategoryModal, setShowAddCategoryModal] = useState(false);
@@ -32,10 +31,9 @@ const SavingCategoriesPage = () => {
       {/* Header */}
       <div className="w-full flex items-center justify-between my-2 mb-3">
         <div className="flex items-center gap-2">
-          <RxHamburgerMenu
-            className="md:hidden text-white text-2xl"
-            onClick={() => setOpen(true)}
-          />
+          <Link to={"/home/savings"} className="md:hidden ">
+            <IoArrowBackCircle className="text-white text-2xl" />
+          </Link>
           <div>
             <h1 className="text-white text-lg font-bold">Saving Categories</h1>
             <p className="text-white/70 text-sm hidden md:block">

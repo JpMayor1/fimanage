@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { MdDelete, MdEdit } from "react-icons/md";
 import { RxHamburgerMenu } from "react-icons/rx";
+import { Link } from "react-router-dom";
 
 const IncomePage = () => {
   const { setOpen } = useSideBar();
@@ -42,13 +43,21 @@ const IncomePage = () => {
           </div>
         </div>
 
-        <button
-          className="bg-yellow/90 hover:bg-yellow flex flex-row gap-2 items-center text-black rounded-md py-2 px-4 cursor-pointer text-xs md:text-base"
-          onClick={() => setAddIncome(true)}
-        >
-          <FaPlus className="text-xs" />
-          Income
-        </button>
+        <div className="flex items-center gap-4">
+          <Link
+            to={"/home/incomes/categories"}
+            className="flex flex-row gap-2 items-center text-yellow underline rounded-md cursor-pointer text-xs md:text-base"
+          >
+            Categories
+          </Link>
+          <button
+            className="bg-yellow/90 hover:bg-yellow flex flex-row gap-2 items-center text-black rounded-md py-2 px-4 cursor-pointer text-xs md:text-base"
+            onClick={() => setAddIncome(true)}
+          >
+            <FaPlus className="text-xs" />
+            Income
+          </button>
+        </div>
       </div>
 
       {/* Income List */}

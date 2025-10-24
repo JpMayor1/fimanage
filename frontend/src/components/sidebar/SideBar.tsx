@@ -26,29 +26,9 @@ const SideBar = () => {
       link: "/home/dashboard",
       icon: MdOutlineSpaceDashboard,
     },
-    {
-      name: "Income Categories",
-      link: "/home/income/categories",
-      icon: GrMoney,
-    },
     { name: "Incomes", link: "/home/incomes", icon: GrMoney },
-    {
-      name: "Expense Categories",
-      link: "/home/expense/categories",
-      icon: GiExpense,
-    },
     { name: "Expenses", link: "/home/expenses", icon: GiExpense },
-    {
-      name: "Savings Categories",
-      link: "/home/savings/categories",
-      icon: MdOutlineSavings,
-    },
     { name: "Savings", link: "/home/savings", icon: MdOutlineSavings },
-    {
-      name: "Investments Categories",
-      link: "/home/investments/categories",
-      icon: FaMoneyBillTrendUp,
-    },
     {
       name: "Investments",
       link: "/home/investments",
@@ -56,7 +36,7 @@ const SideBar = () => {
     },
   ];
 
-  const isActive = (path: string) => location.pathname === path;
+  const isActive = (path: string) => location.pathname.includes(path);
 
   const linkBase =
     "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors";

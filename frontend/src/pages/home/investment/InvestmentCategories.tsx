@@ -3,16 +3,15 @@ import CreateInvestmentCategory from "@/components/investment/category/CreateInv
 import DeleteInvestmentCategory from "@/components/investment/category/DeleteInvestmentCategory";
 import UpdateInvestmentCategory from "@/components/investment/category/UpdateInvestmentCategory";
 import { useInvestmentStore } from "@/stores/investment/useInvestmentStore";
-import { useSideBar } from "@/stores/sidebar/useSideBar";
 import type { InvestmentCategoryType } from "@/types/investment/investment.type";
 import { AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { FaMoneyBillTrendUp, FaPlus } from "react-icons/fa6";
+import { IoArrowBackCircle } from "react-icons/io5";
 import { MdDelete, MdEdit } from "react-icons/md";
-import { RxHamburgerMenu } from "react-icons/rx";
+import { Link } from "react-router-dom";
 
 const InvestmentCategoriesPage = () => {
-  const { setOpen } = useSideBar();
   const { getCategories, getLoading, categories } = useInvestmentStore();
 
   const [showAddCategoryModal, setShowAddCategoryModal] = useState(false);
@@ -31,10 +30,9 @@ const InvestmentCategoriesPage = () => {
       {/* Header */}
       <div className="w-full flex items-center justify-between my-2 mb-3">
         <div className="flex items-center gap-2">
-          <RxHamburgerMenu
-            className="md:hidden text-white text-2xl"
-            onClick={() => setOpen(true)}
-          />
+          <Link to={"/home/investments"} className="md:hidden ">
+            <IoArrowBackCircle className="text-white text-2xl" />
+          </Link>
           <div>
             <h1 className="text-white text-lg font-bold">
               Investment Categories
