@@ -33,7 +33,7 @@ const ProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [form, setForm] = useState<AccountType>(authUser as AccountType);
   const [profilePreview, setProfilePreview] = useState<string | null>(
-    authUser?.profilePicture || null
+    (authUser?.profilePicture as string) || null
   );
 
   useEffect(() => {
@@ -135,11 +135,13 @@ const ProfilePage = () => {
             <>
               {authUser.profilePicture ? (
                 <BlurImage
-                  src={authUser.profilePicture}
+                  src={authUser.profilePicture as string}
                   alt="Profile picture"
                   className="w-36 h-36 rounded-full border-2 border-yellow/80 object-cover shadow-md mb-3 bg-white cursor-pointer"
                   draggable={false}
-                  onClick={() => setShowImage(authUser.profilePicture)}
+                  onClick={() =>
+                    setShowImage(authUser.profilePicture as string)
+                  }
                 />
               ) : (
                 <Avatar

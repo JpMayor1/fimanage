@@ -1,9 +1,5 @@
 import Account from "@/models/account.model";
-import {
-  AccountFilterType,
-  AccountType,
-  RegisterAccountType,
-} from "@/types/models/account.type";
+import { AccountFilterType, AccountType } from "@/types/models/account.type";
 
 export const findAccountS = async (
   filter: AccountFilterType
@@ -28,8 +24,9 @@ export const registerAccountS = async ({
   email,
   username,
   password,
-}: RegisterAccountType) => {
+}: Partial<AccountType>) => {
   const account = await Account.create({
+    publicId,
     profilePicture,
     firstName,
     middleName,

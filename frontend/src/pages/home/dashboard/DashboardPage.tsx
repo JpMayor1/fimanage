@@ -1,9 +1,12 @@
 import { expenseIcons } from "@/assets/icons/expenseIcons";
 import { incomeIcons } from "@/assets/icons/incomeIcons";
 import LoadingBig from "@/components/custom/loading/LoadingBig";
+import UpdateBalanceModal from "@/components/dashboard/UpdateBalanceModal";
 import { useDashboardStore } from "@/stores/dashboard/useDashboardStore";
 import { useSideBar } from "@/stores/sidebar/useSideBar";
-import { useEffect, useMemo } from "react";
+import { AnimatePresence } from "framer-motion";
+import { useEffect, useMemo, useState } from "react";
+import { MdEdit } from "react-icons/md";
 import { RxHamburgerMenu } from "react-icons/rx";
 
 const DashboardPage = () => {
@@ -11,14 +14,20 @@ const DashboardPage = () => {
   const {
     getDashboardData,
     getLoading,
+    balance,
     totalIncomes,
     totalExpenses,
     totalSavings,
     totalInvestments,
   } = useDashboardStore();
 
+  const [updateBalance, setUpdateBalance] = useState(false);
+
   useEffect(() => {
-    const fetchData = async () => await getDashboardData();
+    const fetchData = async () => {
+      const balance = await getDashboardData();
+      if (balance < 1) setUpdateBalance(true);
+    };
     fetchData();
   }, [getDashboardData]);
 
@@ -39,7 +48,6 @@ const DashboardPage = () => {
     () => totalInvestments.reduce((sum, item) => sum + item.amount, 0),
     [totalInvestments]
   );
-  const remainingBalance = incomeTotal - expenseTotal;
 
   return (
     <div className="h-screen w-full overflow-y-scroll no-scrollbar p-1">
@@ -57,6 +65,21 @@ const DashboardPage = () => {
         <>
           {/* Summary Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+            <div className="rounded-2xl p-4 shadow-md bg-card-balance text-white">
+              <div className="w-full flex items-center justify-between">
+                <h2 className="text-sm font-semibold uppercase opacity-80">
+                  Remaining Balance
+                </h2>
+
+                <button
+                  className="text-white bg-green/80 hover:bg-green rounded-md p-1 cursor-pointer"
+                  onClick={() => setUpdateBalance(true)}
+                >
+                  <MdEdit />
+                </button>
+              </div>
+              <p className="text-2xl font-bold mt-2">₱{balance || 0}</p>
+            </div>
             <div className="rounded-2xl p-4 shadow-md bg-card-income text-white">
               <h2 className="text-sm font-semibold uppercase opacity-80">
                 Total Income
@@ -71,14 +94,6 @@ const DashboardPage = () => {
               </h2>
               <p className="text-2xl font-bold mt-2">
                 ₱{expenseTotal.toLocaleString()}
-              </p>
-            </div>
-            <div className="rounded-2xl p-4 shadow-md bg-card-balance text-white">
-              <h2 className="text-sm font-semibold uppercase opacity-80">
-                Remaining Balance
-              </h2>
-              <p className="text-2xl font-bold mt-2">
-                ₱{remainingBalance.toLocaleString()}
               </p>
             </div>
             <div className="rounded-2xl p-4 shadow-md bg-card-savings text-black">
@@ -180,6 +195,12 @@ const DashboardPage = () => {
           </div>
         </>
       )}
+
+      <AnimatePresence>
+        {updateBalance && !getLoading && (
+          <UpdateBalanceModal onClose={() => setUpdateBalance(false)} />
+        )}
+      </AnimatePresence>
     </div>
   );
 };

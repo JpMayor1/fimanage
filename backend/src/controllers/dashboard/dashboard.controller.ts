@@ -7,7 +7,19 @@ export const getDashboardData = async (req: CustomRequest, res: Response) => {
   const { totalIncomes, totalExpenses, totalSavings, totalInvestments } =
     await getDashboardDataS(account._id);
 
-  res
-    .status(200)
-    .json({ totalIncomes, totalExpenses, totalSavings, totalInvestments });
+  res.status(200).json({
+    balance: account.balance,
+    totalIncomes,
+    totalExpenses,
+    totalSavings,
+    totalInvestments,
+  });
+};
+
+export const updateBalance = async (req: CustomRequest, res: Response) => {
+  const { balance } = req.body;
+  const account = req.account;
+  account.balance = balance;
+  await account.save();
+  res.status(200).json({ message: "Balance updated." });
 };

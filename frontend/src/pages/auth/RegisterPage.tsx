@@ -1,7 +1,7 @@
 import LoadingSmall from "@/components/custom/loading/LoadingSmall";
 import TextField from "@/components/custom/TextField";
 import { useAuthStore } from "@/stores/auth/useAuthStore";
-import type { RegisterAccountType } from "@/types/auth/auth.type";
+import type { AccountType } from "@/types/auth/auth.type";
 import { motion } from "framer-motion";
 import React, { useRef, useState } from "react";
 import {
@@ -22,7 +22,7 @@ const RegisterPage: React.FC = () => {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const [form, setForm] = useState<RegisterAccountType>({
+  const [form, setForm] = useState<Partial<AccountType>>({
     profilePicture: null,
     firstName: "",
     middleName: "",

@@ -1,7 +1,7 @@
 export type AccountType = {
   _id: string;
   publicId?: string;
-  profilePicture?: string;
+  profilePicture?: string | File | null;
   newProfilePicture?: File | null;
   firstName: string;
   middleName?: string;
@@ -14,18 +14,6 @@ export type AccountType = {
   recoveryCode?: string;
   createdAt: string;
   updatedAt: string;
-};
-
-export type RegisterAccountType = {
-  profilePicture?: null | File;
-  firstName: string;
-  middleName?: string;
-  lastName: string;
-  suffix?: string;
-  address: string;
-  email: string;
-  username: string;
-  password: string;
 };
 
 export type AuthStateType = {
@@ -43,7 +31,7 @@ export type AuthStateType = {
     username,
     password,
     address,
-  }: RegisterAccountType) => Promise<boolean>;
+  }: Partial<AccountType>) => Promise<boolean>;
   loginAccount: ({
     username,
     password,

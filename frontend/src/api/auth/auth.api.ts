@@ -1,5 +1,5 @@
 import axiosInstance from "@/axios/axiosInstance";
-import type { RegisterAccountType } from "@/types/auth/auth.type";
+import type { AccountType } from "@/types/auth/auth.type";
 import { uploadFile } from "@/utils/file/uploadFile";
 
 export const registerApi = async ({
@@ -12,7 +12,7 @@ export const registerApi = async ({
   username,
   password,
   address,
-}: RegisterAccountType) => {
+}: Partial<AccountType>) => {
   let default_secure_url = "";
   let default_public_id = "";
   if (profilePicture) {

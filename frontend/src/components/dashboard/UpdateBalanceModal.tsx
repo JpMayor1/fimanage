@@ -1,30 +1,30 @@
-import LoadingSmall from "@/components/custom/loading/LoadingSmall";
-import TextField from "@/components/custom/TextField";
 import { overlayAnim } from "@/constants/overlay.animation.constant";
-import { useExpenseStore } from "@/stores/expense/useExpenseStore";
+import { useDashboardStore } from "@/stores/dashboard/useDashboardStore";
 import { motion } from "framer-motion";
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import toast from "react-hot-toast";
 import { FiX } from "react-icons/fi";
+import TextField from "../custom/TextField";
+import LoadingSmall from "../custom/loading/LoadingSmall";
 
-interface UpdateDailyLimitI {
+interface UpdateBalanceModalI {
   onClose: () => void;
 }
 
-const UpdateDailyLimit = ({ onClose }: UpdateDailyLimitI) => {
-  const { limit: currentLimit, updateLimit, updateLoading } = useExpenseStore();
+const UpdateBalanceModal = ({ onClose }: UpdateBalanceModalI) => {
+  const { balance, updateBalance, updateLoading } = useDashboardStore();
 
-  const [limit, setLimit] = useState<string | number>(currentLimit);
+  const [newBalance, setNewBalance] = useState<string | number>(balance);
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
-    setLimit(e.target.value);
+    setNewBalance(e.target.value);
   }
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    if (!limit || Number(limit) <= 0)
-      return toast.error("Please enter a valid daily limit.");
-    const success = await updateLimit(Number(limit));
+    if (!newBalance || Number(newBalance) <= 0)
+      return toast.error("Please enter a valid balance.");
+    const success = await updateBalance(Number(newBalance));
     if (success) onClose();
   }
 
@@ -46,15 +46,15 @@ const UpdateDailyLimit = ({ onClose }: UpdateDailyLimitI) => {
 
         <form className="space-y-4 w-full" onSubmit={handleSubmit}>
           <label className="block font-semibold text-white">
-            Update Daily Limit
+            {balance > 0 ? "Update" : "Set"} Balance
           </label>
 
           <TextField
             type="number"
-            name="limit"
-            value={limit}
+            name="newBalance"
+            value={newBalance}
             onChange={handleChange}
-            placeholder="Enter new limit (₱)"
+            placeholder="Enter new balance (₱)"
             className="bg-black text-white border focus:border-yellow"
           />
 
@@ -67,7 +67,11 @@ const UpdateDailyLimit = ({ onClose }: UpdateDailyLimitI) => {
                 : "cursor-pointer hover:scale-101 hover:shadow-xl transition-all"
             } w-full py-2 rounded-xl bg-gradient-to-r from-yellow to-yellow/80 text-black text-lg mt-2 shadow-md`}
           >
-            {updateLoading ? <LoadingSmall /> : "Update Limit"}
+            {updateLoading ? (
+              <LoadingSmall />
+            ) : (
+              `${balance > 0 ? "Update" : "Set"} Balance`
+            )}
           </button>
         </form>
       </div>
@@ -75,4 +79,4 @@ const UpdateDailyLimit = ({ onClose }: UpdateDailyLimitI) => {
   );
 };
 
-export default UpdateDailyLimit;
+export default UpdateBalanceModal;

@@ -110,7 +110,7 @@ const SideBar = () => {
         >
           {authUser.profilePicture ? (
             <BlurImage
-              src={authUser.profilePicture}
+              src={authUser.profilePicture as string}
               alt="Profile picture"
               className="h-10 w-10 rounded-full object-cover border border-primary"
               draggable={false}

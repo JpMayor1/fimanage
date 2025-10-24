@@ -4,12 +4,15 @@ import type { InvestmentType } from "../investment/investment.type";
 import type { SavingType } from "../saving/saving.type";
 
 export type DashboardStoreType = {
+  balance: number;
   totalIncomes: IncomeType[];
   totalExpenses: ExpenseType[];
   totalSavings: SavingType[];
   totalInvestments: InvestmentType[];
 
   getLoading: boolean;
+  updateLoading: boolean;
 
-  getDashboardData: () => Promise<void>;
+  getDashboardData: () => Promise<number>;
+  updateBalance: (balance: number) => Promise<boolean>;
 };
