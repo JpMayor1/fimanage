@@ -13,6 +13,7 @@ export type IncomeType = {
   description: string;
   amount: number;
   dt: string;
+  createdAt: string;
 };
 
 export type IncomeStoreType = {
