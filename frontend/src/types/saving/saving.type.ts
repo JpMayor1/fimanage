@@ -23,6 +23,7 @@ export type SavingType = {
     | "On Maturity"
     | string;
   dt: string;
+  createdAt: string;
 };
 
 export type SavingStoreType = {

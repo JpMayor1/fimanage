@@ -23,6 +23,7 @@ export type InvestmentType = {
     | "On Maturity"
     | string;
   dt: string;
+  createdAt: string;
 };
 
 export type InvestmentStoreType = {
