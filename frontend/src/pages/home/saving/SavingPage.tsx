@@ -73,64 +73,61 @@ const SavingPage = () => {
                 </p>
               </div>
             ) : (
-              savings
-                .slice()
-                .reverse()
-                .map((saving, index) => {
-                  return (
-                    <div
-                      key={index}
-                      className={`w-full rounded-md bg-primary shadow-lg p-4 flex justify-between ${
-                        saving.annualRate || saving.frequency
-                          ? "items-start"
-                          : "items-center"
-                      }`}
-                    >
-                      {/* Left Section */}
-                      <div className="flex items-center gap-3">
-                        <div className="w-13.5 h-13.5 flex items-center justify-center rounded-md border border-white/20 bg-black text-yellow">
-                          <TbPigMoney className="text-2xl" />
-                        </div>
-                        <div>
-                          <p className="text-yellow text-xs">
-                            {saving.category}
-                          </p>
-                          <p className="text-white text-sm max-w-[120px] truncate sm:max-w-none sm:whitespace-normal">
-                            {saving.description}
-                          </p>
-                          <p className="text-white/30 text-xxs sm:text-sm">
-                            {saving.dt}
-                          </p>
-                        </div>
-                      </div>
+              savings.map((saving, index) => (
+                <div
+                  key={index}
+                  className="w-full rounded-md bg-primary shadow-lg p-4 hover:bg-black/40 transition-all duration-200"
+                >
+                  {/* Top Row: Category + Date */}
+                  <div className="flex justify-between items-center mb-1">
+                    <p className="text-yellow text-xs font-medium">
+                      {saving.category}{" "}
+                      <span className="text-white/40 text-[10px]">
+                        (Saving)
+                      </span>
+                    </p>
+                    <p className="text-white/40 text-[10px]">{saving.dt}</p>
+                  </div>
 
-                      {/* Right Section */}
-                      <div className="space-y-2">
-                        <p className="text-yellow text-xs text-end">
-                          {saving.annualRate && `${saving.annualRate}%`}{" "}
-                          {saving.frequency}
+                  {/* Bottom Row: Icon + Description + Amount + Buttons */}
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 flex items-center justify-center rounded-md border border-yellow/30 bg-yellow/10 text-yellow">
+                        <TbPigMoney className="text-lg" />
+                      </div>
+                      <div>
+                        <p className="text-white text-sm truncate max-w-[120px] sm:max-w-none">
+                          {saving.description}
                         </p>
-                        <div className="flex items-center justify-center gap-2">
-                          <p className="text-green">
-                            ₱{saving.amount.toLocaleString()}
+                        {(saving.annualRate || saving.frequency) && (
+                          <p className="text-yellow/80 text-xs">
+                            {saving.annualRate && `${saving.annualRate}%`}{" "}
+                            {saving.frequency}
                           </p>
-                          <button
-                            className="text-white bg-green/80 hover:bg-green rounded-md p-2 cursor-pointer"
-                            onClick={() => seUpdateSaving(saving)}
-                          >
-                            <MdEdit />
-                          </button>
-                          <button
-                            className="text-white bg-red/80 hover:bg-red rounded-md p-2 cursor-pointer"
-                            onClick={() => seDeleteSaving(saving)}
-                          >
-                            <MdDelete />
-                          </button>
-                        </div>
+                        )}
                       </div>
                     </div>
-                  );
-                })
+
+                    <div className="flex items-center gap-2">
+                      <p className="text-green font-semibold">
+                        ₱{saving.amount.toLocaleString()}
+                      </p>
+                      <button
+                        className="text-white bg-green/80 hover:bg-green rounded-md p-2 cursor-pointer transition-all duration-200"
+                        onClick={() => seUpdateSaving(saving)}
+                      >
+                        <MdEdit />
+                      </button>
+                      <button
+                        className="text-white bg-red/80 hover:bg-red rounded-md p-2 cursor-pointer transition-all duration-200"
+                        onClick={() => seDeleteSaving(saving)}
+                      >
+                        <MdDelete />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))
             )}
           </div>
         )}

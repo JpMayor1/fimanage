@@ -116,40 +116,45 @@ const RecentActivity: React.FC<RecentActivityProps> = ({
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.2 }}
-                  className="flex justify-between bg-black/30 rounded-lg p-2 items-center hover:bg-black/50 transition"
+                  className="bg-black/30 rounded-lg p-2 hover:bg-black/50 transition"
                 >
-                  <div className="flex items-center gap-2">
-                    {Icon && <Icon size={20} className={colorClass} />}
-                    <div>
-                      <p className="text-white font-medium">
-                        {item.category}{" "}
-                        <span className="text-xs text-gray-400">
-                          (
-                          {item.type.charAt(0).toUpperCase() +
-                            item.type.slice(1)}
-                          )
-                        </span>
-                      </p>
+                  {/* Top Row: Category + Date */}
+                  <div className="flex justify-between items-center">
+                    <p className="text-white font-medium">
+                      {item.category}{" "}
+                      <span className="text-xs text-gray-400">
+                        (
+                        {item.type.charAt(0).toUpperCase() + item.type.slice(1)}
+                        )
+                      </span>
+                    </p>
+                    <p className="text-[10px] text-gray-500">{date}</p>
+                  </div>
+
+                  {/* Bottom Row: Icon + Description + Amount */}
+                  <div className="flex justify-between items-center mt-1">
+                    <div className="flex items-center gap-2">
+                      {Icon && <Icon size={20} className={colorClass} />}
                       {item.description && (
                         <p className="text-xs text-gray-400">
                           {item.description}
                         </p>
                       )}
-                      <p className="text-[10px] text-gray-500">{date}</p>
                     </div>
+
+                    <p
+                      className={`font-semibold ${
+                        isIncome
+                          ? "text-card-income"
+                          : isExpense
+                          ? "text-card-expense"
+                          : colorClass
+                      }`}
+                    >
+                      {isIncome ? "+" : isExpense ? "-" : ""}₱
+                      {item.amount.toLocaleString()}
+                    </p>
                   </div>
-                  <p
-                    className={`font-semibold ${
-                      isIncome
-                        ? "text-card-income"
-                        : isExpense
-                        ? "text-card-expense"
-                        : colorClass
-                    }`}
-                  >
-                    {isIncome ? "+" : isExpense ? "-" : ""}₱
-                    {item.amount.toLocaleString()}
-                  </p>
                 </motion.li>
               );
             })}

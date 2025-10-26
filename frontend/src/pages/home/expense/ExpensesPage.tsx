@@ -206,7 +206,7 @@ const ExpensePage = () => {
                             )}
                           </button>
 
-                          {/* Expandable content */}
+                          {/* Expandable Content */}
                           <AnimatePresence initial={false}>
                             {isOpen && (
                               <motion.div
@@ -229,45 +229,54 @@ const ExpensePage = () => {
                                       return (
                                         <div
                                           key={expense._id}
-                                          className="w-full flex items-center justify-between bg-zinc-950/60 border border-white/10 rounded-xl p-4 hover:border-yellow/30 transition-all duration-200"
+                                          className="w-full bg-zinc-950/60 border border-white/10 rounded-xl p-4 hover:border-yellow/30 transition-all duration-200"
                                         >
-                                          <div className="flex items-center gap-3">
-                                            <div className="w-11 h-11 flex items-center justify-center rounded-lg bg-yellow/10 border border-yellow/30 text-yellow">
-                                              <Icon className="text-xl" />
-                                            </div>
-                                            <div>
-                                              <p className="text-yellow text-xs font-medium">
-                                                {expense.category}
-                                              </p>
+                                          {/* Top Row: Category + Date */}
+                                          <div className="flex justify-between items-center mb-1">
+                                            <p className="text-yellow text-xs font-medium">
+                                              {expense.category}{" "}
+                                              <span className="text-white/40 text-[10px]">
+                                                (Expense)
+                                              </span>
+                                            </p>
+                                            <p className="text-white/40 text-[10px]">
+                                              {expense.dt}
+                                            </p>
+                                          </div>
+
+                                          {/* Bottom Row: Icon + Description + Amount + Buttons */}
+                                          <div className="flex justify-between items-center">
+                                            <div className="flex items-center gap-3">
+                                              <div className="w-9 h-9 flex items-center justify-center rounded-lg bg-yellow/10 border border-yellow/30 text-yellow">
+                                                <Icon className="text-lg" />
+                                              </div>
                                               <p className="text-white text-sm truncate max-w-[140px] sm:max-w-none">
                                                 {expense.description}
                                               </p>
-                                              <p className="text-white/40 text-xs">
-                                                {expense.dt}
-                                              </p>
                                             </div>
-                                          </div>
 
-                                          <div className="flex items-center gap-2">
-                                            <p className="text-green font-semibold">
-                                              ₱{expense.amount.toLocaleString()}
-                                            </p>
-                                            <button
-                                              className="text-white/90 bg-green/80 hover:bg-green rounded-lg p-2 transition-all duration-200 cursor-pointer"
-                                              onClick={() =>
-                                                seUpdateExpense(expense)
-                                              }
-                                            >
-                                              <MdEdit />
-                                            </button>
-                                            <button
-                                              className="text-white/90 bg-red/80 hover:bg-red rounded-lg p-2 transition-all duration-200 cursor-pointer"
-                                              onClick={() =>
-                                                seDeleteExpense(expense)
-                                              }
-                                            >
-                                              <MdDelete />
-                                            </button>
+                                            <div className="flex items-center gap-2">
+                                              <p className="text-red font-semibold">
+                                                -₱
+                                                {expense.amount.toLocaleString()}
+                                              </p>
+                                              <button
+                                                className="text-white/90 bg-green/80 hover:bg-green rounded-lg p-2 transition-all duration-200 cursor-pointer"
+                                                onClick={() =>
+                                                  seUpdateExpense(expense)
+                                                }
+                                              >
+                                                <MdEdit />
+                                              </button>
+                                              <button
+                                                className="text-white/90 bg-red/80 hover:bg-red rounded-lg p-2 transition-all duration-200 cursor-pointer"
+                                                onClick={() =>
+                                                  seDeleteExpense(expense)
+                                                }
+                                              >
+                                                <MdDelete />
+                                              </button>
+                                            </div>
                                           </div>
                                         </div>
                                       );

@@ -74,64 +74,62 @@ const InvestmentPage = () => {
                 </p>
               </div>
             ) : (
-              investments
-                .slice()
-                .reverse()
-                .map((investment, index) => {
-                  return (
-                    <div
-                      key={index}
-                      className={`w-full rounded-md bg-primary shadow-lg p-4 flex justify-between ${
-                        investment.annualRate || investment.frequency
-                          ? "items-start"
-                          : "items-center"
-                      }`}
-                    >
-                      {/* Left Section */}
-                      <div className="flex items-center gap-3">
-                        <div className="w-13.5 h-13.5 flex items-center justify-center rounded-md border border-white/20 bg-black text-yellow">
-                          <FaMoneyBillTrendUp className="text-2xl" />
-                        </div>
-                        <div>
-                          <p className="text-yellow text-xs">
-                            {investment.category}
-                          </p>
-                          <p className="text-white text-sm max-w-[120px] truncate sm:max-w-none sm:whitespace-normal">
-                            {investment.description}
-                          </p>
-                          <p className="text-white/30 text-xxs sm:text-sm">
-                            {investment.dt}
-                          </p>
-                        </div>
-                      </div>
+              investments.map((investment, index) => (
+                <div
+                  key={index}
+                  className="w-full rounded-md bg-primary shadow-lg p-4 hover:bg-black/40 transition-all duration-200"
+                >
+                  {/* Top Row: Category + Date */}
+                  <div className="flex justify-between items-center mb-1">
+                    <p className="text-yellow text-xs font-medium">
+                      {investment.category}{" "}
+                      <span className="text-white/40 text-[10px]">
+                        (Investment)
+                      </span>
+                    </p>
+                    <p className="text-white/40 text-[10px]">{investment.dt}</p>
+                  </div>
 
-                      {/* Right Section */}
-                      <div className="space-y-2">
-                        <p className="text-yellow text-xs text-end">
-                          {investment.annualRate && `${investment.annualRate}%`}{" "}
-                          {investment.frequency}
+                  {/* Bottom Row: Icon + Description + Amount + Buttons */}
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 flex items-center justify-center rounded-md border border-yellow/30 bg-yellow/10 text-yellow">
+                        <FaMoneyBillTrendUp className="text-lg" />
+                      </div>
+                      <div>
+                        <p className="text-white text-sm truncate max-w-[120px] sm:max-w-none">
+                          {investment.description}
                         </p>
-                        <div className="flex items-center justify-center gap-2">
-                          <p className="text-green">
-                            ₱{investment.amount.toLocaleString()}
+                        {(investment.annualRate || investment.frequency) && (
+                          <p className="text-yellow/80 text-xs">
+                            {investment.annualRate &&
+                              `${investment.annualRate}%`}{" "}
+                            {investment.frequency}
                           </p>
-                          <button
-                            className="text-white bg-green/80 hover:bg-green rounded-md p-2 cursor-pointer"
-                            onClick={() => seUpdateInvestment(investment)}
-                          >
-                            <MdEdit />
-                          </button>
-                          <button
-                            className="text-white bg-red/80 hover:bg-red rounded-md p-2 cursor-pointer"
-                            onClick={() => seDeleteInvestment(investment)}
-                          >
-                            <MdDelete />
-                          </button>
-                        </div>
+                        )}
                       </div>
                     </div>
-                  );
-                })
+
+                    <div className="flex items-center gap-2">
+                      <p className="text-green font-semibold">
+                        ₱{investment.amount.toLocaleString()}
+                      </p>
+                      <button
+                        className="text-white bg-green/80 hover:bg-green rounded-md p-2 cursor-pointer transition-all duration-200"
+                        onClick={() => seUpdateInvestment(investment)}
+                      >
+                        <MdEdit />
+                      </button>
+                      <button
+                        className="text-white bg-red/80 hover:bg-red rounded-md p-2 cursor-pointer transition-all duration-200"
+                        onClick={() => seDeleteInvestment(investment)}
+                      >
+                        <MdDelete />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))
             )}
           </div>
         )}
