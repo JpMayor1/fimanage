@@ -16,9 +16,12 @@ import { showError } from "@/utils/error/error.util";
 import toast from "react-hot-toast";
 import { create } from "zustand";
 
-export const useInvestmentStore = create<InvestmentStoreType>((set) => ({
+export const useInvestmentStore = create<InvestmentStoreType>((set, get) => ({
   categories: [],
   investments: [],
+
+  hasMore: true,
+  page: 0,
 
   getLoading: false,
   createLoading: false,
@@ -96,11 +99,24 @@ export const useInvestmentStore = create<InvestmentStoreType>((set) => ({
   },
 
   // Investment
-  getInvestments: async () => {
+  getInvestments: async (append = false) => {
+    const { page, investments } = get();
+    const limit = 20;
+    const skip = append ? page * limit : 0;
+
     set({ getLoading: true });
     try {
-      const response = await getInvestmentsApi();
-      set({ investments: response.data.investments });
+      const response = await getInvestmentsApi(skip, limit);
+      const { investments: newInvestments, total } = response.data;
+      const merged = append
+        ? [...investments, ...newInvestments]
+        : newInvestments;
+
+      set({
+        investments: merged,
+        hasMore: merged.length < total,
+        page: append ? page + 1 : 1,
+      });
     } catch (error) {
       console.error("Error getting investments", error);
       showError(error);

@@ -30,6 +30,9 @@ export type InvestmentStoreType = {
   categories: InvestmentCategoryType[];
   investments: InvestmentType[];
 
+  hasMore: boolean;
+  page: number;
+
   getLoading: boolean;
   createLoading: boolean;
   updateLoading: boolean;
@@ -45,7 +48,7 @@ export type InvestmentStoreType = {
   deleteCategory: (categoryId: string) => Promise<boolean>;
 
   // Investment
-  getInvestments: () => Promise<void>;
+  getInvestments: (append: boolean) => Promise<void>;
   addInvestment: (data: Partial<InvestmentType>) => Promise<boolean>;
   updateInvestment: (
     id: string,

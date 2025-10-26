@@ -29,8 +29,8 @@ export const deleteCategoryApi = async (categoryId: string) =>
   await axiosInstance.delete(`/investment/category/delete/${categoryId}`);
 
 // Investments
-export const getInvestmentsApi = async () =>
-  await axiosInstance.get("investment/all");
+export const getInvestmentsApi = async (skip = 0, limit = 20) =>
+  await axiosInstance.get(`/investment/all?skip=${skip}&limit=${limit}`);
 
 export const addInvestmentApi = async (data: Partial<InvestmentType>) =>
   await axiosInstance.post("/investment/add", data);

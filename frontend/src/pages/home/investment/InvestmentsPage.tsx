@@ -1,4 +1,4 @@
-import LoadingBig from "@/components/custom/loading/LoadingBig";
+import LoadingSmall from "@/components/custom/loading/LoadingSmall";
 import AddInvestment from "@/components/investment/main/AddInvestment";
 import DeleteInvestment from "@/components/investment/main/DeleteInvestment";
 import UpdateInvestment from "@/components/investment/main/UpdateInvestment";
@@ -6,7 +6,7 @@ import { useInvestmentStore } from "@/stores/investment/useInvestmentStore";
 import { useSideBar } from "@/stores/sidebar/useSideBar";
 import type { InvestmentType } from "@/types/investment/investment.type";
 import { AnimatePresence } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { FaMoneyBillTrendUp, FaPlus } from "react-icons/fa6";
 import { MdDelete, MdEdit } from "react-icons/md";
 import { RxHamburgerMenu } from "react-icons/rx";
@@ -14,7 +14,8 @@ import { Link } from "react-router-dom";
 
 const InvestmentPage = () => {
   const { setOpen } = useSideBar();
-  const { getInvestments, getLoading, investments } = useInvestmentStore();
+  const { getInvestments, getLoading, investments, hasMore } =
+    useInvestmentStore();
 
   const [addInvestment, setAddInvestment] = useState(false);
   const [updateInvestment, seUpdateInvestment] =
@@ -22,10 +23,30 @@ const InvestmentPage = () => {
   const [deleteInvestment, seDeleteInvestment] =
     useState<InvestmentType | null>(null);
 
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
   useEffect(() => {
-    const fetchinvestments = async () => await getInvestments();
+    const fetchinvestments = async () => await getInvestments(false);
     fetchinvestments();
   }, [getInvestments]);
+
+  const handleScroll = useCallback(() => {
+    if (!containerRef.current || getLoading || !hasMore) return;
+
+    const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
+
+    // if user reached bottom (or close)
+    if (scrollTop + clientHeight >= scrollHeight - 100) {
+      getInvestments(true); // fetch next 20
+    }
+  }, [getLoading, hasMore, getInvestments]);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    el.addEventListener("scroll", handleScroll);
+    return () => el.removeEventListener("scroll", handleScroll);
+  }, [handleScroll]);
 
   return (
     <div className="h-screen w-full p-1 px-2 md:px-4">
@@ -62,19 +83,20 @@ const InvestmentPage = () => {
       </div>
 
       {/* Investment List */}
-      <div className="h-[calc(100%-50px)] md:h-[calc(100%-70px)] w-full overflow-y-scroll no-scrollbar">
-        {getLoading ? (
-          <LoadingBig />
-        ) : (
-          <div className="space-y-2">
-            {investments.length === 0 ? (
-              <div className="w-full rounded-md bg-primary shadow-lg p-6 text-center">
-                <p className="text-white/70 text-sm">
-                  No investment records found.
-                </p>
-              </div>
-            ) : (
-              investments.map((investment, index) => (
+      <div
+        ref={containerRef}
+        className="h-[calc(100%-50px)] md:h-[calc(100%-70px)] w-full overflow-y-scroll no-scrollbar"
+      >
+        <div className="space-y-2">
+          {investments.length === 0 ? (
+            <div className="w-full rounded-md bg-primary shadow-lg p-6 text-center">
+              <p className="text-white/70 text-sm">
+                No investment records found.
+              </p>
+            </div>
+          ) : (
+            <>
+              {investments.map((investment, index) => (
                 <div
                   key={index}
                   className="w-full rounded-md bg-primary shadow-lg p-4 hover:bg-black/40 transition-all duration-200"
@@ -129,10 +151,21 @@ const InvestmentPage = () => {
                     </div>
                   </div>
                 </div>
-              ))
-            )}
-          </div>
-        )}
+              ))}
+
+              {getLoading && hasMore && (
+                <p className="text-white py-3">
+                  <LoadingSmall />
+                </p>
+              )}
+              {!hasMore && investments.length > 20 && (
+                <div className="py-4 text-center text-white/50 text-sm">
+                  All data have been loaded.
+                </div>
+              )}
+            </>
+          )}
+        </div>
       </div>
 
       <AnimatePresence>

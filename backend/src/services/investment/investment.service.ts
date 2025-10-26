@@ -46,8 +46,20 @@ export const deleteCategoryS = async (categoryId: string) =>
   await InvestmentCategory.findByIdAndDelete(categoryId);
 
 // Investment
-export const getInvestmentsS = async (userId: string) =>
-  await Investment.find({ userId }).lean();
+export const getInvestmentsS = async (
+  userId: string,
+  skip: number,
+  limit: number
+) => {
+  const total = await Investment.countDocuments({ userId });
+  const investments = await Investment.find({ userId })
+    .sort({ createdAt: -1 })
+    .skip(Number(skip))
+    .limit(Number(limit))
+    .lean();
+
+  return { investments, total };
+};
 
 export const addInvestmentS = async (data: Partial<InvestmentType>) => {
   const category = await InvestmentCategory.findOne({ name: data.category });

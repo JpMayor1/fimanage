@@ -92,8 +92,15 @@ export const deleteCategory = async (req: CustomRequest, res: Response) => {
 // Investment
 export const getInvestments = async (req: CustomRequest, res: Response) => {
   const account = req.account;
-  const investments = await getInvestmentsS(account._id);
-  res.status(200).json({ investments });
+  const skip = Number(req.query.skip) || 0;
+  const limit = Number(req.query.limit) || 20;
+
+  const { investments, total } = await getInvestmentsS(
+    account._id,
+    skip,
+    limit
+  );
+  res.status(200).json({ investments, total });
 };
 
 export const addInvestment = async (req: CustomRequest, res: Response) => {
