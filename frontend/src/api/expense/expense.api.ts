@@ -27,8 +27,8 @@ export const deleteCategoryApi = async (categoryId: string) =>
   await axiosInstance.delete(`/expense/category/delete/${categoryId}`);
 
 // Expense
-export const getExpensesApi = async () =>
-  await axiosInstance.get("expense/all");
+export const getExpensesApi = async (skip = 0, limit = 20) =>
+  await axiosInstance.get(`/expense/all?skip=${skip}&limit=${limit}`);
 
 export const addExpenseApi = async (data: Partial<ExpenseType>) =>
   await axiosInstance.post("/expense/add", data);

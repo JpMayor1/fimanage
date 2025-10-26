@@ -92,8 +92,11 @@ export const deleteCategory = async (req: CustomRequest, res: Response) => {
 // Expense
 export const getExpenses = async (req: CustomRequest, res: Response) => {
   const account = req.account;
-  const expenses = await getExpensesS(account._id);
-  res.status(200).json({ expenses, limit: account.limit });
+  const skip = Number(req.query.skip) || 0;
+  const limit = Number(req.query.limit) || 20;
+
+  const { expenses, total } = await getExpensesS(account._id, skip, limit);
+  res.status(200).json({ limit: account.limit, expenses, total });
 };
 
 export const addExpense = async (req: CustomRequest, res: Response) => {

@@ -18,10 +18,13 @@ import { AxiosError } from "axios";
 import toast from "react-hot-toast";
 import { create } from "zustand";
 
-export const useExpenseStore = create<ExpenseStoreType>((set) => ({
+export const useExpenseStore = create<ExpenseStoreType>((set, get) => ({
   categories: [],
   expenses: [],
   limit: 500,
+
+  hasMore: true,
+  page: 0,
 
   getLoading: false,
   createLoading: false,
@@ -100,11 +103,26 @@ export const useExpenseStore = create<ExpenseStoreType>((set) => ({
   },
 
   // Expense
-  getExpenses: async () => {
+  getExpenses: async (append = false) => {
+    const { page, expenses } = get();
+    const limit = 20;
+    const skip = append ? page * limit : 0;
+
+    if (get().getLoading || !get().hasMore) return;
+
     set({ getLoading: true });
     try {
-      const response = await getExpensesApi();
-      set({ expenses: response.data.expenses, limit: response.data.limit });
+      const response = await getExpensesApi(skip, limit);
+      const { limit: dailyLimit, expenses: newExpenses, total } = response.data;
+
+      const merged = append ? [...expenses, ...newExpenses] : newExpenses;
+
+      set({
+        limit: dailyLimit,
+        expenses: merged,
+        hasMore: merged.length < total,
+        page: append ? page + 1 : 1,
+      });
     } catch (error) {
       console.error("Error getting expenses", error);
       showError(error);

@@ -1,4 +1,4 @@
-import LoadingBig from "@/components/custom/loading/LoadingBig";
+import LoadingSmall from "@/components/custom/loading/LoadingSmall";
 import DailyLimitCard from "@/components/expense/dailylimit/DailyLimitCard";
 import DailyLimitReached from "@/components/expense/dailylimit/DailyLimitReached";
 import UpdateDailyLimit from "@/components/expense/dailylimit/UpdateDailyLimit";
@@ -10,14 +10,15 @@ import { useExpenseStore } from "@/stores/expense/useExpenseStore";
 import { useSideBar } from "@/stores/sidebar/useSideBar";
 import type { ExpenseType } from "@/types/expense/expense.type";
 import { AnimatePresence } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { Link } from "react-router-dom";
 
 const ExpensePage = () => {
   const { setOpen } = useSideBar();
-  const { getExpenses, getLoading, expenses, limit } = useExpenseStore();
+  const { getExpenses, getLoading, expenses, limit, hasMore } =
+    useExpenseStore();
 
   const [addExpense, setAddExpense] = useState(false);
   const [updateExpense, seUpdateExpense] = useState<ExpenseType | null>(null);
@@ -28,10 +29,30 @@ const ExpensePage = () => {
   const [todaySpent, setTodaySpent] = useState(0);
   const dismissedRef = useRef(false);
 
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
   useEffect(() => {
-    const fetchexpenses = async () => await getExpenses();
+    const fetchexpenses = async () => await getExpenses(false);
     fetchexpenses();
   }, [getExpenses]);
+
+  const handleScroll = useCallback(() => {
+    if (!containerRef.current || getLoading || !hasMore) return;
+
+    const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
+
+    // if user reached bottom (or close)
+    if (scrollTop + clientHeight >= scrollHeight - 100) {
+      getExpenses(true); // fetch next 20
+    }
+  }, [getLoading, hasMore, getExpenses]);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    el.addEventListener("scroll", handleScroll);
+    return () => el.removeEventListener("scroll", handleScroll);
+  }, [handleScroll]);
 
   useEffect(() => {
     const today = new Date().toDateString();
@@ -97,36 +118,44 @@ const ExpensePage = () => {
       </div>
 
       {/* Expense List */}
-      <div className="h-[calc(100%-50px)] md:h-[calc(100%-70px)] w-full overflow-y-scroll no-scrollbar">
-        {getLoading ? (
-          <LoadingBig />
-        ) : (
-          <div className="w-full">
-            {expenses.length === 0 ? (
-              <div className="w-full rounded-md bg-primary shadow-lg p-6 text-center">
-                <p className="text-white/70 text-sm">
-                  No expense records found.
-                </p>
-              </div>
-            ) : (
-              <div className="w-full">
-                {/* Daily Limit */}
-                <DailyLimitCard
-                  todaySpent={todaySpent}
-                  limit={limit}
-                  onEdit={() => setUpdateLimit(true)}
-                />
+      <div
+        ref={containerRef}
+        className="h-[calc(100%-50px)] md:h-[calc(100%-70px)] w-full overflow-y-scroll no-scrollbar"
+      >
+        <div className="w-full">
+          {expenses.length === 0 ? (
+            <div className="w-full rounded-md bg-primary shadow-lg p-6 text-center">
+              <p className="text-white/70 text-sm">No expense records found.</p>
+            </div>
+          ) : (
+            <div className="w-full">
+              {/* Daily Limit */}
+              <DailyLimitCard
+                todaySpent={todaySpent}
+                limit={limit}
+                onEdit={() => setUpdateLimit(true)}
+              />
 
-                {/* Grouped by date */}
-                <GroupedExpenses
-                  groupedExpenses={groupedExpenses}
-                  onUpdate={(expense) => seUpdateExpense(expense)}
-                  onDelete={(expense) => seDeleteExpense(expense)}
-                />
-              </div>
-            )}
-          </div>
-        )}
+              {/* Grouped by date */}
+              <GroupedExpenses
+                groupedExpenses={groupedExpenses}
+                onUpdate={(expense) => seUpdateExpense(expense)}
+                onDelete={(expense) => seDeleteExpense(expense)}
+              />
+
+              {getLoading && hasMore && (
+                <p className="text-white py-3">
+                  <LoadingSmall />
+                </p>
+              )}
+              {!hasMore && (
+                <div className="py-4 text-center text-white/50 text-sm">
+                  You've reached the end 🎉
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Modals */}

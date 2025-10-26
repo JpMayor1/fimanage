@@ -22,6 +22,9 @@ export type ExpenseStoreType = {
   expenses: ExpenseType[];
   limit: number;
 
+  hasMore: boolean;
+  page: number;
+
   getLoading: boolean;
   createLoading: boolean;
   updateLoading: boolean;
@@ -37,7 +40,7 @@ export type ExpenseStoreType = {
   deleteCategory: (categoryId: string) => Promise<boolean>;
 
   // Expense
-  getExpenses: () => Promise<void>;
+  getExpenses: (append: boolean) => Promise<void>;
   addExpense: (data: Partial<ExpenseType>) => Promise<boolean>;
   updateExpense: (id: string, data: Partial<ExpenseType>) => Promise<boolean>;
   deleteExpense: (id: string) => Promise<boolean>;

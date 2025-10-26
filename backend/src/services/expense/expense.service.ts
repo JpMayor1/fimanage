@@ -48,9 +48,19 @@ export const deleteCategoryS = async (categoryId: string) =>
   await ExpenseCategory.findByIdAndDelete(categoryId);
 
 // Expense
-export const getExpensesS = async (userId: string) => {
-  const expenses = await Expense.find({ userId }).lean();
-  return expenses;
+export const getExpensesS = async (
+  userId: string,
+  skip: number,
+  limit: number
+) => {
+  const total = await Expense.countDocuments({ userId });
+  const expenses = await Expense.find({ userId })
+    .sort({ createdAt: -1 })
+    .skip(Number(skip))
+    .limit(Number(limit))
+    .lean();
+
+  return { expenses, total };
 };
 
 export const addExpenseS = async (
