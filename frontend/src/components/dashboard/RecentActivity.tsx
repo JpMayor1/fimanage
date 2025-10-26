@@ -1,5 +1,6 @@
 import { expenseIcons } from "@/assets/icons/expenseIcons";
 import { incomeIcons } from "@/assets/icons/incomeIcons";
+import { useDashboardStore } from "@/stores/dashboard/useDashboardStore";
 import type { ExpenseType } from "@/types/expense/expense.type";
 import type { IncomeType } from "@/types/income/income.type";
 import type { InvestmentType } from "@/types/investment/investment.type";
@@ -10,34 +11,34 @@ import CustomSelect from "../custom/CustomSelect";
 
 type FilterType = "all" | "income" | "expense" | "savings" | "investment";
 
-interface RecentActivityProps {
-  totalIncomes: IncomeType[];
-  totalExpenses: ExpenseType[];
-  totalSavings: SavingType[];
-  totalInvestments: InvestmentType[];
-}
-
 type UnifiedActivity =
   | (IncomeType & { type: "income" })
   | (ExpenseType & { type: "expense" })
   | (SavingType & { type: "savings" })
   | (InvestmentType & { type: "investment" });
 
-const RecentActivity: React.FC<RecentActivityProps> = ({
-  totalIncomes,
-  totalExpenses,
-  totalSavings,
-  totalInvestments,
-}) => {
+const RecentActivity = () => {
+  const { totalIncomes, totalExpenses, totalSavings, totalInvestments } =
+    useDashboardStore();
+
   const [filter, setFilter] = useState<FilterType>("all");
 
   // 🧮 Combine all activity into one list
   const recentActivity = useMemo(() => {
     const combined: UnifiedActivity[] = [
-      ...totalIncomes.map((item) => ({ ...item, type: "income" as const })),
-      ...totalExpenses.map((item) => ({ ...item, type: "expense" as const })),
-      ...totalSavings.map((item) => ({ ...item, type: "savings" as const })),
-      ...totalInvestments.map((item) => ({
+      ...totalIncomes.recent.map((item) => ({
+        ...item,
+        type: "income" as const,
+      })),
+      ...totalExpenses.recent.map((item) => ({
+        ...item,
+        type: "expense" as const,
+      })),
+      ...totalSavings.recent.map((item) => ({
+        ...item,
+        type: "savings" as const,
+      })),
+      ...totalInvestments.recent.map((item) => ({
         ...item,
         type: "investment" as const,
       })),

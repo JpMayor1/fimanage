@@ -6,20 +6,12 @@ import UpdateBalanceModal from "@/components/dashboard/UpdateBalanceModal";
 import { useDashboardStore } from "@/stores/dashboard/useDashboardStore";
 import { useSideBar } from "@/stores/sidebar/useSideBar";
 import { AnimatePresence } from "framer-motion";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { RxHamburgerMenu } from "react-icons/rx";
 
 const DashboardPage = () => {
   const { setOpen } = useSideBar();
-  const {
-    getDashboardData,
-    getLoading,
-    balance,
-    totalIncomes,
-    totalExpenses,
-    totalSavings,
-    totalInvestments,
-  } = useDashboardStore();
+  const { getDashboardData, getLoading } = useDashboardStore();
 
   const [updateBalance, setUpdateBalance] = useState(false);
 
@@ -30,24 +22,6 @@ const DashboardPage = () => {
     };
     fetchData();
   }, [getDashboardData]);
-
-  // Totals
-  const incomeTotal = useMemo(
-    () => totalIncomes.reduce((sum, item) => sum + item.amount, 0),
-    [totalIncomes]
-  );
-  const expenseTotal = useMemo(
-    () => totalExpenses.reduce((sum, item) => sum + item.amount, 0),
-    [totalExpenses]
-  );
-  const savingsTotal = useMemo(
-    () => totalSavings.reduce((sum, item) => sum + item.amount, 0),
-    [totalSavings]
-  );
-  const investmentTotal = useMemo(
-    () => totalInvestments.reduce((sum, item) => sum + item.amount, 0),
-    [totalInvestments]
-  );
 
   return (
     <div className="h-screen w-full overflow-y-scroll no-scrollbar p-1 px-2 md:px-4">
@@ -64,25 +38,13 @@ const DashboardPage = () => {
       ) : (
         <div className="w-full space-y-5">
           {/* Summary Cards */}
-          <SummaryCards
-            balance={balance}
-            incomeTotal={incomeTotal}
-            expenseTotal={expenseTotal}
-            savingsTotal={savingsTotal}
-            investmentTotal={investmentTotal}
-            onEditBalance={() => setUpdateBalance(true)}
-          />
+          <SummaryCards onEditBalance={() => setUpdateBalance(true)} />
 
           {/* Calendar Expense */}
           <CalendarProgress />
 
           {/* Recent Activity */}
-          <RecentActivity
-            totalIncomes={totalIncomes}
-            totalExpenses={totalExpenses}
-            totalSavings={totalSavings}
-            totalInvestments={totalInvestments}
-          />
+          <RecentActivity />
         </div>
       )}
 

@@ -7,10 +7,10 @@ import type { SavingType } from "../saving/saving.type";
 export type DashboardStoreType = {
   balance: number;
   dailyExpense: CalendarType[];
-  totalIncomes: IncomeType[];
-  totalExpenses: ExpenseType[];
-  totalSavings: SavingType[];
-  totalInvestments: InvestmentType[];
+  totalIncomes: { total: number; recent: IncomeType[] };
+  totalExpenses: { total: number; recent: ExpenseType[] };
+  totalSavings: { total: number; recent: SavingType[] };
+  totalInvestments: { total: number; recent: InvestmentType[] };
 
   getLoading: boolean;
   updateLoading: boolean;

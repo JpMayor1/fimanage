@@ -10,10 +10,10 @@ import { create } from "zustand";
 export const useDashboardStore = create<DashboardStoreType>((set) => ({
   balance: 0,
   dailyExpense: [],
-  totalIncomes: [],
-  totalExpenses: [],
-  totalSavings: [],
-  totalInvestments: [],
+  totalIncomes: { total: 0, recent: [] },
+  totalExpenses: { total: 0, recent: [] },
+  totalSavings: { total: 0, recent: [] },
+  totalInvestments: { total: 0, recent: [] },
 
   getLoading: false,
   updateLoading: false,

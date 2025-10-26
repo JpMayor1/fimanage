@@ -1,23 +1,19 @@
+import { useDashboardStore } from "@/stores/dashboard/useDashboardStore";
 import { formatAmount } from "@/utils/amount/formatAmount";
 import { MdEdit } from "react-icons/md";
 
 interface SummaryCardsProps {
-  balance: number;
-  incomeTotal: number;
-  expenseTotal: number;
-  savingsTotal: number;
-  investmentTotal: number;
   onEditBalance: () => void;
 }
 
-const SummaryCards: React.FC<SummaryCardsProps> = ({
-  balance,
-  incomeTotal,
-  expenseTotal,
-  savingsTotal,
-  investmentTotal,
-  onEditBalance,
-}) => {
+const SummaryCards: React.FC<SummaryCardsProps> = ({ onEditBalance }) => {
+  const {
+    balance,
+    totalIncomes,
+    totalExpenses,
+    totalSavings,
+    totalInvestments,
+  } = useDashboardStore();
   return (
     <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
       {/* Balance Card */}
@@ -44,7 +40,7 @@ const SummaryCards: React.FC<SummaryCardsProps> = ({
           Total Income
         </h2>
         <p className="text-2xl font-bold mt-2">
-          ₱{formatAmount(incomeTotal || 0)}
+          ₱{formatAmount(totalIncomes.total || 0)}
         </p>
       </div>
 
@@ -54,7 +50,7 @@ const SummaryCards: React.FC<SummaryCardsProps> = ({
           Total Expenses
         </h2>
         <p className="text-2xl font-bold mt-2">
-          ₱{formatAmount(expenseTotal || 0)}
+          ₱{formatAmount(totalExpenses.total || 0)}
         </p>
       </div>
 
@@ -64,7 +60,7 @@ const SummaryCards: React.FC<SummaryCardsProps> = ({
           Total Savings
         </h2>
         <p className="text-2xl font-bold mt-2">
-          ₱{formatAmount(savingsTotal || 0)}
+          ₱{formatAmount(totalSavings.total || 0)}
         </p>
       </div>
 
@@ -74,7 +70,7 @@ const SummaryCards: React.FC<SummaryCardsProps> = ({
           Total Investments
         </h2>
         <p className="text-2xl font-bold mt-2">
-          ₱{investmentTotal.toLocaleString()}
+          ₱{formatAmount(totalInvestments.total || 0)}
         </p>
       </div>
     </div>
