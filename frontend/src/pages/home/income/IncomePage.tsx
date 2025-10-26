@@ -1,4 +1,4 @@
-import LoadingBig from "@/components/custom/loading/LoadingBig";
+import LoadingSmall from "@/components/custom/loading/LoadingSmall";
 import AddIncome from "@/components/income/main/AddIncome";
 import DeleteIncome from "@/components/income/main/DeleteIncome";
 import GroupedIncomes from "@/components/income/main/GroupedIncomes";
@@ -107,7 +107,11 @@ const IncomePage = () => {
                 onUpdate={(income) => seUpdateIncome(income)}
                 onDelete={(income) => seDeleteIncome(income)}
               />
-              {getLoading && hasMore && <LoadingBig />}
+              {getLoading && hasMore && (
+                <p className="text-white py-3">
+                  <LoadingSmall />
+                </p>
+              )}
               {!hasMore && (
                 <div className="py-4 text-center text-white/50 text-sm">
                   You've reached the end 🎉
