@@ -73,6 +73,7 @@ const LoginPage: React.FC = () => {
             value={form.username}
             onChange={handleChange}
             required
+            autoFocus
             icon={<FiAtSign />}
           />
 
