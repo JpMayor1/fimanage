@@ -1,6 +1,7 @@
 import { expenseIcons } from "@/assets/icons/expenseIcons";
 import { incomeIcons } from "@/assets/icons/incomeIcons";
 import LoadingBig from "@/components/custom/loading/LoadingBig";
+import CalendarProgress from "@/components/dashboard/CalendarProgress";
 import UpdateBalanceModal from "@/components/dashboard/UpdateBalanceModal";
 import { useDashboardStore } from "@/stores/dashboard/useDashboardStore";
 import { useSideBar } from "@/stores/sidebar/useSideBar";
@@ -64,7 +65,7 @@ const DashboardPage = () => {
       ) : (
         <>
           {/* Summary Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-5">
             <div className="rounded-2xl p-4 shadow-md bg-card-balance text-white">
               <div className="w-full flex items-center justify-between">
                 <h2 className="text-sm font-semibold uppercase opacity-80">
@@ -114,8 +115,10 @@ const DashboardPage = () => {
             </div>
           </div>
 
+          <CalendarProgress />
+
           {/* Recent Activity */}
-          <div className="bg-primary rounded-2xl p-5 shadow-md mt-8">
+          <div className="bg-primary rounded-2xl p-5 shadow-md mt-5">
             <h2 className="text-lg font-bold mb-4 text-white">
               Recent Activity
             </h2>

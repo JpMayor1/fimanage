@@ -22,6 +22,7 @@ import incomeRoute from "@/routes/income/income.route";
 import investmentRoute from "@/routes/investment/investment.route";
 import profileRoute from "@/routes/profile/profile.route";
 import savingRoute from "@/routes/saving/saving.route";
+import { startDailyExpenseJob } from "./jobs/calendarJobs";
 
 const bootstrap = async () => {
   const app = express();
@@ -68,6 +69,7 @@ const bootstrap = async () => {
 
   server.listen(PORT, () => {
     initDB();
+    startDailyExpenseJob();
     console.log(`Server Running on port ${PORT}`);
   });
 };

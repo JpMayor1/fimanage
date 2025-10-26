@@ -9,6 +9,7 @@ import { create } from "zustand";
 
 export const useDashboardStore = create<DashboardStoreType>((set) => ({
   balance: 0,
+  dailyExpense: [],
   totalIncomes: [],
   totalExpenses: [],
   totalSavings: [],
@@ -23,6 +24,7 @@ export const useDashboardStore = create<DashboardStoreType>((set) => ({
       const response = await getDashboardDataApi();
       set({
         balance: response.data.balance,
+        dailyExpense: response.data.dailyExpense,
         totalIncomes: response.data.totalIncomes,
         totalExpenses: response.data.totalExpenses,
         totalSavings: response.data.totalSavings,
