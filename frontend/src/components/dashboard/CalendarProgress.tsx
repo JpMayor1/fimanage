@@ -92,7 +92,7 @@ const CalendarProgress: React.FC = () => {
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-bold">Daily Expense</h2>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           <button
             onClick={() => changeMonth("prev")}
             className="p-2 rounded-md bg-green/40 hover:bg-green/50 transition-colors cursor-pointer"

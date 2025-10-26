@@ -19,7 +19,7 @@ const SummaryCards: React.FC<SummaryCardsProps> = ({ onEditBalance }) => {
       {/* Balance Card */}
       <div className="order-last lg:order-first col-span-2 lg:col-span-1 rounded-2xl p-4 shadow-md bg-card-balance text-white">
         <div className="w-full flex items-center justify-between">
-          <h2 className="text-sm font-semibold uppercase opacity-80">
+          <h2 className="text-xs md:text-sm font-semibold uppercase opacity-80">
             Balance
           </h2>
           <button
@@ -36,7 +36,7 @@ const SummaryCards: React.FC<SummaryCardsProps> = ({ onEditBalance }) => {
 
       {/* Income */}
       <div className="order-1 lg:order-2 rounded-2xl p-4 shadow-md bg-card-income text-white">
-        <h2 className="text-sm font-semibold uppercase opacity-80">
+        <h2 className="text-xs md:text-sm font-semibold uppercase opacity-80">
           Total Income
         </h2>
         <p className="text-2xl font-bold mt-2">
@@ -46,7 +46,7 @@ const SummaryCards: React.FC<SummaryCardsProps> = ({ onEditBalance }) => {
 
       {/* Expense */}
       <div className="order-2 lg:order-3 rounded-2xl p-4 shadow-md bg-card-expense text-white">
-        <h2 className="text-sm font-semibold uppercase opacity-80">
+        <h2 className="text-xs md:text-sm font-semibold uppercase opacity-80">
           Total Expenses
         </h2>
         <p className="text-2xl font-bold mt-2">
@@ -56,7 +56,7 @@ const SummaryCards: React.FC<SummaryCardsProps> = ({ onEditBalance }) => {
 
       {/* Savings */}
       <div className="order-3 lg:order-4 rounded-2xl p-4 shadow-md bg-card-savings text-black">
-        <h2 className="text-sm font-semibold uppercase opacity-80">
+        <h2 className="text-xs md:text-sm font-semibold uppercase opacity-80">
           Total Savings
         </h2>
         <p className="text-2xl font-bold mt-2">
@@ -66,7 +66,7 @@ const SummaryCards: React.FC<SummaryCardsProps> = ({ onEditBalance }) => {
 
       {/* Investments */}
       <div className="order-4 lg:order-5 rounded-2xl p-4 shadow-md bg-card-investment text-black">
-        <h2 className="text-sm font-semibold uppercase opacity-80">
+        <h2 className="text-xs md:text-sm font-semibold uppercase opacity-80">
           Total Investments
         </h2>
         <p className="text-2xl font-bold mt-2">
