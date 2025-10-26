@@ -1,6 +1,6 @@
 import { useDashboardStore } from "@/stores/dashboard/useDashboardStore";
 import dayjs, { Dayjs } from "dayjs";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 export type CalendarType = {
@@ -15,6 +15,11 @@ export type CalendarType = {
 const CalendarProgress: React.FC = () => {
   const { dailyExpense } = useDashboardStore();
   const [currentMonth, setCurrentMonth] = useState<Dayjs>(dayjs());
+  const [fade, setFade] = useState<"in" | "out">("in");
+  const [animatedProgress, setAnimatedProgress] = useState<
+    Record<string, number>
+  >({});
+
   const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
   const { startDayIndex, daysArray } = useMemo(() => {
@@ -25,28 +30,71 @@ const CalendarProgress: React.FC = () => {
     return { startDayIndex, daysArray };
   }, [currentMonth]);
 
-  const prevMonth = () => setCurrentMonth((m) => m.subtract(1, "month"));
-  const nextMonth = () => setCurrentMonth((m) => m.add(1, "month"));
+  const changeMonth = (direction: "prev" | "next") => {
+    setFade("out");
+    setTimeout(() => {
+      setCurrentMonth((m) =>
+        direction === "prev" ? m.subtract(1, "month") : m.add(1, "month")
+      );
+      setFade("in");
+    }, 200);
+  };
 
   const today = dayjs();
 
-  const getProgressForDay = (date: Dayjs) => {
-    const record = dailyExpense.find((item: CalendarType) =>
-      dayjs(item.createdAt).isSame(date, "day")
-    );
-    if (!record) return 0;
-    const percent = (record.expense / record.limit) * 100;
-    return Math.min(100, Math.max(0, percent));
-  };
+  useEffect(() => {
+    const newProgress: Record<string, number> = {};
+    const getProgressForDay = (date: Dayjs) => {
+      const record = dailyExpense.find((item: CalendarType) =>
+        dayjs(item.createdAt).isSame(date, "day")
+      );
+      if (!record) return 0;
+      const percent = (record.expense / record.limit) * 100;
+      return Math.min(100, Math.max(0, percent));
+    };
+
+    daysArray.forEach((day) => {
+      const date = currentMonth.date(day);
+      newProgress[date.format("YYYY-MM-DD")] = getProgressForDay(date);
+    });
+
+    const duration = 800;
+    const frameRate = 60;
+    const totalFrames = Math.round((duration / 1000) * frameRate);
+    let frame = 0;
+
+    const animate = () => {
+      frame++;
+      const progressFactor = frame / totalFrames;
+      const eased =
+        progressFactor < 0.5
+          ? 4 * progressFactor * progressFactor * progressFactor
+          : 1 - Math.pow(-2 * progressFactor + 2, 3) / 2;
+
+      setAnimatedProgress(() => {
+        const interpolated: Record<string, number> = {};
+        for (const key in newProgress) {
+          interpolated[key] = newProgress[key] * eased;
+        }
+        return interpolated;
+      });
+
+      if (frame < totalFrames) {
+        requestAnimationFrame(animate);
+      }
+    };
+
+    animate();
+  }, [currentMonth, dailyExpense, daysArray]);
 
   return (
-    <div className="bg-primary text-white rounded-2xl p-5 w-full mx-auto shadow-lg select-none">
+    <div className="bg-primary text-white rounded-2xl p-5 w-full mx-auto shadow-lg select-none overflow-hidden">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-bold">Daily Expense</h2>
         <div className="flex items-center gap-3">
           <button
-            onClick={prevMonth}
+            onClick={() => changeMonth("prev")}
             className="p-2 rounded-md bg-green/40 hover:bg-green/50 transition-colors cursor-pointer"
           >
             <FaChevronLeft className="text-primary" />
@@ -55,7 +103,7 @@ const CalendarProgress: React.FC = () => {
             {currentMonth.format("MMMM YYYY")}
           </span>
           <button
-            onClick={nextMonth}
+            onClick={() => changeMonth("next")}
             className="p-2 rounded-md bg-green/40 hover:bg-green/50 transition-colors cursor-pointer"
           >
             <FaChevronRight className="text-primary" />
@@ -73,7 +121,11 @@ const CalendarProgress: React.FC = () => {
       </div>
 
       {/* Calendar Grid */}
-      <div className="grid grid-cols-7 text-center gap-y-3">
+      <div
+        className={`grid grid-cols-7 text-center gap-y-3 transition-opacity duration-200 ${
+          fade === "in" ? "opacity-100" : "opacity-0"
+        }`}
+      >
         {/* Empty cells before first day */}
         {Array.from({ length: startDayIndex }).map((_, idx) => (
           <div key={`empty-${idx}`} />
@@ -82,15 +134,17 @@ const CalendarProgress: React.FC = () => {
         {/* Actual days */}
         {daysArray.map((day) => {
           const date = currentMonth.date(day);
+          const dateKey = date.format("YYYY-MM-DD");
+          const progress = animatedProgress[dateKey] || 0;
+
+          const strokeDasharray = 113;
+          const strokeDashoffset =
+            strokeDasharray - (strokeDasharray * progress) / 100;
+
           const isToday =
             date.isSame(today, "day") &&
             date.isSame(today, "month") &&
             date.isSame(today, "year");
-
-          const progress = getProgressForDay(date);
-          const strokeDasharray = 113; // circumference for 18px radius circle
-          const strokeDashoffset =
-            strokeDasharray - (strokeDasharray * progress) / 100;
 
           return (
             <div key={day} className="relative flex justify-center">
@@ -114,11 +168,11 @@ const CalendarProgress: React.FC = () => {
                   r="18"
                   className={`${
                     progress >= 100
-                      ? "stroke-red-500"
+                      ? "stroke-red"
                       : progress >= 75
-                      ? "stroke-orange-500"
-                      : "stroke-green-500"
-                  }`}
+                      ? "stroke-blue"
+                      : "stroke-green"
+                  } transition-none`}
                   fill="none"
                   strokeWidth="2.5"
                   strokeDasharray={113}
@@ -131,7 +185,7 @@ const CalendarProgress: React.FC = () => {
               <div
                 className={`w-9 h-9 flex items-center justify-center rounded-full text-sm font-medium z-10 ${
                   isToday
-                    ? "bg-orange-500 text-white"
+                    ? "bg-card-balance text-white"
                     : "bg-transparent text-gray-300"
                 }`}
               >
