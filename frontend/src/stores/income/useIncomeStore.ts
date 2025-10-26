@@ -16,9 +16,12 @@ import { showError } from "@/utils/error/error.util";
 import toast from "react-hot-toast";
 import { create } from "zustand";
 
-export const useIncomeStore = create<IncomeStoreType>((set) => ({
+export const useIncomeStore = create<IncomeStoreType>((set, get) => ({
   categories: [],
   incomes: [],
+
+  hasMore: true,
+  page: 0,
 
   getLoading: false,
   createLoading: false,
@@ -96,13 +99,27 @@ export const useIncomeStore = create<IncomeStoreType>((set) => ({
   },
 
   // Income
-  getIncomes: async () => {
+  getIncomes: async (append = false) => {
+    const { page, incomes } = get();
+    const limit = 20;
+    const skip = append ? page * limit : 0;
+
+    if (get().getLoading || !get().hasMore) return;
+
     set({ getLoading: true });
+
     try {
-      const response = await getIncomesApi();
-      set({ incomes: response.data.incomes });
+      const response = await getIncomesApi(skip, limit);
+      const { incomes: newIncomes, total } = response.data;
+
+      const merged = append ? [...incomes, ...newIncomes] : newIncomes;
+
+      set({
+        incomes: merged,
+        hasMore: merged.length < total,
+        page: append ? page + 1 : 1,
+      });
     } catch (error) {
-      console.error("Error getting incomes", error);
       showError(error);
     } finally {
       set({ getLoading: false });

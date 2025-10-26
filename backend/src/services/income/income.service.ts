@@ -47,9 +47,20 @@ export const deleteCategoryS = async (categoryId: string) =>
   await IncomeCategory.findByIdAndDelete(categoryId);
 
 // Income
-export const getIncomesS = async (userId: string) =>
-  await Income.find({ userId }).lean();
+export const getIncomesS = async (
+  userId: string,
+  skip: number,
+  limit: number
+) => {
+  const total = await Income.countDocuments({ userId });
+  const incomes = await Income.find({ userId })
+    .sort({ createdAt: -1 })
+    .skip(Number(skip))
+    .limit(Number(limit))
+    .lean();
 
+  return { incomes, total };
+};
 export const addIncomeS = async (
   account: AccountDocumentType,
   data: Partial<IncomeType>

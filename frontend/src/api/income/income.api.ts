@@ -25,7 +25,8 @@ export const deleteCategoryApi = async (categoryId: string) =>
   await axiosInstance.delete(`/income/category/delete/${categoryId}`);
 
 // Income
-export const getIncomesApi = async () => await axiosInstance.get("income/all");
+export const getIncomesApi = async (skip = 0, limit = 20) =>
+  await axiosInstance.get(`/income/all?skip=${skip}&limit=${limit}`);
 
 export const addIncomeApi = async (data: Partial<IncomeType>) =>
   await axiosInstance.post("/income/add", data);

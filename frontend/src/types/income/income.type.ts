@@ -20,6 +20,9 @@ export type IncomeStoreType = {
   categories: IncomeCategoryType[];
   incomes: IncomeType[];
 
+  hasMore: boolean;
+  page: number;
+
   getLoading: boolean;
   createLoading: boolean;
   updateLoading: boolean;
@@ -35,7 +38,7 @@ export type IncomeStoreType = {
   deleteCategory: (categoryId: string) => Promise<boolean>;
 
   // Income
-  getIncomes: () => Promise<void>;
+  getIncomes: (append: boolean) => Promise<void>;
   addIncome: (data: Partial<IncomeType>) => Promise<boolean>;
   updateIncome: (id: string, data: Partial<IncomeType>) => Promise<boolean>;
   deleteIncome: (id: string) => Promise<boolean>;

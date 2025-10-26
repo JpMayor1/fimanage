@@ -7,23 +7,43 @@ import { useIncomeStore } from "@/stores/income/useIncomeStore";
 import { useSideBar } from "@/stores/sidebar/useSideBar";
 import type { IncomeType } from "@/types/income/income.type";
 import { AnimatePresence } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { Link } from "react-router-dom";
 
 const IncomePage = () => {
   const { setOpen } = useSideBar();
-  const { getIncomes, getLoading, incomes } = useIncomeStore();
+  const { getIncomes, getLoading, incomes, hasMore } = useIncomeStore();
 
   const [addIncome, setAddIncome] = useState(false);
   const [updateIncome, seUpdateIncome] = useState<IncomeType | null>(null);
   const [deleteIncome, seDeleteIncome] = useState<IncomeType | null>(null);
 
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
   useEffect(() => {
-    const fetchIncomes = async () => await getIncomes();
+    const fetchIncomes = async () => await getIncomes(false);
     fetchIncomes();
   }, [getIncomes]);
+
+  const handleScroll = useCallback(() => {
+    if (!containerRef.current || getLoading || !hasMore) return;
+
+    const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
+
+    // if user reached bottom (or close)
+    if (scrollTop + clientHeight >= scrollHeight - 100) {
+      getIncomes(true); // fetch next 20
+    }
+  }, [getLoading, hasMore, getIncomes]);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    el.addEventListener("scroll", handleScroll);
+    return () => el.removeEventListener("scroll", handleScroll);
+  }, [handleScroll]);
 
   const groupedIncomes = incomes.reduce((acc, inc) => {
     const dateStr = new Date(inc.createdAt).toLocaleDateString("en-US", {
@@ -71,26 +91,31 @@ const IncomePage = () => {
       </div>
 
       {/* Income List */}
-      <div className="h-[calc(100%-50px)] md:h-[calc(100%-70px)] w-full overflow-y-scroll no-scrollbar">
-        {getLoading ? (
-          <LoadingBig />
-        ) : (
-          <div className="w-full">
-            {incomes.length === 0 ? (
-              <div className="w-full rounded-md bg-primary shadow-lg p-6 text-center">
-                <p className="text-white/70 text-sm">
-                  No income records found.
-                </p>
-              </div>
-            ) : (
+      <div
+        ref={containerRef}
+        className="h-[calc(100%-50px)] md:h-[calc(100%-70px)] w-full overflow-y-scroll no-scrollbar"
+      >
+        <div className="w-full">
+          {incomes.length === 0 ? (
+            <div className="w-full rounded-md bg-primary shadow-lg p-6 text-center">
+              <p className="text-white/70 text-sm">No income records found.</p>
+            </div>
+          ) : (
+            <>
               <GroupedIncomes
                 groupedIncomes={groupedIncomes}
                 onUpdate={(income) => seUpdateIncome(income)}
                 onDelete={(income) => seDeleteIncome(income)}
               />
-            )}
-          </div>
-        )}
+              {getLoading && hasMore && <LoadingBig />}
+              {!hasMore && (
+                <div className="py-4 text-center text-white/50 text-sm">
+                  You've reached the end 🎉
+                </div>
+              )}
+            </>
+          )}
+        </div>
       </div>
 
       {/* Modals */}

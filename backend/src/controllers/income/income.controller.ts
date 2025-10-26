@@ -90,8 +90,12 @@ export const deleteCategory = async (req: CustomRequest, res: Response) => {
 // Income
 export const getIncomes = async (req: CustomRequest, res: Response) => {
   const account = req.account;
-  const incomes = await getIncomesS(account._id);
-  res.status(200).json({ incomes });
+  const skip = Number(req.query.skip) || 0;
+  const limit = Number(req.query.limit) || 20;
+
+  const { incomes, total } = await getIncomesS(account._id, skip, limit);
+
+  res.status(200).json({ incomes, total });
 };
 
 export const addIncome = async (req: CustomRequest, res: Response) => {
