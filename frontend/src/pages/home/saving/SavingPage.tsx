@@ -1,4 +1,4 @@
-import LoadingBig from "@/components/custom/loading/LoadingBig";
+import LoadingSmall from "@/components/custom/loading/LoadingSmall";
 import AddSaving from "@/components/savings/main/AddSaving";
 import DeleteSaving from "@/components/savings/main/DeleteSaving";
 import UpdateSaving from "@/components/savings/main/UpdateSaving";
@@ -6,7 +6,7 @@ import { useSavingStore } from "@/stores/saving/useSavingStore";
 import { useSideBar } from "@/stores/sidebar/useSideBar";
 import type { SavingType } from "@/types/saving/saving.type";
 import { AnimatePresence } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { MdDelete, MdEdit } from "react-icons/md";
 import { RxHamburgerMenu } from "react-icons/rx";
@@ -15,16 +15,36 @@ import { Link } from "react-router-dom";
 
 const SavingPage = () => {
   const { setOpen } = useSideBar();
-  const { getSavings, getLoading, savings } = useSavingStore();
+  const { getSavings, getLoading, savings, hasMore } = useSavingStore();
 
   const [addSaving, setAddSaving] = useState(false);
   const [updateSaving, seUpdateSaving] = useState<SavingType | null>(null);
   const [deleteSaving, seDeleteSaving] = useState<SavingType | null>(null);
 
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
   useEffect(() => {
-    const fetchsavings = async () => await getSavings();
+    const fetchsavings = async () => await getSavings(false);
     fetchsavings();
   }, [getSavings]);
+
+  const handleScroll = useCallback(() => {
+    if (!containerRef.current || getLoading || !hasMore) return;
+
+    const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
+
+    // if user reached bottom (or close)
+    if (scrollTop + clientHeight >= scrollHeight - 100) {
+      getSavings(true); // fetch next 20
+    }
+  }, [getLoading, hasMore, getSavings]);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    el.addEventListener("scroll", handleScroll);
+    return () => el.removeEventListener("scroll", handleScroll);
+  }, [handleScroll]);
 
   return (
     <div className="h-screen w-full p-1 px-2 md:px-4">
@@ -61,19 +81,18 @@ const SavingPage = () => {
       </div>
 
       {/* Saving List */}
-      <div className="h-[calc(100%-50px)] md:h-[calc(100%-70px)] w-full overflow-y-scroll no-scrollbar">
-        {getLoading ? (
-          <LoadingBig />
-        ) : (
-          <div className="space-y-2">
-            {savings.length === 0 ? (
-              <div className="w-full rounded-md bg-primary shadow-lg p-6 text-center">
-                <p className="text-white/70 text-sm">
-                  No saving records found.
-                </p>
-              </div>
-            ) : (
-              savings.map((saving, index) => (
+      <div
+        ref={containerRef}
+        className="h-[calc(100%-50px)] md:h-[calc(100%-70px)] w-full overflow-y-scroll no-scrollbar"
+      >
+        <div className="space-y-2">
+          {savings.length === 0 ? (
+            <div className="w-full rounded-md bg-primary shadow-lg p-6 text-center">
+              <p className="text-white/70 text-sm">No saving records found.</p>
+            </div>
+          ) : (
+            <>
+              {savings.map((saving, index) => (
                 <div
                   key={index}
                   className="w-full rounded-md bg-primary shadow-lg p-4 hover:bg-black/40 transition-all duration-200"
@@ -127,10 +146,21 @@ const SavingPage = () => {
                     </div>
                   </div>
                 </div>
-              ))
-            )}
-          </div>
-        )}
+              ))}
+
+              {getLoading && hasMore && (
+                <p className="text-white py-3">
+                  <LoadingSmall />
+                </p>
+              )}
+              {!hasMore && savings.length > 20 && (
+                <div className="py-4 text-center text-white/50 text-sm">
+                  All data have been loaded.
+                </div>
+              )}
+            </>
+          )}
+        </div>
       </div>
 
       <AnimatePresence>

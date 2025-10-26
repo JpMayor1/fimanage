@@ -25,7 +25,8 @@ export const deleteCategoryApi = async (categoryId: string) =>
   await axiosInstance.delete(`/saving/category/delete/${categoryId}`);
 
 // Savings
-export const getSavingsApi = async () => await axiosInstance.get("saving/all");
+export const getSavingsApi = async (skip = 0, limit = 20) =>
+  await axiosInstance.get(`/saving/all?skip=${skip}&limit=${limit}`);
 
 export const addSavingApi = async (data: Partial<SavingType>) =>
   await axiosInstance.post("/saving/add", data);

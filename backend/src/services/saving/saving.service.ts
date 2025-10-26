@@ -46,8 +46,20 @@ export const deleteCategoryS = async (categoryId: string) =>
   await SavingCategory.findByIdAndDelete(categoryId);
 
 // Saving
-export const getSavingsS = async (userId: string) =>
-  await Saving.find({ userId }).lean();
+export const getSavingsS = async (
+  userId: string,
+  skip: number,
+  limit: number
+) => {
+  const total = await Saving.countDocuments({ userId });
+  const savings = await Saving.find({ userId })
+    .sort({ createdAt: -1 })
+    .skip(Number(skip))
+    .limit(Number(limit))
+    .lean();
+
+  return { savings, total };
+};
 
 export const addSavingS = async (data: Partial<SavingType>) => {
   const category = await SavingCategory.findOne({ name: data.category });

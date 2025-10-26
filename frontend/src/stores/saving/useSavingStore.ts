@@ -16,9 +16,12 @@ import { showError } from "@/utils/error/error.util";
 import toast from "react-hot-toast";
 import { create } from "zustand";
 
-export const useSavingStore = create<SavingStoreType>((set) => ({
+export const useSavingStore = create<SavingStoreType>((set, get) => ({
   categories: [],
   savings: [],
+
+  hasMore: true,
+  page: 0,
 
   getLoading: false,
   createLoading: false,
@@ -96,11 +99,23 @@ export const useSavingStore = create<SavingStoreType>((set) => ({
   },
 
   // Saving
-  getSavings: async () => {
+  getSavings: async (append = false) => {
+    const { page, savings } = get();
+    const limit = 20;
+    const skip = append ? page * limit : 0;
+
     set({ getLoading: true });
     try {
-      const response = await getSavingsApi();
-      set({ savings: response.data.savings });
+      const response = await getSavingsApi(skip, limit);
+      const { savings: newSavings, total } = response.data;
+
+      const merged = append ? [...savings, ...newSavings] : newSavings;
+
+      set({
+        savings: merged,
+        hasMore: merged.length < total,
+        page: append ? page + 1 : 1,
+      });
     } catch (error) {
       console.error("Error getting savings", error);
       showError(error);

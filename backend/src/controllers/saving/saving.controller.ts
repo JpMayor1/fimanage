@@ -89,8 +89,11 @@ export const deleteCategory = async (req: CustomRequest, res: Response) => {
 // Saving
 export const getSavings = async (req: CustomRequest, res: Response) => {
   const account = req.account;
-  const savings = await getSavingsS(account._id);
-  res.status(200).json({ savings });
+  const skip = Number(req.query.skip) || 0;
+  const limit = Number(req.query.limit) || 20;
+
+  const { savings, total } = await getSavingsS(account._id, skip, limit);
+  res.status(200).json({ savings, total });
 };
 
 export const addSaving = async (req: CustomRequest, res: Response) => {

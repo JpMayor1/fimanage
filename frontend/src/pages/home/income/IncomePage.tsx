@@ -112,9 +112,9 @@ const IncomePage = () => {
                   <LoadingSmall />
                 </p>
               )}
-              {!hasMore && (
+              {!hasMore && incomes.length > 20 && (
                 <div className="py-4 text-center text-white/50 text-sm">
-                  You've reached the end 🎉
+                  All data have been loaded.
                 </div>
               )}
             </>
