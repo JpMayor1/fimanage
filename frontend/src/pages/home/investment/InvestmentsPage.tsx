@@ -17,6 +17,7 @@ const InvestmentPage = () => {
   const { getInvestments, getLoading, investments, hasMore } =
     useInvestmentStore();
 
+  const [firstLoading, setFirstLoading] = useState(false);
   const [addInvestment, setAddInvestment] = useState(false);
   const [updateInvestment, seUpdateInvestment] =
     useState<InvestmentType | null>(null);
@@ -26,7 +27,11 @@ const InvestmentPage = () => {
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    const fetchinvestments = async () => await getInvestments(false);
+    const fetchinvestments = async () => {
+      setFirstLoading(true);
+      await getInvestments(false);
+      setFirstLoading(false);
+    };
     fetchinvestments();
   }, [getInvestments]);
 
@@ -87,85 +92,93 @@ const InvestmentPage = () => {
         ref={containerRef}
         className="h-[calc(100%-50px)] md:h-[calc(100%-70px)] w-full overflow-y-scroll no-scrollbar"
       >
-        <div className="space-y-2">
-          {investments.length === 0 ? (
-            <div className="w-full rounded-md bg-primary shadow-lg p-6 text-center">
-              <p className="text-white/70 text-sm">
-                No investment records found.
-              </p>
-            </div>
-          ) : (
-            <>
-              {investments.map((investment, index) => (
-                <div
-                  key={index}
-                  className="w-full rounded-md bg-primary shadow-lg p-4 hover:bg-black/40 transition-all duration-200"
-                >
-                  {/* Top Row: Category + Date */}
-                  <div className="flex justify-between items-center mb-1">
-                    <p className="text-yellow text-xs font-medium">
-                      {investment.category}{" "}
-                      <span className="text-white/40 text-[10px]">
-                        (Investment)
-                      </span>
-                    </p>
-                    <p className="text-white/40 text-[10px]">{investment.dt}</p>
-                  </div>
-
-                  {/* Bottom Row: Icon + Description + Amount + Buttons */}
-                  <div className="flex justify-between items-center">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 flex items-center justify-center rounded-md border border-yellow/30 bg-yellow/10 text-yellow">
-                        <FaMoneyBillTrendUp className="text-lg" />
-                      </div>
-                      <div>
-                        <p className="text-white text-sm truncate max-w-[120px] sm:max-w-none">
-                          {investment.description}
-                        </p>
-                        {(investment.annualRate || investment.frequency) && (
-                          <p className="text-yellow/80 text-xs">
-                            {investment.annualRate &&
-                              `${investment.annualRate}%`}{" "}
-                            {investment.frequency}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                      <p className="text-green font-semibold">
-                        ₱{investment.amount.toLocaleString()}
-                      </p>
-                      <button
-                        className="text-white bg-green/80 hover:bg-green rounded-md p-2 cursor-pointer transition-all duration-200"
-                        onClick={() => seUpdateInvestment(investment)}
-                      >
-                        <MdEdit />
-                      </button>
-                      <button
-                        className="text-white bg-red/80 hover:bg-red rounded-md p-2 cursor-pointer transition-all duration-200"
-                        onClick={() => seDeleteInvestment(investment)}
-                      >
-                        <MdDelete />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-
-              {getLoading && hasMore && (
-                <p className="text-white py-3">
-                  <LoadingSmall />
+        {firstLoading ? (
+          <p className="text-white py-3">
+            <LoadingSmall />
+          </p>
+        ) : (
+          <div className="space-y-2">
+            {investments.length === 0 ? (
+              <div className="w-full rounded-md bg-primary shadow-lg p-6 text-center">
+                <p className="text-white/70 text-sm">
+                  No investment records found.
                 </p>
-              )}
-              {!hasMore && investments.length > 20 && (
-                <div className="py-4 text-center text-white/50 text-sm">
-                  All data have been loaded.
-                </div>
-              )}
-            </>
-          )}
-        </div>
+              </div>
+            ) : (
+              <>
+                {investments.map((investment, index) => (
+                  <div
+                    key={index}
+                    className="w-full rounded-md bg-primary shadow-lg p-4 hover:bg-black/40 transition-all duration-200"
+                  >
+                    {/* Top Row: Category + Date */}
+                    <div className="flex justify-between items-center mb-1">
+                      <p className="text-yellow text-xs font-medium">
+                        {investment.category}{" "}
+                        <span className="text-white/40 text-[10px]">
+                          (Investment)
+                        </span>
+                      </p>
+                      <p className="text-white/40 text-[10px]">
+                        {investment.dt}
+                      </p>
+                    </div>
+
+                    {/* Bottom Row: Icon + Description + Amount + Buttons */}
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 flex items-center justify-center rounded-md border border-yellow/30 bg-yellow/10 text-yellow">
+                          <FaMoneyBillTrendUp className="text-lg" />
+                        </div>
+                        <div>
+                          <p className="text-white text-sm truncate max-w-[120px] sm:max-w-none">
+                            {investment.description}
+                          </p>
+                          {(investment.annualRate || investment.frequency) && (
+                            <p className="text-yellow/80 text-xs">
+                              {investment.annualRate &&
+                                `${investment.annualRate}%`}{" "}
+                              {investment.frequency}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <p className="text-green font-semibold">
+                          ₱{investment.amount.toLocaleString()}
+                        </p>
+                        <button
+                          className="text-white bg-green/80 hover:bg-green rounded-md p-2 cursor-pointer transition-all duration-200"
+                          onClick={() => seUpdateInvestment(investment)}
+                        >
+                          <MdEdit />
+                        </button>
+                        <button
+                          className="text-white bg-red/80 hover:bg-red rounded-md p-2 cursor-pointer transition-all duration-200"
+                          onClick={() => seDeleteInvestment(investment)}
+                        >
+                          <MdDelete />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+
+                {getLoading && hasMore && (
+                  <p className="text-white py-3">
+                    <LoadingSmall />
+                  </p>
+                )}
+                {!hasMore && investments.length > 20 && (
+                  <div className="py-4 text-center text-white/50 text-sm">
+                    All data have been loaded.
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        )}
       </div>
 
       <AnimatePresence>

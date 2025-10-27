@@ -17,13 +17,18 @@ const IncomePage = () => {
   const { getIncomes, getLoading, incomes, hasMore } = useIncomeStore();
 
   const [addIncome, setAddIncome] = useState(false);
+  const [firstLoading, setFirstLoading] = useState(false);
   const [updateIncome, seUpdateIncome] = useState<IncomeType | null>(null);
   const [deleteIncome, seDeleteIncome] = useState<IncomeType | null>(null);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    const fetchIncomes = async () => await getIncomes(false);
+    const fetchIncomes = async () => {
+      setFirstLoading(true);
+      await getIncomes(false);
+      setFirstLoading(false);
+    };
     fetchIncomes();
   }, [getIncomes]);
 
@@ -95,31 +100,39 @@ const IncomePage = () => {
         ref={containerRef}
         className="h-[calc(100%-50px)] md:h-[calc(100%-70px)] w-full overflow-y-scroll no-scrollbar"
       >
-        <div className="w-full">
-          {incomes.length === 0 ? (
-            <div className="w-full rounded-md bg-primary shadow-lg p-6 text-center">
-              <p className="text-white/70 text-sm">No income records found.</p>
-            </div>
-          ) : (
-            <>
-              <GroupedIncomes
-                groupedIncomes={groupedIncomes}
-                onUpdate={(income) => seUpdateIncome(income)}
-                onDelete={(income) => seDeleteIncome(income)}
-              />
-              {getLoading && hasMore && (
-                <p className="text-white py-3">
-                  <LoadingSmall />
+        {firstLoading ? (
+          <p className="text-white py-3">
+            <LoadingSmall />
+          </p>
+        ) : (
+          <div className="w-full">
+            {incomes.length === 0 ? (
+              <div className="w-full rounded-md bg-primary shadow-lg p-6 text-center">
+                <p className="text-white/70 text-sm">
+                  No income records found.
                 </p>
-              )}
-              {!hasMore && incomes.length > 20 && (
-                <div className="py-4 text-center text-white/50 text-sm">
-                  All data have been loaded.
-                </div>
-              )}
-            </>
-          )}
-        </div>
+              </div>
+            ) : (
+              <>
+                <GroupedIncomes
+                  groupedIncomes={groupedIncomes}
+                  onUpdate={(income) => seUpdateIncome(income)}
+                  onDelete={(income) => seDeleteIncome(income)}
+                />
+                {getLoading && hasMore && (
+                  <p className="text-white py-3">
+                    <LoadingSmall />
+                  </p>
+                )}
+                {!hasMore && incomes.length > 20 && (
+                  <div className="py-4 text-center text-white/50 text-sm">
+                    All data have been loaded.
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Modals */}

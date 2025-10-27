@@ -17,6 +17,7 @@ const SavingPage = () => {
   const { setOpen } = useSideBar();
   const { getSavings, getLoading, savings, hasMore } = useSavingStore();
 
+  const [firstLoading, setFirstLoading] = useState(false);
   const [addSaving, setAddSaving] = useState(false);
   const [updateSaving, seUpdateSaving] = useState<SavingType | null>(null);
   const [deleteSaving, seDeleteSaving] = useState<SavingType | null>(null);
@@ -24,7 +25,11 @@ const SavingPage = () => {
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    const fetchsavings = async () => await getSavings(false);
+    const fetchsavings = async () => {
+      setFirstLoading(true);
+      await getSavings(false);
+      setFirstLoading(false);
+    };
     fetchsavings();
   }, [getSavings]);
 
@@ -85,82 +90,90 @@ const SavingPage = () => {
         ref={containerRef}
         className="h-[calc(100%-50px)] md:h-[calc(100%-70px)] w-full overflow-y-scroll no-scrollbar"
       >
-        <div className="space-y-2">
-          {savings.length === 0 ? (
-            <div className="w-full rounded-md bg-primary shadow-lg p-6 text-center">
-              <p className="text-white/70 text-sm">No saving records found.</p>
-            </div>
-          ) : (
-            <>
-              {savings.map((saving, index) => (
-                <div
-                  key={index}
-                  className="w-full rounded-md bg-primary shadow-lg p-4 hover:bg-black/40 transition-all duration-200"
-                >
-                  {/* Top Row: Category + Date */}
-                  <div className="flex justify-between items-center mb-1">
-                    <p className="text-yellow text-xs font-medium">
-                      {saving.category}{" "}
-                      <span className="text-white/40 text-[10px]">
-                        (Saving)
-                      </span>
-                    </p>
-                    <p className="text-white/40 text-[10px]">{saving.dt}</p>
-                  </div>
-
-                  {/* Bottom Row: Icon + Description + Amount + Buttons */}
-                  <div className="flex justify-between items-center">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 flex items-center justify-center rounded-md border border-yellow/30 bg-yellow/10 text-yellow">
-                        <TbPigMoney className="text-lg" />
-                      </div>
-                      <div>
-                        <p className="text-white text-sm truncate max-w-[120px] sm:max-w-none">
-                          {saving.description}
-                        </p>
-                        {(saving.annualRate || saving.frequency) && (
-                          <p className="text-yellow/80 text-xs">
-                            {saving.annualRate && `${saving.annualRate}%`}{" "}
-                            {saving.frequency}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                      <p className="text-green font-semibold">
-                        ₱{saving.amount.toLocaleString()}
-                      </p>
-                      <button
-                        className="text-white bg-green/80 hover:bg-green rounded-md p-2 cursor-pointer transition-all duration-200"
-                        onClick={() => seUpdateSaving(saving)}
-                      >
-                        <MdEdit />
-                      </button>
-                      <button
-                        className="text-white bg-red/80 hover:bg-red rounded-md p-2 cursor-pointer transition-all duration-200"
-                        onClick={() => seDeleteSaving(saving)}
-                      >
-                        <MdDelete />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-
-              {getLoading && hasMore && (
-                <p className="text-white py-3">
-                  <LoadingSmall />
+        {firstLoading ? (
+          <p className="text-white py-3">
+            <LoadingSmall />
+          </p>
+        ) : (
+          <div className="space-y-2">
+            {savings.length === 0 ? (
+              <div className="w-full rounded-md bg-primary shadow-lg p-6 text-center">
+                <p className="text-white/70 text-sm">
+                  No saving records found.
                 </p>
-              )}
-              {!hasMore && savings.length > 20 && (
-                <div className="py-4 text-center text-white/50 text-sm">
-                  All data have been loaded.
-                </div>
-              )}
-            </>
-          )}
-        </div>
+              </div>
+            ) : (
+              <>
+                {savings.map((saving, index) => (
+                  <div
+                    key={index}
+                    className="w-full rounded-md bg-primary shadow-lg p-4 hover:bg-black/40 transition-all duration-200"
+                  >
+                    {/* Top Row: Category + Date */}
+                    <div className="flex justify-between items-center mb-1">
+                      <p className="text-yellow text-xs font-medium">
+                        {saving.category}{" "}
+                        <span className="text-white/40 text-[10px]">
+                          (Saving)
+                        </span>
+                      </p>
+                      <p className="text-white/40 text-[10px]">{saving.dt}</p>
+                    </div>
+
+                    {/* Bottom Row: Icon + Description + Amount + Buttons */}
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 flex items-center justify-center rounded-md border border-yellow/30 bg-yellow/10 text-yellow">
+                          <TbPigMoney className="text-lg" />
+                        </div>
+                        <div>
+                          <p className="text-white text-sm truncate max-w-[120px] sm:max-w-none">
+                            {saving.description}
+                          </p>
+                          {(saving.annualRate || saving.frequency) && (
+                            <p className="text-yellow/80 text-xs">
+                              {saving.annualRate && `${saving.annualRate}%`}{" "}
+                              {saving.frequency}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <p className="text-green font-semibold">
+                          ₱{saving.amount.toLocaleString()}
+                        </p>
+                        <button
+                          className="text-white bg-green/80 hover:bg-green rounded-md p-2 cursor-pointer transition-all duration-200"
+                          onClick={() => seUpdateSaving(saving)}
+                        >
+                          <MdEdit />
+                        </button>
+                        <button
+                          className="text-white bg-red/80 hover:bg-red rounded-md p-2 cursor-pointer transition-all duration-200"
+                          onClick={() => seDeleteSaving(saving)}
+                        >
+                          <MdDelete />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+
+                {getLoading && hasMore && (
+                  <p className="text-white py-3">
+                    <LoadingSmall />
+                  </p>
+                )}
+                {!hasMore && savings.length > 20 && (
+                  <div className="py-4 text-center text-white/50 text-sm">
+                    All data have been loaded.
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        )}
       </div>
 
       <AnimatePresence>
