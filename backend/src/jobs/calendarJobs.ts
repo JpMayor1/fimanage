@@ -1,29 +1,35 @@
 import Account from "@/models/account.model";
 import Calendar from "@/models/calendar.model";
 import Expense from "@/models/expense.model";
-import { endOfDay, format, startOfDay } from "date-fns";
-import { toZonedTime } from "date-fns-tz";
+import { endOfDay, startOfDay } from "date-fns";
+import { formatInTimeZone, toZonedTime } from "date-fns-tz";
 import mongoose from "mongoose";
 import cron from "node-cron";
 
 export const startDailyExpenseJob = () => {
   cron.schedule(
-    "0 0 * * *", // Every midnight
+    "59 23 * * *",
     async () => {
       const timeZone = "Asia/Manila";
       const now = new Date();
       const phTime = toZonedTime(now, timeZone);
 
       console.log(
-        `🕛 [${format(
+        `🕛 [${formatInTimeZone(
           phTime,
+          timeZone,
           "yyyy-MM-dd HH:mm:ss"
         )}] Running daily expense computation job...`
       );
 
       try {
-        const startOfDayPH = startOfDay(phTime);
-        const endOfDayPH = endOfDay(phTime);
+        // Use today's PH date
+        const todayStartPH = startOfDay(phTime);
+        const todayEndPH = endOfDay(phTime);
+
+        // Convert PH-local range to UTC equivalents
+        const startUTC = new Date(todayStartPH.toISOString());
+        const endUTC = new Date(todayEndPH.toISOString());
 
         const users = await Account.find();
 
@@ -33,7 +39,7 @@ export const startDailyExpenseJob = () => {
               {
                 $match: {
                   userId: new mongoose.Types.ObjectId(user._id),
-                  createdAt: { $gte: startOfDayPH, $lte: endOfDayPH },
+                  createdAt: { $gte: startUTC, $lte: endUTC },
                   countable: true,
                 },
               },
@@ -45,14 +51,13 @@ export const startDailyExpenseJob = () => {
               },
             ]);
 
-            const expenseAmount = totalExpense.length
-              ? totalExpense[0].total
-              : 0;
+            const expenseAmount =
+              totalExpense.length > 0 ? totalExpense[0].total : 0;
 
-            // Prevent duplicates for same day
+            // Prevent duplicate records for the same day
             const existing = await Calendar.findOne({
               userId: user._id,
-              date: { $gte: startOfDayPH, $lte: endOfDayPH },
+              date: { $gte: startUTC, $lte: endUTC },
             });
 
             if (existing) {
@@ -66,7 +71,7 @@ export const startDailyExpenseJob = () => {
               userId: user._id,
               limit: user.limit || 500,
               expense: expenseAmount,
-              date: phTime,
+              date: todayStartPH,
             });
 
             console.log(
@@ -83,7 +88,7 @@ export const startDailyExpenseJob = () => {
       }
     },
     {
-      timezone: "Asia/Manila", // ensures cron runs on Philippine time
+      timezone: "Asia/Manila",
     }
   );
 
