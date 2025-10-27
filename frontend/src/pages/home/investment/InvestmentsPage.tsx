@@ -5,6 +5,7 @@ import UpdateInvestment from "@/components/investment/main/UpdateInvestment";
 import { useInvestmentStore } from "@/stores/investment/useInvestmentStore";
 import { useSideBar } from "@/stores/sidebar/useSideBar";
 import type { InvestmentType } from "@/types/investment/investment.type";
+import { formatAmount } from "@/utils/amount/formatAmount";
 import { AnimatePresence } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FaMoneyBillTrendUp, FaPlus } from "react-icons/fa6";
@@ -109,7 +110,7 @@ const InvestmentPage = () => {
                 {investments.map((investment, index) => (
                   <div
                     key={index}
-                    className="w-full rounded-md bg-primary shadow-lg p-4 hover:bg-black/40 transition-all duration-200"
+                    className="w-full rounded-md bg-primary shadow-lg p-4 transition-all duration-200"
                   >
                     {/* Top Row: Category + Date */}
                     <div className="flex justify-between items-center mb-1">
@@ -146,7 +147,7 @@ const InvestmentPage = () => {
 
                       <div className="flex items-center gap-2">
                         <p className="text-green font-semibold">
-                          ₱{investment.amount.toLocaleString()}
+                          ₱{formatAmount(investment.amount)}
                         </p>
                         <button
                           className="text-white bg-green/80 hover:bg-green rounded-md p-2 cursor-pointer transition-all duration-200"

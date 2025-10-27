@@ -5,6 +5,7 @@ import UpdateSaving from "@/components/savings/main/UpdateSaving";
 import { useSavingStore } from "@/stores/saving/useSavingStore";
 import { useSideBar } from "@/stores/sidebar/useSideBar";
 import type { SavingType } from "@/types/saving/saving.type";
+import { formatAmount } from "@/utils/amount/formatAmount";
 import { AnimatePresence } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
@@ -107,7 +108,7 @@ const SavingPage = () => {
                 {savings.map((saving, index) => (
                   <div
                     key={index}
-                    className="w-full rounded-md bg-primary shadow-lg p-4 hover:bg-black/40 transition-all duration-200"
+                    className="w-full rounded-md bg-primary shadow-lg p-4 transition-all duration-200"
                   >
                     {/* Top Row: Category + Date */}
                     <div className="flex justify-between items-center mb-1">
@@ -141,7 +142,7 @@ const SavingPage = () => {
 
                       <div className="flex items-center gap-2">
                         <p className="text-green font-semibold">
-                          ₱{saving.amount.toLocaleString()}
+                          ₱{formatAmount(saving.amount)}
                         </p>
                         <button
                           className="text-white bg-green/80 hover:bg-green rounded-md p-2 cursor-pointer transition-all duration-200"

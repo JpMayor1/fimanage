@@ -1,5 +1,6 @@
 import { expenseIcons } from "@/assets/icons/expenseIcons";
 import type { ExpenseType } from "@/types/expense/expense.type";
+import { formatAmount } from "@/utils/amount/formatAmount";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import { FiChevronDown, FiChevronUp } from "react-icons/fi";
@@ -53,7 +54,7 @@ const GroupedExpenses = ({
                     {dailyExpenses.length}{" "}
                     {dailyExpenses.length > 1 ? "expenses" : "expense"} • Total{" "}
                     <span className="text-yellow font-medium">
-                      ₱{total.toLocaleString()}
+                      ₱{formatAmount(total)}
                     </span>
                   </p>
                 </div>
@@ -75,7 +76,7 @@ const GroupedExpenses = ({
                     transition={{ duration: 0.3, ease: "easeInOut" }}
                     className="overflow-hidden"
                   >
-                    <div className="p-4 space-y-2">
+                    <div className="p-2 md:p-4 space-y-2">
                       {dailyExpenses
                         .slice()
                         .reverse()
@@ -105,14 +106,14 @@ const GroupedExpenses = ({
                                   <div className="w-9 h-9 flex items-center justify-center rounded-lg bg-yellow/10 border border-yellow/30 text-yellow">
                                     <Icon className="text-lg" />
                                   </div>
-                                  <p className="text-white text-sm truncate max-w-[140px] sm:max-w-none">
+                                  <p className="text-white text-xm md:text-sm truncate max-w-[150px] sm:max-w-none">
                                     {expense.description}
                                   </p>
                                 </div>
 
                                 <div className="flex items-center gap-2">
-                                  <p className="text-red font-semibold">
-                                    -₱{expense.amount.toLocaleString()}
+                                  <p className="text-green text-xs md:text-base font-semibold">
+                                    -₱{formatAmount(expense.amount)}
                                   </p>
                                   <button
                                     className="text-white/90 bg-green/80 hover:bg-green rounded-lg p-2 transition-all duration-200 cursor-pointer"
