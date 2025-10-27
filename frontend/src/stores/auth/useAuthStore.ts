@@ -66,6 +66,7 @@ export const useAuthStore = create(
         try {
           await logoutApi();
           set({ authUser: null });
+          localStorage.clear();
           sessionStorage.clear();
         } catch (error) {
           console.error("Error logging out", error);
@@ -92,7 +93,7 @@ export const useAuthStore = create(
     }),
     {
       name: "auth-storage",
-      storage: createJSONStorage(() => sessionStorage),
+      storage: createJSONStorage(() => localStorage),
     }
   )
 );
