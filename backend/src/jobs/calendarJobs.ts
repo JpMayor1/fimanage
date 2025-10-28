@@ -8,7 +8,7 @@ import cron from "node-cron";
 
 export const startDailyExpenseJob = () => {
   cron.schedule(
-    "55 22 * * *", // runs exactly at 12:00 AM (Asia/Manila)
+    "0 0 * * *", // runs exactly at 12:00 AM (Asia/Manila)
     async () => {
       const timeZone = "Asia/Manila";
       const now = new Date();
