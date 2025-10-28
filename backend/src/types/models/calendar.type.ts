@@ -5,6 +5,7 @@ export type CalendarType = {
   userId: string;
   limit: number;
   expense: number;
+  date: string;
   createdAt: Date;
   updatedAt: Date;
 };

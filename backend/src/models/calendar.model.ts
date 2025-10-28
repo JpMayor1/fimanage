@@ -6,6 +6,7 @@ const CalendarSchema = new Schema<CalendarDocumentType>(
     userId: String,
     limit: Number,
     expense: Number,
+    date: String,
   },
   { timestamps: true }
 );

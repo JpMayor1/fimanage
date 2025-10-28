@@ -1,14 +1,14 @@
 import Account from "@/models/account.model";
 import Calendar from "@/models/calendar.model";
 import Expense from "@/models/expense.model";
-import { endOfDay, startOfDay } from "date-fns";
+import { endOfDay, startOfDay, subDays } from "date-fns";
 import { formatInTimeZone, toZonedTime } from "date-fns-tz";
 import mongoose from "mongoose";
 import cron from "node-cron";
 
 export const startDailyExpenseJob = () => {
   cron.schedule(
-    "59 23 * * *",
+    "55 22 * * *", // runs exactly at 12:00 AM (Asia/Manila)
     async () => {
       const timeZone = "Asia/Manila";
       const now = new Date();
@@ -23,18 +23,27 @@ export const startDailyExpenseJob = () => {
       );
 
       try {
-        // Use today's PH date
-        const todayStartPH = startOfDay(phTime);
-        const todayEndPH = endOfDay(phTime);
+        // Use yesterday's PH date for computation
+        const yesterdayPH = subDays(phTime, 1);
+        const yesterdayStartPH = startOfDay(yesterdayPH);
+        const yesterdayEndPH = endOfDay(yesterdayPH);
 
-        // Convert PH-local range to UTC equivalents
-        const startUTC = new Date(todayStartPH.toISOString());
-        const endUTC = new Date(todayEndPH.toISOString());
+        // Convert PH-local range to UTC equivalents for DB queries
+        const startUTC = new Date(yesterdayStartPH.toISOString());
+        const endUTC = new Date(yesterdayEndPH.toISOString());
+
+        // For saving record with correct date string
+        const yesterdayPhDateString = formatInTimeZone(
+          yesterdayPH,
+          timeZone,
+          "yyyy-MM-dd"
+        );
 
         const users = await Account.find();
 
         for (const user of users) {
           try {
+            // Compute total expenses for *yesterday*
             const totalExpense = await Expense.aggregate([
               {
                 $match: {
@@ -57,12 +66,12 @@ export const startDailyExpenseJob = () => {
             // Prevent duplicate records for the same day
             const existing = await Calendar.findOne({
               userId: user._id,
-              date: { $gte: startUTC, $lte: endUTC },
+              date: yesterdayPhDateString,
             });
 
             if (existing) {
               console.log(
-                `ℹ️ Already recorded for ${user.username}, skipping...`
+                `ℹAlready recorded for ${user.username} (${yesterdayPhDateString}), skipping...`
               );
               continue;
             }
@@ -71,26 +80,26 @@ export const startDailyExpenseJob = () => {
               userId: user._id,
               limit: user.limit || 500,
               expense: expenseAmount,
-              date: todayStartPH,
+              date: yesterdayPhDateString,
             });
 
             console.log(
-              `✅ Recorded ₱${expenseAmount.toFixed(2)} for ${user.username}`
+              `Recorded ₱${expenseAmount.toFixed(2)} for ${
+                user.username
+              } (Date: ${yesterdayPhDateString})`
             );
           } catch (userError) {
             console.error(`⚠️ Error processing ${user.username}:`, userError);
           }
         }
 
-        console.log("🏁 Daily expense computation completed successfully.");
+        console.log("Daily expense computation completed successfully.");
       } catch (error) {
-        console.error("❌ Fatal error in daily expense job:", error);
+        console.error("Fatal error in daily expense job:", error);
       }
     },
     {
       timezone: "Asia/Manila",
     }
   );
-
-  console.log("✅ Daily Expense Job scheduled (timezone: Asia/Manila)");
 };

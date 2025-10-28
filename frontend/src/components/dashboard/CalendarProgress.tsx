@@ -1,16 +1,8 @@
 import { useDashboardStore } from "@/stores/dashboard/useDashboardStore";
+import type { CalendarType } from "@/types/calendar/calendar.type";
 import dayjs, { Dayjs } from "dayjs";
 import React, { useEffect, useMemo, useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-
-export type CalendarType = {
-  _id: string;
-  userId: string;
-  limit: number;
-  expense: number;
-  createdAt: string;
-  updatedAt: string;
-};
 
 const CalendarProgress: React.FC = () => {
   const { dailyExpense } = useDashboardStore();
@@ -46,7 +38,7 @@ const CalendarProgress: React.FC = () => {
     const newProgress: Record<string, number> = {};
     const getProgressForDay = (date: Dayjs) => {
       const record = dailyExpense.find((item: CalendarType) =>
-        dayjs(item.createdAt).isSame(date, "day")
+        dayjs(item.date).isSame(date, "day")
       );
       if (!record) return 0;
       const percent = (record.expense / record.limit) * 100;
