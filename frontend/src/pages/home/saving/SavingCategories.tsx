@@ -71,28 +71,29 @@ const SavingCategoriesPage = () => {
                   return (
                     <div
                       key={index}
-                      className="w-full rounded-md bg-primary shadow-lg p-4 flex items-center justify-between"
+                      className="w-full rounded-md bg-primary shadow-lg p-4 flex items-center justify-between gap-4"
                     >
-                      {/* Left Section */}
-                      <div className="flex items-center gap-3">
-                        <div className="w-13.5 h-13.5 flex items-center justify-center rounded-md border border-white/20 bg-black text-yellow">
+                      {/* LEFT SECTION */}
+                      <div className="flex items-center gap-3 flex-1 min-w-0">
+                        <div className="w-13.5 h-13.5 flex-shrink-0 flex items-center justify-center rounded-md border border-white/20 bg-black text-yellow">
                           <TbPigMoney className="text-2xl" />
                         </div>
-                        <div>
-                          <p className="text-white text-sm">{category.name}</p>
-                        </div>
+                        <p className="text-white text-sm truncate w-full">
+                          {category.name}
+                        </p>
                       </div>
 
-                      {/* Right Section */}
-                      <div className="flex items-center justify-center gap-2">
+                      {/* RIGHT SECTION */}
+                      <div className="flex items-center gap-2 flex-shrink-0">
                         <button
-                          className="text-white bg-green/80 hover:bg-green rounded-md p-2 cursor-pointer"
+                          className="text-white bg-green/80 hover:bg-green rounded-md p-2 cursor-pointer transition-all duration-200"
                           onClick={() => setShowUpdateCategoryModal(category)}
                         >
                           <MdEdit />
                         </button>
+
                         <button
-                          className="text-white bg-red/80 hover:bg-red rounded-md p-2 cursor-pointer"
+                          className="text-white bg-red/80 hover:bg-red rounded-md p-2 cursor-pointer transition-all duration-200"
                           onClick={() => setShowDeleteCategoryModal(category)}
                         >
                           <MdDelete />

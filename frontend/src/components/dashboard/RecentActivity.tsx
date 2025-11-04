@@ -134,10 +134,14 @@ const RecentActivity = () => {
 
                   {/* Bottom Row: Icon + Description + Amount */}
                   <div className="flex justify-between items-center mt-1">
-                    <div className="flex items-center gap-2">
-                      {Icon && <Icon size={20} className={colorClass} />}
+                    <div className="flex items-center gap-2 flex-1 min-w-0">
+                      {Icon && (
+                        <div className="flex-shrink-0">
+                          <Icon size={20} className={colorClass} />
+                        </div>
+                      )}
                       {item.description && (
-                        <p className="text-xs text-gray-400">
+                        <p className="text-xs text-gray-400 truncate w-full">
                           {item.description}
                         </p>
                       )}

@@ -83,7 +83,7 @@ const CalendarProgress: React.FC = () => {
     <div className="bg-primary text-white rounded-2xl p-5 w-full mx-auto shadow-lg select-none overflow-hidden">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-bold">Daily Expense</h2>
+        <h2 className="text-base font-bold">Daily Expense</h2>
         <div className="flex items-center gap-2">
           <button
             onClick={() => changeMonth("prev")}
@@ -91,7 +91,7 @@ const CalendarProgress: React.FC = () => {
           >
             <FaChevronLeft className="text-primary" />
           </button>
-          <span className="text-lg font-semibold min-w-[130px] text-center">
+          <span className="text-sm font-semibold whitespace-nowrap text-center">
             {currentMonth.format("MMMM YYYY")}
           </span>
           <button

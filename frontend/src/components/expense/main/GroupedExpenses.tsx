@@ -92,7 +92,8 @@ const GroupedExpenses = ({
                                 <p className="text-yellow text-xs font-medium">
                                   {expense.category}{" "}
                                   <span className="text-white/40 text-[10px]">
-                                    (Expense)
+                                    {" "}
+                                    (Expense){" "}
                                   </span>
                                 </p>
                                 <p className="text-white/40 text-[10px]">
@@ -101,26 +102,31 @@ const GroupedExpenses = ({
                               </div>
 
                               {/* Bottom Row */}
-                              <div className="flex justify-between items-center">
-                                <div className="flex items-center gap-3">
-                                  <div className="w-9 h-9 flex items-center justify-center rounded-lg bg-yellow/10 border border-yellow/30 text-yellow">
+                              <div className="flex items-center justify-between">
+                                {/* LEFT SIDE (icon + description) */}
+                                <div className="flex items-center gap-3 flex-1 min-w-0">
+                                  <div className="w-9 h-9 flex-shrink-0 flex items-center justify-center rounded-lg bg-yellow/10 border border-yellow/30 text-yellow">
                                     <Icon className="text-lg" />
                                   </div>
-                                  <p className="text-white text-xm md:text-sm truncate max-w-[150px] sm:max-w-none">
+
+                                  <p className="text-white text-xs md:text-sm truncate w-full">
                                     {expense.description}
                                   </p>
                                 </div>
 
-                                <div className="flex items-center gap-2">
-                                  <p className="text-green text-xs md:text-base font-semibold">
+                                {/* RIGHT SIDE (amount + edit + delete buttons) */}
+                                <div className="flex items-center gap-2 flex-shrink-0">
+                                  <p className="text-green text-xs md:text-base font-semibold whitespace-nowrap">
                                     -₱{formatAmount(expense.amount)}
                                   </p>
+
                                   <button
                                     className="text-white/90 bg-green/80 hover:bg-green rounded-lg p-2 transition-all duration-200 cursor-pointer"
                                     onClick={() => onUpdate(expense)}
                                   >
                                     <MdEdit />
                                   </button>
+
                                   <button
                                     className="text-white/90 bg-red/80 hover:bg-red rounded-lg p-2 transition-all duration-200 cursor-pointer"
                                     onClick={() => onDelete(expense)}
