@@ -116,7 +116,7 @@ const GroupedExpenses = ({
 
                                 {/* RIGHT SIDE (amount + edit + delete buttons) */}
                                 <div className="flex items-center gap-2 flex-shrink-0">
-                                  <p className="text-green text-xs md:text-base font-semibold whitespace-nowrap">
+                                  <p className="text-red text-xs md:text-base font-semibold whitespace-nowrap">
                                     -₱{formatAmount(expense.amount)}
                                   </p>
 
