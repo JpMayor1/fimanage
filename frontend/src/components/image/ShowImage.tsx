@@ -25,7 +25,7 @@ const ShowImage = ({ image, onClose }: ShowImageI) => {
       animate="animate"
       exit="exit"
       variants={overlayAnim}
-      className="fixed inset-0 h-screen w-screen flex items-center justify-center bg-black/90 p-10 overflow-hidden z-30"
+      className="fixed inset-0 h-[100dvh] w-screen flex items-center justify-center bg-black/90 p-10 overflow-hidden z-30"
     >
       <button
         className="absolute top-5 right-5 cursor-pointer"

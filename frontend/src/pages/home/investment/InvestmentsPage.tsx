@@ -55,7 +55,7 @@ const InvestmentPage = () => {
   }, [handleScroll]);
 
   return (
-    <div className="h-screen w-full p-1 px-2 md:px-4">
+    <div className="h-[100dvh] w-full p-1 px-2 md:px-4">
       {/* Header */}
       <div className="w-full flex items-center justify-between my-2 mb-3">
         <div className="flex items-center gap-2">

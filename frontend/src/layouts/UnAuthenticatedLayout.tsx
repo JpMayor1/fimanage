@@ -8,7 +8,7 @@ const UnAuthenticatedLayout = () => {
     return <Navigate to="/home/dashboard" replace />;
   }
   return (
-    <div className="h-screen w-screen overflow-hidden">
+    <div className="h-[100dvh] w-screen overflow-hidden">
       <AnimatedBackground />
       <div className="relative h-full w-full">
         <Outlet />

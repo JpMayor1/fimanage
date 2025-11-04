@@ -10,7 +10,7 @@ const PageNotFound: React.FC = () => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="w-full h-screen bg-primary flex flex-col items-center justify-center relative overflow-hidden"
+      className="w-full h-[100dvh] bg-primary flex flex-col items-center justify-center relative overflow-hidden"
     >
       {/* Floating yellow glow */}
       <motion.div

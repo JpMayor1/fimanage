@@ -8,7 +8,7 @@ export default function LandingPage() {
   const { canInstall, promptInstall } = usePWAInstall();
 
   return (
-    <div className="text-white h-screen flex flex-col font-sans overflow-y-scroll no-scrollbar">
+    <div className="text-white h-[100dvh] flex flex-col font-sans overflow-y-scroll no-scrollbar">
       {/* Navbar */}
       <header className="flex justify-between items-center px-4 md:px-8 py-4 md:py-6 border-b border-gray-700">
         <motion.h1

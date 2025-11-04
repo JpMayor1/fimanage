@@ -9,9 +9,9 @@ const AuthenticatedLayout = () => {
     return <Navigate to="/" replace />;
   }
   return (
-    <div className="h-screen w-screen overflow-hidden flex justify-end bg-gradient-to-br from-primary via-black to-primary">
+    <div className="h-[100dvh] w-screen overflow-hidden flex justify-end bg-gradient-to-br from-primary via-black to-primary">
       <SideBar />
-      <div className="h-screen w-full md:w-[calc(100%-280px)]">
+      <div className="h-full w-full md:w-[calc(100%-280px)]">
         <Outlet />
       </div>
     </div>
