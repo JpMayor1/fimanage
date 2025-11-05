@@ -11,7 +11,9 @@ const CalendarProgress: React.FC = () => {
   const [animatedProgress, setAnimatedProgress] = useState<
     Record<string, number>
   >({});
+  const [activeDate, setActiveDate] = useState<string | null>(null);
 
+  const isMobile = window.innerWidth <= 768;
   const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
   const { startDayIndex, daysArray } = useMemo(() => {
@@ -33,6 +35,14 @@ const CalendarProgress: React.FC = () => {
   };
 
   const today = dayjs();
+
+  const handleDateAction = (dateKey: string) => {
+    if (activeDate === dateKey) {
+      setActiveDate(null);
+    } else {
+      setActiveDate(dateKey);
+    }
+  };
 
   useEffect(() => {
     const newProgress: Record<string, number> = {};
@@ -78,6 +88,14 @@ const CalendarProgress: React.FC = () => {
 
     animate();
   }, [currentMonth, dailyExpense, daysArray]);
+
+  useEffect(() => {
+    const closePopover = () => setActiveDate(null);
+    if (activeDate) {
+      document.addEventListener("click", closePopover);
+    }
+    return () => document.removeEventListener("click", closePopover);
+  }, [activeDate]);
 
   return (
     <div className="bg-primary text-white rounded-2xl p-5 w-full mx-auto shadow-lg select-none overflow-hidden">
@@ -129,6 +147,10 @@ const CalendarProgress: React.FC = () => {
           const dateKey = date.format("YYYY-MM-DD");
           const progress = animatedProgress[dateKey] || 0;
 
+          const record = dailyExpense.find((item: CalendarType) =>
+            dayjs(item.date).isSame(date, "day")
+          );
+
           const strokeDasharray = 113;
           const strokeDashoffset =
             strokeDasharray - (strokeDasharray * progress) / 100;
@@ -139,7 +161,16 @@ const CalendarProgress: React.FC = () => {
             date.isSame(today, "year");
 
           return (
-            <div key={day} className="relative flex justify-center">
+            <div
+              key={day}
+              className="relative flex justify-center"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDateAction(dateKey);
+              }}
+              onMouseEnter={() => !isMobile && setActiveDate(dateKey)}
+              onMouseLeave={() => !isMobile && setActiveDate(null)}
+            >
               {/* Circular progress bar */}
               <svg
                 className="absolute w-9 h-9 rotate-[-90deg]"
@@ -183,6 +214,23 @@ const CalendarProgress: React.FC = () => {
               >
                 {day}
               </div>
+
+              {/* Popover showing limit and expense */}
+              {activeDate === dateKey && record && (
+                <div
+                  className="absolute bottom-11 left-1/2 -translate-x-1/2 bg-zinc-800 text-white p-3 rounded-lg shadow-lg text-xs space-y-1 z-20"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <p className="whitespace-nowrap text-xxs">
+                    <span className="font-semibold">Limit:</span> ₱
+                    {record.limit.toLocaleString()}
+                  </p>
+                  <p className="whitespace-nowrap text-xxs">
+                    <span className="font-semibold">Expense:</span> ₱
+                    {record.expense.toLocaleString()}
+                  </p>
+                </div>
+              )}
             </div>
           );
         })}
