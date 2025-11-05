@@ -22,6 +22,9 @@ const RecentActivity = () => {
     useDashboardStore();
 
   const [filter, setFilter] = useState<FilterType>("all");
+  const [activeDescription, setActiveDescription] = useState<string | null>(
+    null
+  );
 
   // 🧮 Combine all activity into one list
   const recentActivity = useMemo(() => {
@@ -75,6 +78,12 @@ const RecentActivity = () => {
     }
   };
 
+  const toggleDescription = (id: string) => {
+    setActiveDescription((prev) => (prev === id ? null : id));
+  };
+
+  const isMobile = typeof window !== "undefined" && window.innerWidth <= 768;
+
   return (
     <div className="bg-primary rounded-2xl p-5 shadow-md">
       <div className="flex justify-between items-center mb-4">
@@ -109,6 +118,7 @@ const RecentActivity = () => {
               const isIncome = item.type === "income";
               const isExpense = item.type === "expense";
               const date = new Date(item.createdAt || item.dt).toLocaleString();
+              const isActive = activeDescription === item._id;
 
               return (
                 <motion.li
@@ -117,7 +127,7 @@ const RecentActivity = () => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.2 }}
-                  className="bg-black/30 rounded-lg p-2 hover:bg-black/50 transition"
+                  className="relative bg-black/30 rounded-lg p-2 hover:bg-black/50 transition"
                 >
                   {/* Top Row: Category + Date */}
                   <div className="flex justify-between items-center">
@@ -141,9 +151,29 @@ const RecentActivity = () => {
                         </div>
                       )}
                       {item.description && (
-                        <p className="text-xs text-gray-400 truncate w-full">
-                          {item.description}
-                        </p>
+                        <>
+                          <p
+                            className="text-white text-xs md:text-sm truncate w-full cursor-pointer"
+                            onClick={() =>
+                              isMobile && toggleDescription(item._id!)
+                            }
+                            onMouseEnter={() =>
+                              !isMobile && setActiveDescription(item._id!)
+                            }
+                            onMouseLeave={() =>
+                              !isMobile && setActiveDescription(null)
+                            }
+                          >
+                            {item.description}
+                          </p>
+
+                          {/* Tooltip / Full description */}
+                          {isActive && (
+                            <div className="absolute left-14 bottom-8 bg-zinc-800 text-white text-xs p-2 rounded-lg shadow-lg z-10 max-w-xs">
+                              {item.description}
+                            </div>
+                          )}
+                        </>
                       )}
                     </div>
 

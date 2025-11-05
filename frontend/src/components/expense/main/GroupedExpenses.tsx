@@ -18,12 +18,21 @@ const GroupedExpenses = ({
   onDelete,
 }: GroupedExpensesProps) => {
   const [expandedDates, setExpandedDates] = useState<string[]>([]);
+  const [activeDescription, setActiveDescription] = useState<string | null>(
+    null
+  );
 
   const toggleExpand = (date: string) => {
     setExpandedDates((prev) =>
       prev.includes(date) ? prev.filter((d) => d !== date) : [...prev, date]
     );
   };
+
+  const toggleDescription = (id: string) => {
+    setActiveDescription((prev) => (prev === id ? null : id));
+  };
+
+  const isMobile = typeof window !== "undefined" && window.innerWidth <= 768;
 
   return (
     <div className="space-y-4">
@@ -82,10 +91,12 @@ const GroupedExpenses = ({
                         .reverse()
                         .map((expense) => {
                           const Icon = expenseIcons[expense.icon];
+                          const isActive = activeDescription === expense._id;
+
                           return (
                             <div
                               key={expense._id}
-                              className="w-full bg-zinc-950/60 border border-white/10 rounded-xl p-4 hover:border-yellow/30 transition-all duration-200"
+                              className="relative w-full bg-zinc-950/60 border border-white/10 rounded-xl p-4 hover:border-yellow/30 transition-all duration-200"
                             >
                               {/* Top Row: Category + Date */}
                               <div className="flex justify-between items-center mb-1">
@@ -109,9 +120,29 @@ const GroupedExpenses = ({
                                     <Icon className="text-lg" />
                                   </div>
 
-                                  <p className="text-white text-xs md:text-sm truncate w-full">
+                                  <p
+                                    className="text-white text-xs md:text-sm truncate w-full cursor-pointer"
+                                    onClick={() =>
+                                      isMobile &&
+                                      toggleDescription(expense._id!)
+                                    }
+                                    onMouseEnter={() =>
+                                      !isMobile &&
+                                      setActiveDescription(expense._id!)
+                                    }
+                                    onMouseLeave={() =>
+                                      !isMobile && setActiveDescription(null)
+                                    }
+                                  >
                                     {expense.description}
                                   </p>
+
+                                  {/* Tooltip / Full description */}
+                                  {isActive && (
+                                    <div className="absolute left-14 bottom-12 bg-zinc-800 text-white text-xs p-2 rounded-lg shadow-lg z-10 max-w-xs">
+                                      {expense.description}
+                                    </div>
+                                  )}
                                 </div>
 
                                 {/* RIGHT SIDE (amount + edit + delete buttons) */}

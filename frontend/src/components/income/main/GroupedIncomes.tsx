@@ -18,12 +18,21 @@ const GroupedIncomes = ({
   onDelete,
 }: GroupedIncomesProps) => {
   const [expandedDates, setExpandedDates] = useState<string[]>([]);
+  const [activeDescription, setActiveDescription] = useState<string | null>(
+    null
+  );
 
   const toggleExpand = (date: string) => {
     setExpandedDates((prev) =>
       prev.includes(date) ? prev.filter((d) => d !== date) : [...prev, date]
     );
   };
+
+  const toggleDescription = (id: string) => {
+    setActiveDescription((prev) => (prev === id ? null : id));
+  };
+
+  const isMobile = typeof window !== "undefined" && window.innerWidth <= 768;
 
   return (
     <div className="space-y-4">
@@ -74,7 +83,6 @@ const GroupedIncomes = ({
                     animate={{ height: "auto", opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
                     transition={{ duration: 0.3, ease: "easeInOut" }}
-                    className="overflow-hidden"
                   >
                     <div className="p-2 md:p-4 space-y-2">
                       {dailyIncomes
@@ -82,10 +90,12 @@ const GroupedIncomes = ({
                         .reverse()
                         .map((income) => {
                           const Icon = incomeIcons[income.icon];
+                          const isActive = activeDescription === income._id;
+
                           return (
                             <div
                               key={income._id}
-                              className="w-full bg-zinc-950/60 border border-white/10 rounded-xl p-4 hover:border-yellow/30 transition-all duration-200"
+                              className="relative w-full bg-zinc-950/60 border border-white/10 rounded-xl p-4 hover:border-yellow/30 transition-all duration-200"
                             >
                               <div className="flex items-center justify-between">
                                 {/* LEFT SIDE (icon + description) */}
@@ -94,9 +104,28 @@ const GroupedIncomes = ({
                                     <Icon className="text-lg" />
                                   </div>
 
-                                  <p className="text-white text-xs md:text-sm truncate w-full">
+                                  <p
+                                    className="text-white text-xs md:text-sm truncate w-full cursor-pointer"
+                                    onClick={() =>
+                                      isMobile && toggleDescription(income._id!)
+                                    }
+                                    onMouseEnter={() =>
+                                      !isMobile &&
+                                      setActiveDescription(income._id!)
+                                    }
+                                    onMouseLeave={() =>
+                                      !isMobile && setActiveDescription(null)
+                                    }
+                                  >
                                     {income.description}
                                   </p>
+
+                                  {/* Tooltip / Full description */}
+                                  {isActive && (
+                                    <div className="absolute left-14 bottom-12 bg-zinc-800 text-white text-xs p-2 rounded-lg shadow-lg z-10 max-w-xs">
+                                      {income.description}
+                                    </div>
+                                  )}
                                 </div>
 
                                 {/* RIGHT SIDE (amount + buttons) */}
