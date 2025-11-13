@@ -1,49 +1,38 @@
 import { useDashboardStore } from "@/stores/dashboard/useDashboardStore";
 import { formatAmount } from "@/utils/amount/formatAmount";
-import { MdEdit } from "react-icons/md";
 
-interface SummaryCardsProps {
-  onEditBalance: () => void;
-}
-
-const SummaryCards: React.FC<SummaryCardsProps> = ({ onEditBalance }) => {
-  const { balance, totalIncomes, totalExpenses } = useDashboardStore();
+const SummaryCards: React.FC = () => {
+  const { totalBalances, totalIncomes, totalExpenses } = useDashboardStore();
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
+    <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
       {/* Balance Card */}
-      <div className="order-last lg:order-first col-span-2 lg:col-span-1 rounded-2xl p-4 shadow-md bg-card-balance text-white">
+      <div className="rounded-2xl p-4 shadow-md bg-card-balance text-white">
         <div className="w-full flex items-center justify-between">
           <h2 className="text-xs md:text-sm font-semibold uppercase opacity-80">
-            Balance
+            Total Balance
           </h2>
-          <button
-            className="text-white bg-green/80 hover:bg-green rounded-md p-1 cursor-pointer"
-            onClick={onEditBalance}
-          >
-            <MdEdit />
-          </button>
         </div>
         <p className="text-2xl text-center lg:text-left font-bold mt-2">
-          ₱{formatAmount(balance || 0)}
+          ₱{formatAmount(totalBalances.total || 0)}
         </p>
       </div>
 
       {/* Income */}
-      <div className="order-1 lg:order-2 rounded-2xl p-4 shadow-md bg-card-income text-white">
+      <div className="rounded-2xl p-4 shadow-md bg-card-income text-white">
         <h2 className="text-xs md:text-sm font-semibold uppercase opacity-80">
           Total Income
         </h2>
-        <p className="text-2xl font-bold mt-2">
+        <p className="text-2xl text-center lg:text-left font-bold mt-2">
           ₱{formatAmount(totalIncomes.total || 0)}
         </p>
       </div>
 
       {/* Expense */}
-      <div className="order-2 lg:order-3 rounded-2xl p-4 shadow-md bg-card-expense text-white">
+      <div className="rounded-2xl p-4 shadow-md bg-card-expense text-white">
         <h2 className="text-xs md:text-sm font-semibold uppercase opacity-80">
           Total Expenses
         </h2>
-        <p className="text-2xl font-bold mt-2">
+        <p className="text-2xl text-center lg:text-left  font-bold mt-2">
           ₱{formatAmount(totalExpenses.total || 0)}
         </p>
       </div>

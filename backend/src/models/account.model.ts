@@ -13,7 +13,6 @@ const accountSchema = new Schema<AccountDocumentType>(
     email: { type: String, required: true, unique: true },
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    balance: Number,
     limit: { type: Number, default: 500 },
     recoveryCode: String,
   },

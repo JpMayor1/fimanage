@@ -1,29 +1,35 @@
+import { balanceIcons } from "@/assets/icons/balanceIcons";
 import { expenseIcons } from "@/assets/icons/expenseIcons";
 import { incomeIcons } from "@/assets/icons/incomeIcons";
 import { useDashboardStore } from "@/stores/dashboard/useDashboardStore";
+import type { BalanceType } from "@/types/balance/balance.type";
 import type { ExpenseType } from "@/types/expense/expense.type";
 import type { IncomeType } from "@/types/income/income.type";
 import { AnimatePresence, motion } from "framer-motion";
 import { useMemo, useState } from "react";
 import CustomSelect from "../custom/CustomSelect";
 
-type FilterType = "all" | "income" | "expense";
+type FilterType = "all" | "balance" | "income" | "expense";
 
 type UnifiedActivity =
+  | (BalanceType & { type: "balance" })
   | (IncomeType & { type: "income" })
   | (ExpenseType & { type: "expense" });
 
 const RecentActivity = () => {
-  const { totalIncomes, totalExpenses } = useDashboardStore();
+  const { totalBalances, totalIncomes, totalExpenses } = useDashboardStore();
 
   const [filter, setFilter] = useState<FilterType>("all");
   const [activeDescription, setActiveDescription] = useState<string | null>(
     null
   );
 
-  // 🧮 Combine all activity into one list
   const recentActivity = useMemo(() => {
     const combined: UnifiedActivity[] = [
+      ...totalBalances.recent.map((item) => ({
+        ...item,
+        type: "balance" as const,
+      })),
       ...totalIncomes.recent.map((item) => ({
         ...item,
         type: "income" as const,
@@ -42,16 +48,19 @@ const RecentActivity = () => {
           new Date(a.createdAt || a.dt).getTime()
       )
       .slice(0, 6);
-  }, [totalIncomes, totalExpenses, filter]);
+  }, [totalBalances, totalIncomes, totalExpenses, filter]);
 
   const getIcon = (item: UnifiedActivity) => {
-    if (item.type === "income") return incomeIcons[item.icon];
-    if (item.type === "expense") return expenseIcons[item.icon];
-    return undefined;
+    if (item.type === "balance") return balanceIcons[item.icon] ?? null;
+    if (item.type === "income") return incomeIcons[item.icon] ?? null;
+    if (item.type === "expense") return expenseIcons[item.icon] ?? null;
+    return null;
   };
 
   const getColor = (type: FilterType) => {
     switch (type) {
+      case "balance":
+        return "text-card-balance";
       case "income":
         return "text-card-income";
       case "expense":
@@ -72,7 +81,6 @@ const RecentActivity = () => {
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-lg font-bold text-white">Recent Activity</h2>
 
-        {/* Filter Dropdown */}
         <CustomSelect
           name="category"
           value={filter}
@@ -81,6 +89,7 @@ const RecentActivity = () => {
           className="text-xs cursor-pointer"
         >
           <option value="all">All</option>
+          <option value="balance">Balances</option>
           <option value="income">Incomes</option>
           <option value="expense">Expenses</option>
         </CustomSelect>
@@ -93,7 +102,7 @@ const RecentActivity = () => {
       ) : (
         <ul className="space-y-2">
           <AnimatePresence>
-            {recentActivity.map((item) => {
+            {recentActivity.map((item, index) => {
               const Icon = getIcon(item);
               const colorClass = getColor(item.type);
               const isIncome = item.type === "income";
@@ -103,17 +112,16 @@ const RecentActivity = () => {
 
               return (
                 <motion.li
-                  key={item._id}
+                  key={item._id ?? index}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.2 }}
                   className="relative bg-black/30 rounded-lg p-2 hover:bg-black/50 transition"
                 >
-                  {/* Top Row: Category + Date */}
                   <div className="flex justify-between items-center">
-                    <p className="text-white font-medium">
-                      {item.category}{" "}
+                    <p className="text-white font-medium truncate">
+                      {item.type === "balance" ? item.name : item.category}{" "}
                       <span className="text-xs text-gray-400">
                         (
                         {item.type.charAt(0).toUpperCase() + item.type.slice(1)}
@@ -123,7 +131,6 @@ const RecentActivity = () => {
                     <p className="text-[10px] text-gray-500">{date}</p>
                   </div>
 
-                  {/* Bottom Row: Icon + Description + Amount */}
                   <div className="flex justify-between items-center mt-1">
                     <div className="flex items-center gap-2 flex-1 min-w-0">
                       {Icon && (
@@ -131,30 +138,26 @@ const RecentActivity = () => {
                           <Icon size={20} className={colorClass} />
                         </div>
                       )}
-                      {item.description && (
-                        <>
-                          <p
-                            className="text-white text-xs md:text-sm truncate w-full cursor-pointer"
-                            onClick={() =>
-                              isMobile && toggleDescription(item._id!)
-                            }
-                            onMouseEnter={() =>
-                              !isMobile && setActiveDescription(item._id!)
-                            }
-                            onMouseLeave={() =>
-                              !isMobile && setActiveDescription(null)
-                            }
-                          >
-                            {item.description}
-                          </p>
+                      <p
+                        className="text-white text-xs md:text-sm truncate w-full cursor-pointer"
+                        onClick={() => isMobile && toggleDescription(item._id!)}
+                        onMouseEnter={() =>
+                          !isMobile && setActiveDescription(item._id!)
+                        }
+                        onMouseLeave={() =>
+                          !isMobile && setActiveDescription(null)
+                        }
+                      >
+                        {item.type === "balance" ? item.name : item.description}
+                      </p>
 
-                          {/* Tooltip / Full description */}
-                          {isActive && (
-                            <div className="absolute left-14 bottom-8 bg-zinc-800 text-white text-xs p-2 rounded-lg shadow-lg z-10 max-w-xs">
-                              {item.description}
-                            </div>
-                          )}
-                        </>
+                      {/* Tooltip / Full description */}
+                      {isActive && (
+                        <div className="absolute left-14 bottom-8 bg-zinc-800 text-white text-xs p-2 rounded-lg shadow-lg z-10 max-w-xs">
+                          {item.type === "balance"
+                            ? item.name
+                            : item.description}
+                        </div>
                       )}
                     </div>
 

@@ -13,7 +13,6 @@ export type AccountType = {
   password: string;
   address: string;
   recoveryCode?: string;
-  balance: number;
   limit: number;
   createdAt: Date;
   updatedAt: Date;
