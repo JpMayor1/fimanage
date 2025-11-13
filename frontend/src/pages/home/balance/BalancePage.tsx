@@ -7,58 +7,26 @@ import { useBalanceStore } from "@/stores/balance/useBalanceStore";
 import { useSideBar } from "@/stores/sidebar/useSideBar";
 import type { BalanceType } from "@/types/balance/balance.type";
 import { AnimatePresence } from "framer-motion";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { RxHamburgerMenu } from "react-icons/rx";
 
 const BalancePage = () => {
   const { setOpen } = useSideBar();
-  const { getBalances, getLoading, balances, hasMore } = useBalanceStore();
+  const { getBalances, getLoading, balances } = useBalanceStore();
 
   const [addBalance, setAddBalance] = useState(false);
-  const [firstLoading, setFirstLoading] = useState(false);
   const [updateBalance, seUpdateBalance] = useState<BalanceType | null>(null);
   const [deleteBalance, seDeleteBalance] = useState<BalanceType | null>(null);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const fetchBalances = async () => {
-      setFirstLoading(true);
-      await getBalances(false);
-      setFirstLoading(false);
+      await getBalances();
     };
     fetchBalances();
   }, [getBalances]);
-
-  const handleScroll = useCallback(() => {
-    if (!containerRef.current || getLoading || !hasMore) return;
-
-    const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
-
-    // if user reached bottom (or close)
-    if (scrollTop + clientHeight >= scrollHeight - 100) {
-      getBalances(true); // fetch next 20
-    }
-  }, [getLoading, hasMore, getBalances]);
-
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    el.addEventListener("scroll", handleScroll);
-    return () => el.removeEventListener("scroll", handleScroll);
-  }, [handleScroll]);
-
-  const groupedBalances = balances.reduce((acc, inc) => {
-    const dateStr = new Date(inc.createdAt).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-    if (!acc[dateStr]) acc[dateStr] = [];
-    acc[dateStr].push(inc);
-    return acc;
-  }, {} as Record<string, BalanceType[]>);
 
   return (
     <div className="h-[100dvh] w-full p-1 px-2 md:px-4">
@@ -91,7 +59,7 @@ const BalancePage = () => {
         ref={containerRef}
         className="h-[calc(100%-50px)] md:h-[calc(100%-70px)] w-full overflow-y-scroll no-scrollbar"
       >
-        {firstLoading ? (
+        {getLoading ? (
           <p className="text-white py-3">
             <LoadingSmall />
           </p>
@@ -104,23 +72,11 @@ const BalancePage = () => {
                 </p>
               </div>
             ) : (
-              <>
-                <GroupedBalances
-                  groupedBalances={groupedBalances}
-                  onUpdate={(balance) => seUpdateBalance(balance)}
-                  onDelete={(balance) => seDeleteBalance(balance)}
-                />
-                {getLoading && hasMore && (
-                  <p className="text-white py-3">
-                    <LoadingSmall />
-                  </p>
-                )}
-                {!hasMore && balances.length > 20 && (
-                  <div className="py-4 text-center text-white/50 text-sm">
-                    All data have been loaded.
-                  </div>
-                )}
-              </>
+              <GroupedBalances
+                groupedBalances={balances}
+                onUpdate={(balance) => seUpdateBalance(balance)}
+                onDelete={(balance) => seDeleteBalance(balance)}
+              />
             )}
           </div>
         )}

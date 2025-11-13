@@ -8,6 +8,11 @@ const incomeSchema = new Schema<IncomeDocumentType>(
       ref: "Account",
       required: true,
     },
+    balanceId: {
+      type: Schema.Types.ObjectId,
+      ref: "Balance",
+      required: true,
+    },
     icon: String,
     category: {
       type: String,

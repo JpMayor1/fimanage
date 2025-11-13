@@ -15,19 +15,26 @@ interface UpdateIncomeI {
 }
 
 const UpdateIncome = ({ income, onClose }: UpdateIncomeI) => {
-  const { getCategories, getLoading, categories, updateIncome, updateLoading } =
-    useIncomeStore();
+  const {
+    getSelections,
+    getLoading,
+    categories,
+    balances,
+    updateIncome,
+    updateLoading,
+  } = useIncomeStore();
 
   const [form, setForm] = useState<Partial<IncomeType>>({
+    balanceId: income.balanceId,
     description: income.description,
     category: income.category,
     amount: income.amount,
   });
 
   useEffect(() => {
-    const fetchCategories = async () => await getCategories();
-    fetchCategories();
-  }, [getCategories]);
+    const fetchSelections = async () => await getSelections();
+    fetchSelections();
+  }, [getSelections]);
 
   function handleChange(e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
     const { name, value } = e.target;
@@ -81,6 +88,26 @@ const UpdateIncome = ({ income, onClose }: UpdateIncomeI) => {
                     className="bg-primary"
                   >
                     {category.name}
+                  </option>
+                ))}
+              </CustomSelect>
+
+              <CustomSelect
+                name="balanceId"
+                value={form.balanceId}
+                onChange={handleChange}
+                required
+              >
+                <option value="" disabled className="bg-primary">
+                  Select Balance
+                </option>
+                {balances.map((balance) => (
+                  <option
+                    key={balance._id}
+                    value={balance._id}
+                    className="bg-primary"
+                  >
+                    {balance.name}
                   </option>
                 ))}
               </CustomSelect>

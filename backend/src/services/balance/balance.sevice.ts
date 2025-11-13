@@ -4,19 +4,12 @@ import { getPhDt } from "@/utils/date&time/getPhDt";
 import { AppError } from "@/utils/error/appError";
 
 // Balance
-export const getBalancesS = async (
-  userId: string,
-  skip: number,
-  limit: number
-) => {
-  const total = await Balance.countDocuments({ userId });
+export const getBalancesS = async (userId: string) => {
   const balances = await Balance.find({ userId })
     .sort({ createdAt: -1 })
-    .skip(Number(skip))
-    .limit(Number(limit))
     .lean();
 
-  return { balances, total };
+  return { balances };
 };
 
 export const addBalanceS = async (data: Partial<BalanceType>) => {
@@ -47,9 +40,7 @@ export const updateBalanceS = async (
   return updatedBalance;
 };
 
-export const deleteBalanceS = async (
-  id: string
-) => {
+export const deleteBalanceS = async (id: string) => {
   const deletedBalance = await Balance.findByIdAndDelete(id);
   if (!deletedBalance) throw new AppError("Balance not found", 404);
 

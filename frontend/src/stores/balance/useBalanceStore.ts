@@ -9,11 +9,8 @@ import { showError } from "@/utils/error/error.util";
 import toast from "react-hot-toast";
 import { create } from "zustand";
 
-export const useBalanceStore = create<BalanceStoreType>((set, get) => ({
+export const useBalanceStore = create<BalanceStoreType>((set) => ({
   balances: [],
-
-  hasMore: true,
-  page: 0,
 
   getLoading: false,
   createLoading: false,
@@ -21,25 +18,15 @@ export const useBalanceStore = create<BalanceStoreType>((set, get) => ({
   deleteLoading: false,
 
   // Balance
-  getBalances: async (append = false) => {
-    const { page, balances } = get();
-    const limit = 20;
-    const skip = append ? page * limit : 0;
-
-    if (get().getLoading || !get().hasMore) return;
-
+  getBalances: async () => {
     set({ getLoading: true });
 
     try {
-      const response = await getBalancesApi(skip, limit);
-      const { balances: newBalances, total } = response.data;
-
-      const merged = append ? [...balances, ...newBalances] : newBalances;
+      const response = await getBalancesApi();
+      const { balances } = response.data;
 
       set({
-        balances: merged,
-        hasMore: merged.length < total,
-        page: append ? page + 1 : 1,
+        balances,
       });
     } catch (error) {
       showError(error);

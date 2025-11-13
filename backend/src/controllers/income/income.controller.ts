@@ -5,6 +5,7 @@ import {
   deleteIncomeS,
   findIncomeCategoryS,
   getCategoriesS,
+  getIncomeSelectionS,
   getIncomesS,
   updateCategoryS,
   updateIncomeS,
@@ -13,6 +14,12 @@ import { CustomRequest } from "@/types/express/express.type";
 import { IncomeCategoryType } from "@/types/models/IncomeCategoryType";
 import { AppError } from "@/utils/error/appError";
 import { Response } from "express";
+
+export const getIncomeSelection = async (req: CustomRequest, res: Response) => {
+  const account = req.account;
+  const { categories, balances } = await getIncomeSelectionS(account._id);
+  res.status(200).json({ categories, balances });
+};
 
 // Income Category
 export const getCategories = async (req: CustomRequest, res: Response) => {
@@ -100,13 +107,15 @@ export const getIncomes = async (req: CustomRequest, res: Response) => {
 
 export const addIncome = async (req: CustomRequest, res: Response) => {
   const account = req.account;
-  const { description, category, amount } = req.body;
+  const { balanceId, description, category, amount } = req.body;
+  if (!balanceId) throw new AppError("Balance ID is required.", 400);
   if (!description) throw new AppError("Description is required.", 400);
   if (!category) throw new AppError("Category is required.", 400);
   if (!Number(amount)) throw new AppError("Amount is required.", 400);
 
-  const newIncome = await addIncomeS(account, {
+  const newIncome = await addIncomeS({
     userId: account._id,
+    balanceId,
     category,
     description,
     amount,
@@ -115,16 +124,16 @@ export const addIncome = async (req: CustomRequest, res: Response) => {
 };
 
 export const updateIncome = async (req: CustomRequest, res: Response) => {
-  const account = req.account;
   const { id } = req.params;
-  const { description, category, amount } = req.body;
+  const { balanceId, description, category, amount } = req.body;
 
   if (!id) throw new AppError("Income ID is required.", 400);
   if (!description) throw new AppError("Description is required.", 400);
   if (!category) throw new AppError("Category is required.", 400);
   if (!Number(amount)) throw new AppError("Amount is required.", 400);
 
-  const updatedIncome = await updateIncomeS(account, id, {
+  const updatedIncome = await updateIncomeS(id, {
+    balanceId,
     description,
     category,
     amount,
@@ -136,8 +145,7 @@ export const updateIncome = async (req: CustomRequest, res: Response) => {
 };
 
 export const deleteIncome = async (req: CustomRequest, res: Response) => {
-  const account = req.account;
   const { id } = req.params;
-  const deletedIncome = await deleteIncomeS(account, id);
+  const deletedIncome = await deleteIncomeS(id);
   res.status(200).json({ message: "Income deleted.", deletedIncome });
 };

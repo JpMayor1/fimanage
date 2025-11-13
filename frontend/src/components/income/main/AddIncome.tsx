@@ -15,20 +15,27 @@ interface AddIncomeI {
 
 const initialState: Partial<IncomeType> = {
   category: "",
+  balanceId: "",
   description: "",
   amount: 0,
 };
 
 const AddIncome = ({ onClose }: AddIncomeI) => {
-  const { getCategories, getLoading, categories, addIncome, createLoading } =
-    useIncomeStore();
+  const {
+    getSelections,
+    getLoading,
+    categories,
+    balances,
+    addIncome,
+    createLoading,
+  } = useIncomeStore();
 
   const [form, setForm] = useState<Partial<IncomeType>>(initialState);
 
   useEffect(() => {
-    const fetchCategories = async () => await getCategories();
-    fetchCategories();
-  }, [getCategories]);
+    const fetchSelections = async () => await getSelections();
+    fetchSelections();
+  }, [getSelections]);
 
   function handleChange(e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
     const { name, value } = e.target;
@@ -83,6 +90,26 @@ const AddIncome = ({ onClose }: AddIncomeI) => {
                     className="bg-primary"
                   >
                     {category.name}
+                  </option>
+                ))}
+              </CustomSelect>
+
+              <CustomSelect
+                name="balanceId"
+                value={form.balanceId}
+                onChange={handleChange}
+                required
+              >
+                <option value="" disabled className="bg-primary">
+                  Select Balance
+                </option>
+                {balances.map((balance) => (
+                  <option
+                    key={balance._id}
+                    value={balance._id}
+                    className="bg-primary"
+                  >
+                    {balance.name}
                   </option>
                 ))}
               </CustomSelect>

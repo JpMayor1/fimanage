@@ -5,6 +5,7 @@ import {
   deleteIncome,
   getCategories,
   getIncomes,
+  getIncomeSelection,
   updateCategory,
   updateIncome,
 } from "@/controllers/income/income.controller";
@@ -12,6 +13,9 @@ import verifier from "@/middlewares/verifier";
 import { Router } from "express";
 
 const router = Router();
+
+router.get("/selection/all", verifier, getIncomeSelection);
+
 // Income Category
 router.get("/category/all", verifier, getCategories);
 router.post("/category/create", verifier, createIncomeCategory);

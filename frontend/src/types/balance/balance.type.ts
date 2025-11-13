@@ -14,15 +14,12 @@ export type BalanceType = {
 export type BalanceStoreType = {
   balances: BalanceType[];
 
-  hasMore: boolean;
-  page: number;
-
   getLoading: boolean;
   createLoading: boolean;
   updateLoading: boolean;
   deleteLoading: boolean;
 
-  getBalances: (append: boolean) => Promise<void>;
+  getBalances: () => Promise<void>;
   addBalance: (data: Partial<BalanceType>) => Promise<boolean>;
   updateBalance: (id: string, data: Partial<BalanceType>) => Promise<boolean>;
   deleteBalance: (id: string) => Promise<boolean>;

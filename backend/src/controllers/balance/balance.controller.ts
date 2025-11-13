@@ -11,12 +11,8 @@ import { Response } from "express";
 // Balance
 export const getBalances = async (req: CustomRequest, res: Response) => {
   const account = req.account;
-  const skip = Number(req.query.skip) || 0;
-  const limit = Number(req.query.limit) || 20;
-
-  const { balances, total } = await getBalancesS(account._id, skip, limit);
-
-  res.status(200).json({ balances, total });
+  const { balances } = await getBalancesS(account._id);
+  res.status(200).json({ balances });
 };
 
 export const addBalance = async (req: CustomRequest, res: Response) => {

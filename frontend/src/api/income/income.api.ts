@@ -4,6 +4,9 @@ import type {
   IncomeType,
 } from "@/types/income/income.type";
 
+export const getSelectionsApi = async () =>
+  await axiosInstance.get("/income/selection/all");
+
 // Income Category
 export const getCategoriesApi = async () =>
   await axiosInstance.get("/income/category/all");

@@ -1,4 +1,5 @@
 import type { IncomeIconKey } from "@/assets/icons/incomeIcons";
+import type { BalanceType } from "../balance/balance.type";
 
 export type IncomeCategoryType = {
   _id?: string;
@@ -8,6 +9,7 @@ export type IncomeCategoryType = {
 
 export type IncomeType = {
   _id?: string;
+  balanceId: string;
   icon: IncomeIconKey;
   category: string;
   description: string;
@@ -18,6 +20,7 @@ export type IncomeType = {
 
 export type IncomeStoreType = {
   categories: IncomeCategoryType[];
+  balances: BalanceType[];
   incomes: IncomeType[];
 
   hasMore: boolean;
@@ -27,6 +30,8 @@ export type IncomeStoreType = {
   createLoading: boolean;
   updateLoading: boolean;
   deleteLoading: boolean;
+
+  getSelections: () => Promise<void>;
 
   // Income Category
   getCategories: () => Promise<void>;

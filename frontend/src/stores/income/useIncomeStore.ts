@@ -5,6 +5,7 @@ import {
   deleteIncomeApi,
   getCategoriesApi,
   getIncomesApi,
+  getSelectionsApi,
   updateCategoryApi,
   updateIncomeApi,
 } from "@/api/income/income.api";
@@ -18,6 +19,7 @@ import { create } from "zustand";
 
 export const useIncomeStore = create<IncomeStoreType>((set, get) => ({
   categories: [],
+  balances: [],
   incomes: [],
 
   hasMore: true,
@@ -27,6 +29,22 @@ export const useIncomeStore = create<IncomeStoreType>((set, get) => ({
   createLoading: false,
   updateLoading: false,
   deleteLoading: false,
+
+  getSelections: async () => {
+    set({ getLoading: true });
+    try {
+      const response = await getSelectionsApi();
+      set({
+        categories: response.data.categories,
+        balances: response.data.balances,
+      });
+    } catch (error) {
+      console.error("Error getting categories", error);
+      showError(error);
+    } finally {
+      set({ getLoading: false });
+    }
+  },
 
   // Income Category
   getCategories: async () => {
