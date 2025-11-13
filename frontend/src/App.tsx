@@ -10,6 +10,7 @@ import PageNotFound from "./pages/general/PageNotFound";
 import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
 
+import BalancePage from "./pages/home/balance/BalancePage";
 import DashboardPage from "./pages/home/dashboard/DashboardPage";
 import ExpenseCategoriesPage from "./pages/home/expense/ExpenseCategories";
 import ExpensesPage from "./pages/home/expense/ExpensesPage";
@@ -53,6 +54,10 @@ function App() {
         {
           path: "/home/dashboard",
           element: <DashboardPage />,
+        },
+        {
+          path: "/home/balances",
+          element: <BalancePage />,
         },
         {
           path: "/home/incomes/categories",

@@ -15,6 +15,7 @@ import { globalErrorHandler } from "./middlewares/globalErrorHandler";
 import cloudinary from "@/middlewares/cloudinary";
 
 import authRoute from "@/routes/auth/auth.route";
+import balanceRoute from "@/routes/balance/balance.route";
 import dashboardRoute from "@/routes/dashboard/dashboard.route";
 import expenseRoute from "@/routes/expense/expense.route";
 import fileRoute from "@/routes/file/file.route";
@@ -57,6 +58,7 @@ const bootstrap = async () => {
   app.use("/api/profile", profileRoute);
   app.use("/api/file", fileRoute);
   app.use("/api/dashboard", dashboardRoute);
+  app.use("/api/balance", balanceRoute);
   app.use("/api/income", incomeRoute);
   app.use("/api/expense", expenseRoute);
   app.use("/api/saving", savingRoute);

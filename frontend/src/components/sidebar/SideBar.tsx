@@ -8,6 +8,7 @@ import { GrMoney } from "react-icons/gr";
 import { IoMdClose } from "react-icons/io";
 import {
   MdLogout,
+  MdOutlineAccountBalanceWallet,
   MdOutlineSavings,
   MdOutlineSpaceDashboard,
 } from "react-icons/md";
@@ -26,6 +27,11 @@ const SideBar = () => {
       name: "Dashboard",
       link: "/home/dashboard",
       icon: MdOutlineSpaceDashboard,
+    },
+    {
+      name: "Balances",
+      link: "/home/balances",
+      icon: MdOutlineAccountBalanceWallet,
     },
     { name: "Incomes", link: "/home/incomes", icon: GrMoney },
     { name: "Expenses", link: "/home/expenses", icon: GiExpense },
