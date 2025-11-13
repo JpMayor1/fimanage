@@ -54,8 +54,8 @@ export default function LandingPage() {
           </h2>
           <p className="text-base md:text-lg text-gray-300">
             Take control of your money with real-time tracking, smart budgeting,
-            and reports for your income, expenses, savings, and investments.
-            Your financial future starts here.
+            and reports for your income and expenses. Your financial future
+            starts here.
           </p>
 
           {/* If app install available → show Install button */}

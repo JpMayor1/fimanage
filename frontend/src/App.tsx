@@ -16,12 +16,8 @@ import ExpenseCategoriesPage from "./pages/home/expense/ExpenseCategories";
 import ExpensesPage from "./pages/home/expense/ExpensesPage";
 import IncomeCategoriesPage from "./pages/home/income/IncomeCategories";
 import IncomePage from "./pages/home/income/IncomePage";
-import InvestmentCategoriesPage from "./pages/home/investment/InvestmentCategories";
-import InvestmentsPage from "./pages/home/investment/InvestmentsPage";
 import ProfilePage from "./pages/home/profile/ProfilePage";
 import ReportPage from "./pages/home/report/ReportPage";
-import SavingCategoriesPage from "./pages/home/saving/SavingCategories";
-import SavingPage from "./pages/home/saving/SavingPage";
 
 function App() {
   const router = createBrowserRouter([
@@ -74,22 +70,6 @@ function App() {
         {
           path: "/home/expenses",
           element: <ExpensesPage />,
-        },
-        {
-          path: "/home/savings/categories",
-          element: <SavingCategoriesPage />,
-        },
-        {
-          path: "/home/savings",
-          element: <SavingPage />,
-        },
-        {
-          path: "/home/investments/categories",
-          element: <InvestmentCategoriesPage />,
-        },
-        {
-          path: "/home/investments",
-          element: <InvestmentsPage />,
         },
         {
           path: "/home/reports",

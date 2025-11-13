@@ -3,23 +3,18 @@ import { incomeIcons } from "@/assets/icons/incomeIcons";
 import { useDashboardStore } from "@/stores/dashboard/useDashboardStore";
 import type { ExpenseType } from "@/types/expense/expense.type";
 import type { IncomeType } from "@/types/income/income.type";
-import type { InvestmentType } from "@/types/investment/investment.type";
-import type { SavingType } from "@/types/saving/saving.type";
 import { AnimatePresence, motion } from "framer-motion";
 import { useMemo, useState } from "react";
 import CustomSelect from "../custom/CustomSelect";
 
-type FilterType = "all" | "income" | "expense" | "savings" | "investment";
+type FilterType = "all" | "income" | "expense";
 
 type UnifiedActivity =
   | (IncomeType & { type: "income" })
-  | (ExpenseType & { type: "expense" })
-  | (SavingType & { type: "savings" })
-  | (InvestmentType & { type: "investment" });
+  | (ExpenseType & { type: "expense" });
 
 const RecentActivity = () => {
-  const { totalIncomes, totalExpenses, totalSavings, totalInvestments } =
-    useDashboardStore();
+  const { totalIncomes, totalExpenses } = useDashboardStore();
 
   const [filter, setFilter] = useState<FilterType>("all");
   const [activeDescription, setActiveDescription] = useState<string | null>(
@@ -37,14 +32,6 @@ const RecentActivity = () => {
         ...item,
         type: "expense" as const,
       })),
-      ...totalSavings.recent.map((item) => ({
-        ...item,
-        type: "savings" as const,
-      })),
-      ...totalInvestments.recent.map((item) => ({
-        ...item,
-        type: "investment" as const,
-      })),
     ];
 
     return combined
@@ -55,12 +42,12 @@ const RecentActivity = () => {
           new Date(a.createdAt || a.dt).getTime()
       )
       .slice(0, 6);
-  }, [totalIncomes, totalExpenses, totalSavings, totalInvestments, filter]);
+  }, [totalIncomes, totalExpenses, filter]);
 
   const getIcon = (item: UnifiedActivity) => {
     if (item.type === "income") return incomeIcons[item.icon];
     if (item.type === "expense") return expenseIcons[item.icon];
-    return undefined; // savings & investments have no icon in your types
+    return undefined;
   };
 
   const getColor = (type: FilterType) => {
@@ -69,10 +56,6 @@ const RecentActivity = () => {
         return "text-card-income";
       case "expense":
         return "text-card-expense";
-      case "savings":
-        return "text-card-savings";
-      case "investment":
-        return "text-card-investment";
       default:
         return "text-white";
     }
@@ -100,8 +83,6 @@ const RecentActivity = () => {
           <option value="all">All</option>
           <option value="income">Incomes</option>
           <option value="expense">Expenses</option>
-          <option value="savings">Savings</option>
-          <option value="investment">Investments</option>
         </CustomSelect>
       </div>
 

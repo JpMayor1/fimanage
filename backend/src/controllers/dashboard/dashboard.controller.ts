@@ -4,21 +4,15 @@ import { Response } from "express";
 
 export const getDashboardData = async (req: CustomRequest, res: Response) => {
   const account = req.account;
-  const {
-    dailyExpense,
-    totalIncomes,
-    totalExpenses,
-    totalSavings,
-    totalInvestments,
-  } = await getDashboardDataS(account._id);
+  const { dailyExpense, totalIncomes, totalExpenses } = await getDashboardDataS(
+    account._id
+  );
 
   res.status(200).json({
     balance: account.balance,
     dailyExpense,
     totalIncomes,
     totalExpenses,
-    totalSavings,
-    totalInvestments,
   });
 };
 

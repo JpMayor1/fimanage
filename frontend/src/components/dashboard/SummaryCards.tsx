@@ -7,13 +7,7 @@ interface SummaryCardsProps {
 }
 
 const SummaryCards: React.FC<SummaryCardsProps> = ({ onEditBalance }) => {
-  const {
-    balance,
-    totalIncomes,
-    totalExpenses,
-    totalSavings,
-    totalInvestments,
-  } = useDashboardStore();
+  const { balance, totalIncomes, totalExpenses } = useDashboardStore();
   return (
     <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
       {/* Balance Card */}
@@ -55,24 +49,24 @@ const SummaryCards: React.FC<SummaryCardsProps> = ({ onEditBalance }) => {
       </div>
 
       {/* Savings */}
-      <div className="order-3 lg:order-4 rounded-2xl p-4 shadow-md bg-card-savings text-black">
+      {/* <div className="order-3 lg:order-4 rounded-2xl p-4 shadow-md bg-card-savings text-black">
         <h2 className="text-xs md:text-sm font-semibold uppercase opacity-80">
           Total Savings
         </h2>
         <p className="text-2xl font-bold mt-2">
           ₱{formatAmount(totalSavings.total || 0)}
         </p>
-      </div>
+      </div> */}
 
       {/* Investments */}
-      <div className="order-4 lg:order-5 rounded-2xl p-4 shadow-md bg-card-investment text-black">
+      {/* <div className="order-4 lg:order-5 rounded-2xl p-4 shadow-md bg-card-investment text-black">
         <h2 className="text-xs md:text-sm font-semibold uppercase opacity-80">
           Total Investments
         </h2>
         <p className="text-2xl font-bold mt-2">
           ₱{formatAmount(totalInvestments.total || 0)}
         </p>
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -12,8 +12,6 @@ export const useDashboardStore = create<DashboardStoreType>((set) => ({
   dailyExpense: [],
   totalIncomes: { total: 0, recent: [] },
   totalExpenses: { total: 0, recent: [] },
-  totalSavings: { total: 0, recent: [] },
-  totalInvestments: { total: 0, recent: [] },
 
   getLoading: false,
   updateLoading: false,
@@ -27,8 +25,6 @@ export const useDashboardStore = create<DashboardStoreType>((set) => ({
         dailyExpense: response.data.dailyExpense,
         totalIncomes: response.data.totalIncomes,
         totalExpenses: response.data.totalExpenses,
-        totalSavings: response.data.totalSavings,
-        totalInvestments: response.data.totalInvestments,
       });
       return response.data.balance | 0;
     } catch (error) {
