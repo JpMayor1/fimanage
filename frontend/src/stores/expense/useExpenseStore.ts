@@ -5,6 +5,7 @@ import {
   deleteExpenseApi,
   getCategoriesApi,
   getExpensesApi,
+  getSelectionsApi,
   updateCategoryApi,
   updateExpenseApi,
   updateLimitApi,
@@ -20,6 +21,7 @@ import { create } from "zustand";
 
 export const useExpenseStore = create<ExpenseStoreType>((set, get) => ({
   categories: [],
+  balances: [],
   expenses: [],
   limit: 500,
 
@@ -30,6 +32,22 @@ export const useExpenseStore = create<ExpenseStoreType>((set, get) => ({
   createLoading: false,
   updateLoading: false,
   deleteLoading: false,
+
+  getSelections: async () => {
+    set({ getLoading: true });
+    try {
+      const response = await getSelectionsApi();
+      set({
+        categories: response.data.categories,
+        balances: response.data.balances,
+      });
+    } catch (error) {
+      console.error("Error getting categories", error);
+      showError(error);
+    } finally {
+      set({ getLoading: false });
+    }
+  },
 
   // Expense Category
   getCategories: async () => {

@@ -3,6 +3,7 @@ import { Document, Schema } from "mongoose";
 export type ExpenseType = {
   _id?: string;
   userId: Schema.Types.ObjectId;
+  balanceId: Schema.Types.ObjectId;
   icon: string;
   description: string;
   category: string;

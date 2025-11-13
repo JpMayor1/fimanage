@@ -15,14 +15,21 @@ interface AddExpenseI {
 
 const initialState: Partial<ExpenseType> = {
   category: "",
+  balanceId: "",
   description: "",
   amount: 0,
   countable: true,
 };
 
 const AddExpense = ({ onClose }: AddExpenseI) => {
-  const { getCategories, getLoading, categories, addExpense, createLoading } =
-    useExpenseStore();
+  const {
+    getSelections,
+    getLoading,
+    categories,
+    balances,
+    addExpense,
+    createLoading,
+  } = useExpenseStore();
 
   const [form, setForm] = useState<Partial<ExpenseType>>(initialState);
   const [showTooltip, setShowTooltip] = useState(false);
@@ -34,9 +41,9 @@ const AddExpense = ({ onClose }: AddExpenseI) => {
   }, []);
 
   useEffect(() => {
-    const fetchCategories = async () => await getCategories();
-    fetchCategories();
-  }, [getCategories]);
+    const fetchSelections = async () => await getSelections();
+    fetchSelections();
+  }, [getSelections]);
 
   function handleChange(e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
     const { name, value } = e.target;
@@ -95,6 +102,26 @@ const AddExpense = ({ onClose }: AddExpenseI) => {
                     className="bg-primary"
                   >
                     {category.name}
+                  </option>
+                ))}
+              </CustomSelect>
+
+              <CustomSelect
+                name="balanceId"
+                value={form.balanceId}
+                onChange={handleChange}
+                required
+              >
+                <option value="" disabled className="bg-primary">
+                  Select Balance
+                </option>
+                {balances.map((balance) => (
+                  <option
+                    key={balance._id}
+                    value={balance._id}
+                    className="bg-primary"
+                  >
+                    {balance.name}
                   </option>
                 ))}
               </CustomSelect>

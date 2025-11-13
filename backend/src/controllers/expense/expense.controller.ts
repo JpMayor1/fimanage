@@ -5,6 +5,7 @@ import {
   deleteExpenseS,
   findExpenseCategoryS,
   getCategoriesS,
+  getExpenseSelectionS,
   getExpensesS,
   updateCategoryS,
   updateExpenseS,
@@ -15,6 +16,15 @@ import { CustomRequest } from "@/types/express/express.type";
 import { ExpenseCategoryType } from "@/types/models/expenseCategoryType";
 import { AppError } from "@/utils/error/appError";
 import { Response } from "express";
+
+export const getExpenseSelection = async (
+  req: CustomRequest,
+  res: Response
+) => {
+  const account = req.account;
+  const { categories, balances } = await getExpenseSelectionS(account._id);
+  res.status(200).json({ categories, balances });
+};
 
 // Expense Category
 export const getCategories = async (req: CustomRequest, res: Response) => {
@@ -101,13 +111,15 @@ export const getExpenses = async (req: CustomRequest, res: Response) => {
 
 export const addExpense = async (req: CustomRequest, res: Response) => {
   const account = req.account;
-  const { description, category, amount, countable } = req.body;
+  const { balanceId, description, category, amount, countable } = req.body;
+  if (!balanceId) throw new AppError("Balance ID is required.", 400);
   if (!description) throw new AppError("Description is required.", 400);
   if (!category) throw new AppError("Category is required.", 400);
   if (!Number(amount)) throw new AppError("Amount is required.", 400);
 
-  const newExpense = await addExpenseS(account, {
+  const newExpense = await addExpenseS({
     userId: account._id,
+    balanceId,
     description,
     category,
     amount,
@@ -117,16 +129,17 @@ export const addExpense = async (req: CustomRequest, res: Response) => {
 };
 
 export const updateExpense = async (req: CustomRequest, res: Response) => {
-  const account = req.account;
   const { id } = req.params;
-  const { description, category, amount, countable } = req.body;
+  const { balanceId, description, category, amount, countable } = req.body;
 
   if (!id) throw new AppError("Expense ID is required.", 400);
+  if (!balanceId) throw new AppError("Balance ID is required.", 400);
   if (!description) throw new AppError("Description is required.", 400);
   if (!category) throw new AppError("Category is required.", 400);
   if (!Number(amount)) throw new AppError("Amount is required.", 400);
 
-  const updatedExpense = await updateExpenseS(account, id, {
+  const updatedExpense = await updateExpenseS(id, {
+    balanceId,
     description,
     category,
     amount,
@@ -139,9 +152,8 @@ export const updateExpense = async (req: CustomRequest, res: Response) => {
 };
 
 export const deleteExpense = async (req: CustomRequest, res: Response) => {
-  const account = req.account;
   const { id } = req.params;
-  const deletedExpense = await deleteExpenseS(account, id);
+  const deletedExpense = await deleteExpenseS(id);
   res.status(200).json({ message: "Expense deleted.", deletedExpense });
 };
 

@@ -112,7 +112,7 @@ export const updateIncomeS = async (id: string, data: Partial<IncomeType>) => {
     const newAmount = data.amount ?? oldAmount;
 
     // If the balance source is the same, just adjust the difference
-    if (oldBalance._id === newBalance._id) {
+    if (oldBalance.id === newBalance.id) {
       const diff = Number(newAmount) - Number(oldAmount);
       if (diff !== 0) {
         await Balance.findByIdAndUpdate(

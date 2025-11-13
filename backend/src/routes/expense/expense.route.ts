@@ -5,6 +5,7 @@ import {
   deleteExpense,
   getCategories,
   getExpenses,
+  getExpenseSelection,
   updateCategory,
   updateExpense,
   updateLimit,
@@ -13,6 +14,9 @@ import verifier from "@/middlewares/verifier";
 import { Router } from "express";
 
 const router = Router();
+
+router.get("/selection/all", verifier, getExpenseSelection);
+
 // Expense Category
 router.get("/category/all", verifier, getCategories);
 router.post("/category/create", verifier, createExpenseCategory);

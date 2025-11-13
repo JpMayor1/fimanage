@@ -4,6 +4,9 @@ import type {
   ExpenseType,
 } from "@/types/expense/expense.type";
 
+export const getSelectionsApi = async () =>
+  await axiosInstance.get("/expense/selection/all");
+
 // Expense Category
 export const getCategoriesApi = async () =>
   await axiosInstance.get("/expense/category/all");

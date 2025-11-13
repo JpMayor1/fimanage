@@ -1,4 +1,5 @@
 import type { ExpenseIconKey } from "@/assets/icons/expenseIcons";
+import type { BalanceType } from "../balance/balance.type";
 
 export type ExpenseCategoryType = {
   _id?: string;
@@ -8,6 +9,7 @@ export type ExpenseCategoryType = {
 
 export type ExpenseType = {
   _id?: string;
+  balanceId: string;
   icon: ExpenseIconKey;
   category: string;
   description: string;
@@ -19,6 +21,7 @@ export type ExpenseType = {
 
 export type ExpenseStoreType = {
   categories: ExpenseCategoryType[];
+  balances: BalanceType[];
   expenses: ExpenseType[];
   limit: number;
 
@@ -29,6 +32,8 @@ export type ExpenseStoreType = {
   createLoading: boolean;
   updateLoading: boolean;
   deleteLoading: boolean;
+
+  getSelections: () => Promise<void>;
 
   // Expense Category
   getCategories: () => Promise<void>;

@@ -1,7 +1,7 @@
 import Account from "@/models/account.model";
+import Balance from "@/models/balance.model";
 import Expense from "@/models/expense.model";
 import ExpenseCategory from "@/models/expenseCategory.model";
-import { AccountDocumentType } from "@/types/models/account.type";
 import { ExpenseType } from "@/types/models/expense.type";
 import {
   ExpenseCategoryFilterType,
@@ -9,6 +9,12 @@ import {
 } from "@/types/models/expenseCategoryType";
 import { getPhDt } from "@/utils/date&time/getPhDt";
 import { AppError } from "@/utils/error/appError";
+
+export const getExpenseSelectionS = async (userId: string) => {
+  const categories = await ExpenseCategory.find({ userId }).lean();
+  const balances = await Balance.find({ userId }).lean();
+  return { categories, balances };
+};
 
 // Expense Category
 export const findExpenseCategoryS = async (
@@ -63,26 +69,28 @@ export const getExpensesS = async (
   return { expenses, total };
 };
 
-export const addExpenseS = async (
-  account: AccountDocumentType,
-  data: Partial<ExpenseType>
-) => {
+export const addExpenseS = async (data: Partial<ExpenseType>) => {
   const category = await ExpenseCategory.findOne({ name: data.category });
   if (!category) throw new AppError("Category not found", 404);
+
+  const balance = await Balance.findById(data.balanceId);
+  if (!balance) throw new AppError("Balance not found", 404);
+
   const newExpense = await Expense.create({
     ...data,
     icon: category.icon,
     dt: getPhDt(),
   });
+
   if (data.amount && data.amount > 0) {
-    account.balance -= Number(data.amount);
-    account.save();
+    balance.amount -= Number(data.amount);
+    await balance.save();
   }
+
   return newExpense;
 };
 
 export const updateExpenseS = async (
-  account: AccountDocumentType,
   id: string,
   data: Partial<ExpenseType>
 ) => {
@@ -95,13 +103,37 @@ export const updateExpenseS = async (
     data.icon = category.icon;
   }
 
-  if (data.amount !== undefined) {
-    const oldAmount = expense.amount;
-    const newAmount = data.amount;
-    const difference = oldAmount - newAmount;
+  // Handle balance adjustment if amount or balanceId changed
+  if (data.amount !== undefined || data.balanceId !== undefined) {
+    const oldBalance = await Balance.findById(expense.balanceId);
+    if (!oldBalance) throw new AppError("Old balance not found", 404);
 
-    account.balance += difference;
-    await account.save();
+    const newBalanceId = data.balanceId || expense.balanceId;
+    const newBalance = await Balance.findById(newBalanceId);
+    if (!newBalance) throw new AppError("New balance not found", 404);
+
+    const oldAmount = Number(expense.amount);
+    const newAmount = Number(data.amount ?? oldAmount);
+
+    if (oldBalance.id === newBalance.id) {
+      const diff = newAmount - oldAmount;
+      if (diff !== 0) {
+        await Balance.findByIdAndUpdate(
+          newBalance._id,
+          { $inc: { amount: -diff } },
+          { new: true }
+        );
+      }
+    } else {
+      await Promise.all([
+        Balance.findByIdAndUpdate(oldBalance._id, {
+          $inc: { amount: +oldAmount },
+        }),
+        Balance.findByIdAndUpdate(newBalance._id, {
+          $inc: { amount: -newAmount },
+        }),
+      ]);
+    }
   }
 
   const updatedExpense = await Expense.findByIdAndUpdate(
@@ -113,15 +145,19 @@ export const updateExpenseS = async (
   return updatedExpense;
 };
 
-export const deleteExpenseS = async (
-  account: AccountDocumentType,
-  id: string
-) => {
+export const deleteExpenseS = async (id: string) => {
   const deletedExpense = await Expense.findByIdAndDelete(id);
   if (!deletedExpense) throw new AppError("Expense not found", 404);
 
-  account.balance += deletedExpense.amount;
-  await account.save();
+  const { balanceId, amount } = deletedExpense;
+
+  if (balanceId && amount && amount > 0) {
+    await Balance.findByIdAndUpdate(
+      balanceId,
+      { $inc: { amount: +amount } },
+      { new: true }
+    );
+  }
 
   return deletedExpense;
 };

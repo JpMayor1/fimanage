@@ -16,14 +16,16 @@ interface UpdateExpenseI {
 
 const UpdateExpense = ({ expense, onClose }: UpdateExpenseI) => {
   const {
-    getCategories,
+    getSelections,
     getLoading,
     categories,
+    balances,
     updateExpense,
     updateLoading,
   } = useExpenseStore();
 
   const [form, setForm] = useState<Partial<ExpenseType>>({
+    balanceId: expense.balanceId,
     description: expense.description,
     category: expense.category,
     amount: expense.amount,
@@ -38,9 +40,9 @@ const UpdateExpense = ({ expense, onClose }: UpdateExpenseI) => {
   }, []);
 
   useEffect(() => {
-    const fetchCategories = async () => await getCategories();
-    fetchCategories();
-  }, [getCategories]);
+    const fetchSelections = async () => await getSelections();
+    fetchSelections();
+  }, [getSelections]);
 
   function handleChange(e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
     const { name, value } = e.target;
@@ -98,6 +100,26 @@ const UpdateExpense = ({ expense, onClose }: UpdateExpenseI) => {
                     className="bg-primary"
                   >
                     {category.name}
+                  </option>
+                ))}
+              </CustomSelect>
+
+              <CustomSelect
+                name="balanceId"
+                value={form.balanceId}
+                onChange={handleChange}
+                required
+              >
+                <option value="" disabled className="bg-primary">
+                  Select Balance
+                </option>
+                {balances.map((balance) => (
+                  <option
+                    key={balance._id}
+                    value={balance._id}
+                    className="bg-primary"
+                  >
+                    {balance.name}
                   </option>
                 ))}
               </CustomSelect>
