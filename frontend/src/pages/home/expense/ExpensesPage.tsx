@@ -67,7 +67,7 @@ const ExpensePage = () => {
       )
       .reduce((sum, expense) => sum + expense.amount, 0);
     setTodaySpent(total);
-    setShowLimitWarning(total >= limit);
+    setShowLimitWarning(total > limit);
   }, [expenses, limit]);
 
   const handleCloseWarning = () => {

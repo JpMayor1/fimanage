@@ -9,6 +9,8 @@ export type ExpenseType = {
   amount: number;
   dt: string;
   countable: boolean;
+  savingId: string;
+  investmentId: string;
 };
 
 export type ExpenseFilterType = Partial<

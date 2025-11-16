@@ -39,8 +39,8 @@ const DailyLimitReached = ({ onClose }: DailyLimitReachedI) => {
             Tama na sa pag gastos Bossing!
           </h2>
           <p className="text-white/80 text-sm max-w-[260px]">
-            Naabot o lumagpas ka na sa iyong daily limit. Medyo hinay-hinay muna
-            sa gastos 😅
+            Lumagpas ka na sa iyong daily limit. Medyo hinay-hinay muna sa
+            gastos 😅
           </p>
         </div>
 

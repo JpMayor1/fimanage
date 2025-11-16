@@ -98,7 +98,7 @@ const GroupedExpenses = ({
                               key={expense._id}
                               className="relative w-full bg-zinc-950/60 border border-white/10 rounded-xl p-4 hover:border-yellow/30 transition-all duration-200"
                             >
-                              {/* Top Row: Category + Date */}
+                              {/* Top Row: Name + Date */}
                               <div className="flex justify-between items-center mb-1">
                                 <p className="text-yellow text-xs font-medium">
                                   {expense.name}

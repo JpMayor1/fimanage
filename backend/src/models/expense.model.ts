@@ -20,6 +20,8 @@ const ExpenseSchema = new Schema<ExpenseDocumentType>(
     amount: { type: Number, required: true },
     dt: String,
     countable: { type: Boolean, default: true },
+    savingId: String,
+    investmentId: String,
   },
   { timestamps: true }
 );

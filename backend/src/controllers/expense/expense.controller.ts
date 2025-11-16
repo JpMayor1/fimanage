@@ -28,7 +28,8 @@ export const getSources = async (req: CustomRequest, res: Response) => {
 
 export const addExpense = async (req: CustomRequest, res: Response) => {
   const account = req.account;
-  const { icon, name, description, category, amount, countable } = req.body;
+  const { icon, name, description, amount, countable, savingId, investmentId } =
+    req.body;
   if (!icon) throw new AppError("Icon is required.", 400);
   if (!name) throw new AppError("Name is required.", 400);
   if (!Number(amount)) throw new AppError("Amount is required.", 400);
@@ -40,6 +41,8 @@ export const addExpense = async (req: CustomRequest, res: Response) => {
     description: description?.trim() ? description.trim() : "No description.",
     amount,
     countable,
+    savingId,
+    investmentId,
   });
   res.status(200).json({ message: "Expense added.", newExpense });
 };
@@ -47,7 +50,8 @@ export const addExpense = async (req: CustomRequest, res: Response) => {
 export const updateExpense = async (req: CustomRequest, res: Response) => {
   const account = req.account;
   const { id } = req.params;
-  const { icon, name, description, amount, countable } = req.body;
+  const { icon, name, description, amount, countable, savingId, investmentId } =
+    req.body;
 
   if (!id) throw new AppError("Expense ID is required.", 400);
   if (!name) throw new AppError("Name is required.", 400);
@@ -59,6 +63,8 @@ export const updateExpense = async (req: CustomRequest, res: Response) => {
     description: description?.trim() ? description.trim() : "No description.",
     amount,
     countable,
+    savingId,
+    investmentId,
   });
 
   res

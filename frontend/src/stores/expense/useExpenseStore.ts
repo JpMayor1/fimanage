@@ -2,6 +2,7 @@ import {
   addExpenseApi,
   deleteExpenseApi,
   getExpensesApi,
+  getSourcesApi,
   updateExpenseApi,
   updateLimitApi,
 } from "@/api/expense/expense.api";
@@ -11,6 +12,8 @@ import toast from "react-hot-toast";
 import { create } from "zustand";
 
 export const useExpenseStore = create<ExpenseStoreType>((set, get) => ({
+  savings: [],
+  investments: [],
   expenses: [],
   limit: 500,
 
@@ -18,6 +21,7 @@ export const useExpenseStore = create<ExpenseStoreType>((set, get) => ({
   page: 0,
 
   getLoading: false,
+  getSourcesLoading: false,
   loading: false,
 
   shown: false,
@@ -47,6 +51,23 @@ export const useExpenseStore = create<ExpenseStoreType>((set, get) => ({
       showError(error);
     } finally {
       set({ getLoading: false });
+    }
+  },
+  getSources: async () => {
+    set({ getSourcesLoading: true });
+    try {
+      const response = await getSourcesApi();
+      const { savings, investments } = response.data;
+
+      set({
+        savings,
+        investments,
+      });
+    } catch (error) {
+      console.error("Error getting sources", error);
+      showError(error);
+    } finally {
+      set({ getSourcesLoading: false });
     }
   },
   addExpense: async (data) => {
