@@ -8,6 +8,7 @@ const savingSchema = new Schema<SavingDocumentType>(
       ref: "Account",
       required: true,
     },
+    icon: String,
     name: {
       type: String,
       required: true,

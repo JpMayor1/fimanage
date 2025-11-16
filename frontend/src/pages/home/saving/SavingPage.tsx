@@ -1,17 +1,15 @@
 import LoadingSmall from "@/components/custom/loading/LoadingSmall";
 import AddSaving from "@/components/savings/main/AddSaving";
 import DeleteSaving from "@/components/savings/main/DeleteSaving";
+import GroupedSavings from "@/components/savings/main/GroupedSavings";
 import UpdateSaving from "@/components/savings/main/UpdateSaving";
 import { useSavingStore } from "@/stores/saving/useSavingStore";
 import { useSideBar } from "@/stores/sidebar/useSideBar";
 import type { SavingType } from "@/types/saving/saving.type";
-import { formatAmount } from "@/utils/amount/formatAmount";
 import { AnimatePresence } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
-import { MdDelete, MdEdit } from "react-icons/md";
 import { RxHamburgerMenu } from "react-icons/rx";
-import { TbPigMoney } from "react-icons/tb";
 
 const SavingPage = () => {
   const { setOpen } = useSideBar();
@@ -21,9 +19,6 @@ const SavingPage = () => {
   const [addSaving, setAddSaving] = useState(false);
   const [updateSaving, seUpdateSaving] = useState<SavingType | null>(null);
   const [deleteSaving, seDeleteSaving] = useState<SavingType | null>(null);
-  const [activeDescription, setActiveDescription] = useState<string | null>(
-    null
-  );
 
   const containerRef = useRef<HTMLDivElement | null>(null);
 
@@ -54,11 +49,16 @@ const SavingPage = () => {
     return () => el.removeEventListener("scroll", handleScroll);
   }, [handleScroll]);
 
-  const toggleDescription = (id: string) => {
-    setActiveDescription((prev) => (prev === id ? null : id));
-  };
-
-  const isMobile = typeof window !== "undefined" && window.innerWidth <= 768;
+  const groupedSavings = savings.reduce((acc, inc) => {
+    const dateStr = new Date(inc.createdAt).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+    if (!acc[dateStr]) acc[dateStr] = [];
+    acc[dateStr].push(inc);
+    return acc;
+  }, {} as Record<string, SavingType[]>);
 
   return (
     <div className="h-[100dvh] w-full p-1 px-2 md:px-4">
@@ -105,84 +105,11 @@ const SavingPage = () => {
               </div>
             ) : (
               <>
-                {savings.map((saving, index) => {
-                  const isActive = activeDescription === saving._id;
-                  return (
-                    <div
-                      key={index}
-                      className="relative w-full rounded-md bg-primary shadow-lg p-4 transition-all duration-200"
-                    >
-                      {/* Top Row: Category + Date */}
-                      <div className="flex justify-between items-center mb-1">
-                        <p className="text-yellow text-xs font-medium">
-                          {saving.name}
-                        </p>
-                        <p className="text-white/40 text-[10px]">{saving.dt}</p>
-                      </div>
-
-                      <div className="flex items-center justify-between">
-                        {/* LEFT SIDE (icon + description + extra info) */}
-                        <div className="flex items-center gap-3 flex-1 min-w-0">
-                          <div className="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-md border border-yellow/30 bg-yellow/10 text-yellow">
-                            <TbPigMoney className="text-lg" />
-                          </div>
-
-                          <div className="min-w-0">
-                            <p
-                              className="text-white text-xs md:text-sm truncate w-full cursor-pointer"
-                              onClick={() =>
-                                isMobile && toggleDescription(saving._id!)
-                              }
-                              onMouseEnter={() =>
-                                !isMobile && setActiveDescription(saving._id!)
-                              }
-                              onMouseLeave={() =>
-                                !isMobile && setActiveDescription(null)
-                              }
-                            >
-                              {saving.description}
-                            </p>
-
-                            {/* Tooltip / Full description */}
-                            {isActive && (
-                              <div className="absolute left-14 bottom-12 bg-zinc-800 text-white text-xs p-2 rounded-lg shadow-lg z-10 max-w-xs">
-                                {saving.description}
-                              </div>
-                            )}
-
-                            {(saving.annualRate || saving.frequency) && (
-                              <p className="text-yellow/80 text-xs whitespace-nowrap">
-                                {saving.annualRate && `${saving.annualRate}%`}{" "}
-                                {saving.frequency}
-                              </p>
-                            )}
-                          </div>
-                        </div>
-
-                        {/* RIGHT SIDE (amount + buttons) */}
-                        <div className="flex items-center gap-2 flex-shrink-0">
-                          <p className="text-green font-semibold whitespace-nowrap">
-                            ₱{formatAmount(saving.amount)}
-                          </p>
-
-                          <button
-                            className="text-white bg-green/80 hover:bg-green rounded-md p-2 cursor-pointer transition-all duration-200"
-                            onClick={() => seUpdateSaving(saving)}
-                          >
-                            <MdEdit />
-                          </button>
-
-                          <button
-                            className="text-white bg-red/80 hover:bg-red rounded-md p-2 cursor-pointer transition-all duration-200"
-                            onClick={() => seDeleteSaving(saving)}
-                          >
-                            <MdDelete />
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
+                <GroupedSavings
+                  groupedSavings={groupedSavings}
+                  onUpdate={(saving) => seUpdateSaving(saving)}
+                  onDelete={(saving) => seDeleteSaving(saving)}
+                />
 
                 {getLoading && hasMore && (
                   <p className="text-white py-3">

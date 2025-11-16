@@ -1,5 +1,8 @@
+import type { SavingIconKey } from "@/assets/icons/savingIcons";
+
 export type SavingType = {
   _id?: string;
+  icon: SavingIconKey;
   name: string;
   description: string;
   amount: number;

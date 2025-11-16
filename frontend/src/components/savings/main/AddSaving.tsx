@@ -1,3 +1,4 @@
+import { savingIcons, type SavingIconKey } from "@/assets/icons/savingIcons";
 import LoadingSmall from "@/components/custom/loading/LoadingSmall";
 import TextField from "@/components/custom/TextField";
 import { frequencies } from "@/constants/frequencies.constant";
@@ -6,13 +7,14 @@ import { useSavingStore } from "@/stores/saving/useSavingStore";
 import type { SavingType } from "@/types/saving/saving.type";
 import { motion } from "framer-motion";
 import { useState, type ChangeEvent, type FormEvent } from "react";
-import { FiX } from "react-icons/fi";
+import { FiChevronDown, FiX } from "react-icons/fi";
 
 interface AddSavingI {
   onClose: () => void;
 }
 
 const initialState: Partial<SavingType> = {
+  icon: "MdBusinessCenter",
   name: "",
   description: "",
   amount: 0,
@@ -24,17 +26,25 @@ const AddSaving = ({ onClose }: AddSavingI) => {
   const { addSaving, createLoading } = useSavingStore();
 
   const [form, setForm] = useState<Partial<SavingType>>(initialState);
+  const [showIcons, setShowIcons] = useState(false);
 
   function handleChange(e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   }
 
+  const handleIconChange = (icon: SavingIconKey) => {
+    setForm((prev) => ({ ...prev, icon }));
+    setShowIcons(false);
+  };
+
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     const success = await addSaving(form);
     if (success) return onClose();
   }
+
+  const SelectedIcon = form.icon ? savingIcons[form.icon] : null;
 
   return (
     <motion.div
@@ -57,14 +67,49 @@ const AddSaving = ({ onClose }: AddSavingI) => {
             Add Saving
           </label>
 
-          <TextField
-            name="name"
-            value={form.name}
-            onChange={handleChange}
-            placeholder="Name *"
-            className="bg-black text-white border border-white/20 focus:border-yellow"
-            containerClassName="flex-1 "
-          />
+          <div className="flex gap-2">
+            {/* Icon picker */}
+            <div className="relative">
+              <button
+                type="button"
+                className="w-13 h-13 flex items-center justify-center rounded-md border border-white/20 bg-black text-yellow cursor-pointer"
+                onClick={() => setShowIcons((prev) => !prev)}
+              >
+                {SelectedIcon && <SelectedIcon className="text-2xl" />}
+                <FiChevronDown className="absolute bottom-1 right-1 text-xs text-white/60" />
+              </button>
+
+              {showIcons && (
+                <div className="w-60 absolute mt-1 flex flex-wrap gap-2 p-2 bg-black border border-white/20 rounded-md shadow-lg z-40">
+                  {Object.keys(savingIcons).map((key) => {
+                    const IconComponent = savingIcons[key as SavingIconKey];
+                    return (
+                      <button
+                        key={key}
+                        type="button"
+                        onClick={() => handleIconChange(key as SavingIconKey)}
+                        className={`p-2 rounded-md hover:bg-yellow/20 cursor-pointer ${
+                          form.icon === key ? "bg-yellow/30" : ""
+                        }`}
+                      >
+                        <IconComponent className="text-yellow text-xl" />
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+            {/* Name input */}
+            <TextField
+              name="name"
+              value={form.name}
+              onChange={handleChange}
+              placeholder="Name *"
+              className="bg-black text-white border border-white/20 focus:border-yellow"
+              containerClassName="flex-1 "
+            />
+          </div>
 
           <div className="flex flex-col gap-1">
             <label className="text-white/80">Description *</label>
