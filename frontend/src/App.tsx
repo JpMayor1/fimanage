@@ -11,7 +11,6 @@ import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
 
 import DashboardPage from "./pages/home/dashboard/DashboardPage";
-import ExpenseCategoriesPage from "./pages/home/expense/ExpenseCategories";
 import ExpensesPage from "./pages/home/expense/ExpensesPage";
 import IncomePage from "./pages/home/income/IncomePage";
 import InvestmentCategoriesPage from "./pages/home/investment/InvestmentCategories";
@@ -56,10 +55,6 @@ function App() {
         {
           path: "/home/incomes",
           element: <IncomePage />,
-        },
-        {
-          path: "/home/expenses/categories",
-          element: <ExpenseCategoriesPage />,
         },
         {
           path: "/home/expenses",

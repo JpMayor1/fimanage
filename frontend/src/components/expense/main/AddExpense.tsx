@@ -1,4 +1,4 @@
-import CustomSelect from "@/components/custom/CustomSelect";
+import { expenseIcons, type ExpenseIconKey } from "@/assets/icons/expenseIcons";
 import LoadingBig from "@/components/custom/loading/LoadingBig";
 import LoadingSmall from "@/components/custom/loading/LoadingSmall";
 import TextField from "@/components/custom/TextField";
@@ -7,42 +7,43 @@ import { useExpenseStore } from "@/stores/expense/useExpenseStore";
 import type { ExpenseType } from "@/types/expense/expense.type";
 import { motion } from "framer-motion";
 import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
-import { FiHelpCircle, FiX } from "react-icons/fi";
+import { FiChevronDown, FiHelpCircle, FiX } from "react-icons/fi";
 
 interface AddExpenseI {
   onClose: () => void;
 }
 
 const initialState: Partial<ExpenseType> = {
-  category: "",
+  icon: "FaUtensils",
+  name: "",
   description: "",
   amount: 0,
   countable: true,
 };
 
 const AddExpense = ({ onClose }: AddExpenseI) => {
-  const { getCategories, getLoading, categories, addExpense, createLoading } =
-    useExpenseStore();
+  const { getLoading, addExpense, createLoading } = useExpenseStore();
 
   const [form, setForm] = useState<Partial<ExpenseType>>(initialState);
   const [showTooltip, setShowTooltip] = useState(false);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
   const [from, setFrom] = useState("balance");
+  const [showIcons, setShowIcons] = useState(false);
 
   useEffect(() => {
     const checkTouch = () => setIsTouchDevice("ontouchstart" in window);
     checkTouch();
   }, []);
 
-  useEffect(() => {
-    const fetchCategories = async () => await getCategories();
-    fetchCategories();
-  }, [getCategories]);
-
   function handleChange(e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   }
+
+  const handleIconChange = (icon: ExpenseIconKey) => {
+    setForm((prev) => ({ ...prev, icon }));
+    setShowIcons(false);
+  };
 
   function handleCheckboxChange(e: ChangeEvent<HTMLInputElement>) {
     setForm((prev) => ({ ...prev, countable: e.target.checked }));
@@ -54,6 +55,8 @@ const AddExpense = ({ onClose }: AddExpenseI) => {
     const success = await addExpense(form);
     if (success) return onClose();
   }
+
+  const SelectedIcon = form.icon ? expenseIcons[form.icon] : null;
 
   return (
     <motion.div
@@ -80,25 +83,52 @@ const AddExpense = ({ onClose }: AddExpenseI) => {
                 Add Expense
               </label>
 
-              <CustomSelect
-                name="category"
-                value={form.category}
-                onChange={handleChange}
-                required
-              >
-                <option value="" disabled className="bg-primary">
-                  Select Category
-                </option>
-                {categories.map((category) => (
-                  <option
-                    key={category._id}
-                    value={category.name}
-                    className="bg-primary"
+              <div className="flex gap-2">
+                {/* Icon picker */}
+                <div className="relative">
+                  <button
+                    type="button"
+                    className="w-13 h-13 flex items-center justify-center rounded-md border border-white/20 bg-black text-yellow cursor-pointer"
+                    onClick={() => setShowIcons((prev) => !prev)}
                   >
-                    {category.name}
-                  </option>
-                ))}
-              </CustomSelect>
+                    {SelectedIcon && <SelectedIcon className="text-2xl" />}
+                    <FiChevronDown className="absolute bottom-1 right-1 text-xs text-white/60" />
+                  </button>
+
+                  {showIcons && (
+                    <div className="w-60 absolute mt-1 flex flex-wrap gap-2 p-2 bg-black border border-white/20 rounded-md shadow-lg z-40">
+                      {Object.keys(expenseIcons).map((key) => {
+                        const IconComponent =
+                          expenseIcons[key as ExpenseIconKey];
+                        return (
+                          <button
+                            key={key}
+                            type="button"
+                            onClick={() =>
+                              handleIconChange(key as ExpenseIconKey)
+                            }
+                            className={`p-2 rounded-md hover:bg-yellow/20 cursor-pointer ${
+                              form.icon === key ? "bg-yellow/30" : ""
+                            }`}
+                          >
+                            <IconComponent className="text-yellow text-xl" />
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+
+                {/* Name input */}
+                <TextField
+                  name="name"
+                  value={form.name}
+                  onChange={handleChange}
+                  placeholder="Name *"
+                  className="bg-black text-white border border-white/20 focus:border-yellow"
+                  containerClassName="flex-1 "
+                />
+              </div>
 
               <div className="flex flex-col gap-1 mt-2">
                 <label className="text-white/80">Source *</label>

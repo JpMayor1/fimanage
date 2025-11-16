@@ -1,15 +1,9 @@
 import type { ExpenseIconKey } from "@/assets/icons/expenseIcons";
 
-export type ExpenseCategoryType = {
-  _id?: string;
-  icon: string;
-  name: string;
-};
-
 export type ExpenseType = {
   _id?: string;
   icon: ExpenseIconKey;
-  category: string;
+  name: string;
   description: string;
   amount: number;
   dt: string;
@@ -18,7 +12,6 @@ export type ExpenseType = {
 };
 
 export type ExpenseStoreType = {
-  categories: ExpenseCategoryType[];
   expenses: ExpenseType[];
   limit: number;
 
@@ -30,16 +23,6 @@ export type ExpenseStoreType = {
   updateLoading: boolean;
   deleteLoading: boolean;
 
-  // Expense Category
-  getCategories: () => Promise<void>;
-  createCategories: (categories: ExpenseCategoryType[]) => Promise<boolean>;
-  updateCategory: (
-    categoryId: string,
-    updatedCategory: ExpenseCategoryType
-  ) => Promise<boolean>;
-  deleteCategory: (categoryId: string) => Promise<boolean>;
-
-  // Expense
   getExpenses: (append: boolean) => Promise<void>;
   addExpense: (data: Partial<ExpenseType>) => Promise<boolean>;
   updateExpense: (id: string, data: Partial<ExpenseType>) => Promise<boolean>;

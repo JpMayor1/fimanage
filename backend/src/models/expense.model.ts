@@ -9,11 +9,11 @@ const ExpenseSchema = new Schema<ExpenseDocumentType>(
       required: true,
     },
     icon: String,
-    description: {
+    name: {
       type: String,
       required: true,
     },
-    category: {
+    description: {
       type: String,
       required: true,
     },

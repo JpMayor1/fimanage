@@ -53,12 +53,8 @@ const DeleteExpense = ({ expense, onClose }: DeleteExpenseI) => {
               Delete Expense
             </label>
             <p className="text-white text-center">
-              Are you sure you want to delete this expense?
-            </p>
-            <p className="text-yellow text-center mt-1">
-              {expense.description?.length > 20
-                ? expense.description.substring(0, 20) + "..."
-                : expense.description}
+              Are you sure you want to delete{" "}
+              <span className="text-red">{expense.name}</span>?
             </p>
           </div>
 

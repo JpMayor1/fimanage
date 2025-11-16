@@ -101,11 +101,7 @@ const GroupedExpenses = ({
                               {/* Top Row: Category + Date */}
                               <div className="flex justify-between items-center mb-1">
                                 <p className="text-yellow text-xs font-medium">
-                                  {expense.category}{" "}
-                                  <span className="text-white/40 text-[10px]">
-                                    {" "}
-                                    (Expense){" "}
-                                  </span>
+                                  {expense.name}
                                 </p>
                                 <p className="text-white/40 text-[10px]">
                                   {expense.dt}

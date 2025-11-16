@@ -1,55 +1,12 @@
 import Account from "@/models/account.model";
 import Expense from "@/models/expense.model";
-import ExpenseCategory from "@/models/expenseCategory.model";
 import Investment from "@/models/investment.model";
 import Saving from "@/models/saving.model";
 import { AccountDocumentType } from "@/types/models/account.type";
 import { ExpenseType } from "@/types/models/expense.type";
-import {
-  ExpenseCategoryFilterType,
-  ExpenseCategoryType,
-} from "@/types/models/expenseCategoryType";
 import { getPhDt } from "@/utils/date&time/getPhDt";
 import { AppError } from "@/utils/error/appError";
 
-// Expense Category
-export const findExpenseCategoryS = async (
-  filter: ExpenseCategoryFilterType
-): Promise<ExpenseCategoryType | null> => {
-  try {
-    const expenseCategory = await ExpenseCategory.findOne(filter).exec();
-    return expenseCategory as ExpenseCategoryType | null;
-  } catch (err) {
-    console.error("Error finding expense category:", err);
-    return null;
-  }
-};
-
-export const getCategoriesS = async (userId: string) =>
-  await ExpenseCategory.find({ userId }).lean();
-
-export const createExpenseCategoryS = async (
-  categories: ExpenseCategoryType[]
-) => {
-  const newCategories = await ExpenseCategory.insertMany(categories);
-  return newCategories as ExpenseCategoryType[];
-};
-
-export const updateCategoryS = async (
-  categoryId: string,
-  updateData: { name?: string; icon?: string }
-) => {
-  return await ExpenseCategory.findByIdAndUpdate(
-    categoryId,
-    { $set: updateData },
-    { new: true }
-  );
-};
-
-export const deleteCategoryS = async (categoryId: string) =>
-  await ExpenseCategory.findByIdAndDelete(categoryId);
-
-// Expense
 export const getExpensesS = async (
   userId: string,
   skip: number,
@@ -66,30 +23,27 @@ export const getExpensesS = async (
 };
 
 export const getSourcesS = async (userId: string) => {
-  const [expenses, savings, investments] = await Promise.all([
-    ExpenseCategory.find({ userId }).select("_id name").lean(),
+  const [savings, investments] = await Promise.all([
     Saving.find({ userId }).lean(),
     Investment.find({ userId }).lean(),
   ]);
-
-  return { expenses, savings, investments };
+  return { savings, investments };
 };
 
 export const addExpenseS = async (
   account: AccountDocumentType,
   data: Partial<ExpenseType>
 ) => {
-  const category = await ExpenseCategory.findOne({ name: data.category });
-  if (!category) throw new AppError("Category not found", 404);
   const newExpense = await Expense.create({
     ...data,
-    icon: category.icon,
     dt: getPhDt(),
   });
+
   if (data.amount && data.amount > 0) {
     account.balance -= Number(data.amount);
     account.save();
   }
+
   return newExpense;
 };
 
@@ -100,12 +54,6 @@ export const updateExpenseS = async (
 ) => {
   const expense = await Expense.findById(id);
   if (!expense) throw new AppError("Expense not found", 404);
-
-  if (data.category) {
-    const category = await ExpenseCategory.findOne({ name: data.category });
-    if (!category) throw new AppError("Category not found", 404);
-    data.icon = category.icon;
-  }
 
   if (data.amount !== undefined) {
     const oldAmount = expense.amount;
