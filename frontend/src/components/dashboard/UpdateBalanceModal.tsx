@@ -42,8 +42,8 @@ const UpdateBalanceModal = ({ onClose }: UpdateBalanceModalI) => {
           className={`${
             Number(newBalance) < 1
               ? "cursor-not-allowed opacity-80"
-              : "cursor-pointer ransition-all"
-          } absolute top-3 right-3 p-2 rounded-full hover:bg-red/20 t`}
+              : "cursor-pointer transition-all hover:bg-red/20"
+          } absolute top-3 right-3 p-2 rounded-full`}
           onClick={onClose}
         >
           <FiX className="text-2xl text-red" />

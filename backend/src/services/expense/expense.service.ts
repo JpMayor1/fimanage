@@ -40,8 +40,8 @@ export const addExpenseS = async (
   });
 
   if (data.amount && data.amount > 0) {
-    account.balance -= Number(data.amount);
-    account.save();
+    account.balance = Math.max(0, account.balance - Number(data.amount));
+    await account.save();
   }
 
   return newExpense;
