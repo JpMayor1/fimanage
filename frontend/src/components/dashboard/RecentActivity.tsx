@@ -132,7 +132,7 @@ const RecentActivity = () => {
                   {/* Top Row: Category + Date */}
                   <div className="flex justify-between items-center">
                     <p className="text-white font-medium">
-                      {item.category}{" "}
+                      {item.name}{" "}
                       <span className="text-xs text-gray-400">
                         (
                         {item.type.charAt(0).toUpperCase() + item.type.slice(1)}
