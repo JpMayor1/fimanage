@@ -9,7 +9,7 @@ const incomeSchema = new Schema<IncomeDocumentType>(
       required: true,
     },
     icon: String,
-    category: {
+    name: {
       type: String,
       required: true,
     },

@@ -97,6 +97,15 @@ const GroupedIncomes = ({
                               key={income._id}
                               className="relative w-full bg-zinc-950/60 border border-white/10 rounded-xl p-4 hover:border-yellow/30 transition-all duration-200"
                             >
+                              <div className="flex justify-between items-center mb-1">
+                                <p className="text-yellow text-sm font-medium">
+                                  {income.name}
+                                </p>
+                                <p className="text-white/40 text-[10px]">
+                                  {income.dt}
+                                </p>
+                              </div>
+
                               <div className="flex items-center justify-between">
                                 {/* LEFT SIDE (icon + description) */}
                                 <div className="flex items-center gap-3 flex-1 min-w-0">

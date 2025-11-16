@@ -4,14 +4,14 @@ export type IncomeType = {
   _id?: string;
   userId: Schema.Types.ObjectId;
   icon: string;
-  category: string;
+  name: string;
   description: string;
   amount: number;
   dt: string;
 };
 
 export type IncomeFilterType = Partial<
-  Pick<IncomeType, "description" | "category">
+  Pick<IncomeType, "description" | "name">
 >;
 
 export type IncomeDocumentType = IncomeType & Document;
