@@ -5,6 +5,7 @@ import {
   deleteExpense,
   getCategories,
   getExpenses,
+  getSources,
   updateCategory,
   updateExpense,
   updateLimit,
@@ -21,6 +22,7 @@ router.delete("/category/delete/:categoryId", verifier, deleteCategory);
 
 // Expense
 router.get("/all", verifier, getExpenses);
+router.get("/sources", verifier, getSources);
 router.post("/add", verifier, addExpense);
 router.patch("/update/:id", verifier, updateExpense);
 router.delete("/delete/:id", verifier, deleteExpense);

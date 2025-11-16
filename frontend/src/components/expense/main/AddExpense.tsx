@@ -27,6 +27,7 @@ const AddExpense = ({ onClose }: AddExpenseI) => {
   const [form, setForm] = useState<Partial<ExpenseType>>(initialState);
   const [showTooltip, setShowTooltip] = useState(false);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
+  const [from, setFrom] = useState("balance");
 
   useEffect(() => {
     const checkTouch = () => setIsTouchDevice("ontouchstart" in window);
@@ -98,6 +99,28 @@ const AddExpense = ({ onClose }: AddExpenseI) => {
                   </option>
                 ))}
               </CustomSelect>
+
+              <div className="flex flex-col gap-1 mt-2">
+                <label className="text-white/80">Source *</label>
+                <div className="flex gap-4">
+                  {["balance", "savings", "investments"].map((option) => (
+                    <label
+                      key={option}
+                      className="flex items-center gap-1 text-white/90 cursor-pointer"
+                    >
+                      <input
+                        type="radio"
+                        name="from"
+                        value={option}
+                        checked={from === option}
+                        onChange={(e) => setFrom(e.target.value)}
+                        className="accent-yellow w-4 h-4"
+                      />
+                      {option.charAt(0).toUpperCase() + option.slice(1)}
+                    </label>
+                  ))}
+                </div>
+              </div>
 
               <div className="flex flex-col gap-1">
                 <label className="text-white/80">Description *</label>

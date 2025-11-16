@@ -6,6 +6,7 @@ import {
   findExpenseCategoryS,
   getCategoriesS,
   getExpensesS,
+  getSourcesS,
   updateCategoryS,
   updateExpenseS,
   updateLimitS,
@@ -97,6 +98,12 @@ export const getExpenses = async (req: CustomRequest, res: Response) => {
 
   const { expenses, total } = await getExpensesS(account._id, skip, limit);
   res.status(200).json({ limit: account.limit, expenses, total });
+};
+
+export const getSources = async (req: CustomRequest, res: Response) => {
+  const account = req.account;
+  const { expenses, savings, investments } = await getSourcesS(account._id);
+  res.status(200).json({ expenses, savings, investments });
 };
 
 export const addExpense = async (req: CustomRequest, res: Response) => {

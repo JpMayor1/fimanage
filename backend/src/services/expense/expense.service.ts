@@ -1,6 +1,8 @@
 import Account from "@/models/account.model";
 import Expense from "@/models/expense.model";
 import ExpenseCategory from "@/models/expenseCategory.model";
+import Investment from "@/models/investment.model";
+import Saving from "@/models/saving.model";
 import { AccountDocumentType } from "@/types/models/account.type";
 import { ExpenseType } from "@/types/models/expense.type";
 import {
@@ -61,6 +63,16 @@ export const getExpensesS = async (
     .lean();
 
   return { expenses, total };
+};
+
+export const getSourcesS = async (userId: string) => {
+  const [expenses, savings, investments] = await Promise.all([
+    ExpenseCategory.find({ userId }).select("_id name").lean(),
+    Saving.find({ userId }).lean(),
+    Investment.find({ userId }).lean(),
+  ]);
+
+  return { expenses, savings, investments };
 };
 
 export const addExpenseS = async (
