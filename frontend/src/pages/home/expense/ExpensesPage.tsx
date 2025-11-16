@@ -16,7 +16,7 @@ import { RxHamburgerMenu } from "react-icons/rx";
 
 const ExpensePage = () => {
   const { setOpen } = useSideBar();
-  const { getExpenses, getLoading, expenses, limit, hasMore } =
+  const { getExpenses, getLoading, expenses, limit, hasMore, shown, setShown } =
     useExpenseStore();
 
   const [addExpense, setAddExpense] = useState(false);
@@ -27,7 +27,6 @@ const ExpensePage = () => {
   const [showLimitWarning, setShowLimitWarning] = useState(false);
 
   const [todaySpent, setTodaySpent] = useState(0);
-  const dismissedRef = useRef(false);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
 
@@ -73,7 +72,7 @@ const ExpensePage = () => {
 
   const handleCloseWarning = () => {
     setShowLimitWarning(false);
-    dismissedRef.current = false;
+    setShown();
   };
 
   const groupedExpenses = expenses.reduce((acc, exp) => {
@@ -180,7 +179,9 @@ const ExpensePage = () => {
         {updateLimit && !getLoading && (
           <UpdateDailyLimit onClose={() => setUpdateLimit(false)} />
         )}
-        {showLimitWarning && <DailyLimitReached onClose={handleCloseWarning} />}
+        {showLimitWarning && !shown && (
+          <DailyLimitReached onClose={handleCloseWarning} />
+        )}
       </AnimatePresence>
     </div>
   );

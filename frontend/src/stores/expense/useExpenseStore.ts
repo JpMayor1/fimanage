@@ -22,6 +22,8 @@ export const useExpenseStore = create<ExpenseStoreType>((set, get) => ({
   updateLoading: false,
   deleteLoading: false,
 
+  shown: false,
+
   getExpenses: async (append = false) => {
     const { page, expenses } = get();
     const limit = 20;
@@ -119,4 +121,5 @@ export const useExpenseStore = create<ExpenseStoreType>((set, get) => ({
       set({ updateLoading: false });
     }
   },
+  setShown: () => set({ shown: true }),
 }));

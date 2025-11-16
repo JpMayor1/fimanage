@@ -23,6 +23,8 @@ export type ExpenseStoreType = {
   updateLoading: boolean;
   deleteLoading: boolean;
 
+  shown: boolean;
+
   getExpenses: (append: boolean) => Promise<void>;
   addExpense: (data: Partial<ExpenseType>) => Promise<boolean>;
   updateExpense: (id: string, data: Partial<ExpenseType>) => Promise<boolean>;
@@ -30,4 +32,5 @@ export type ExpenseStoreType = {
 
   // Limit
   updateLimit: (limit: number) => Promise<boolean>;
+  setShown: () => void;
 };
