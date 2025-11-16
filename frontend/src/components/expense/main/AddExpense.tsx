@@ -1,5 +1,4 @@
 import { expenseIcons, type ExpenseIconKey } from "@/assets/icons/expenseIcons";
-import LoadingBig from "@/components/custom/loading/LoadingBig";
 import LoadingSmall from "@/components/custom/loading/LoadingSmall";
 import TextField from "@/components/custom/TextField";
 import { overlayAnim } from "@/constants/overlay.animation.constant";
@@ -22,7 +21,7 @@ const initialState: Partial<ExpenseType> = {
 };
 
 const AddExpense = ({ onClose }: AddExpenseI) => {
-  const { getLoading, addExpense, createLoading } = useExpenseStore();
+  const { addExpense, createLoading } = useExpenseStore();
 
   const [form, setForm] = useState<Partial<ExpenseType>>(initialState);
   const [showTooltip, setShowTooltip] = useState(false);
@@ -74,164 +73,153 @@ const AddExpense = ({ onClose }: AddExpenseI) => {
           <FiX className="text-2xl text-red" />
         </button>
 
-        {getLoading ? (
-          <LoadingBig />
-        ) : (
-          <>
-            <form className="space-y-2 w-full" onSubmit={handleSubmit}>
-              <label className="block font-semibold text-white">
-                Add Expense
-              </label>
+        <form className="space-y-2 w-full" onSubmit={handleSubmit}>
+          <label className="block font-semibold text-white">Add Expense</label>
 
-              <div className="flex gap-2">
-                {/* Icon picker */}
-                <div className="relative">
-                  <button
-                    type="button"
-                    className="w-13 h-13 flex items-center justify-center rounded-md border border-white/20 bg-black text-yellow cursor-pointer"
-                    onClick={() => setShowIcons((prev) => !prev)}
-                  >
-                    {SelectedIcon && <SelectedIcon className="text-2xl" />}
-                    <FiChevronDown className="absolute bottom-1 right-1 text-xs text-white/60" />
-                  </button>
-
-                  {showIcons && (
-                    <div className="w-60 absolute mt-1 flex flex-wrap gap-2 p-2 bg-black border border-white/20 rounded-md shadow-lg z-40">
-                      {Object.keys(expenseIcons).map((key) => {
-                        const IconComponent =
-                          expenseIcons[key as ExpenseIconKey];
-                        return (
-                          <button
-                            key={key}
-                            type="button"
-                            onClick={() =>
-                              handleIconChange(key as ExpenseIconKey)
-                            }
-                            className={`p-2 rounded-md hover:bg-yellow/20 cursor-pointer ${
-                              form.icon === key ? "bg-yellow/30" : ""
-                            }`}
-                          >
-                            <IconComponent className="text-yellow text-xl" />
-                          </button>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
-
-                {/* Name input */}
-                <TextField
-                  name="name"
-                  value={form.name}
-                  onChange={handleChange}
-                  placeholder="Name *"
-                  className="bg-black text-white border border-white/20 focus:border-yellow"
-                  containerClassName="flex-1 "
-                />
-              </div>
-
-              <div className="flex flex-col gap-1 mt-2">
-                <label className="text-white/80">Source *</label>
-                <div className="flex gap-4">
-                  {["balance", "savings", "investments"].map((option) => (
-                    <label
-                      key={option}
-                      className="flex items-center gap-1 text-white/90 cursor-pointer"
-                    >
-                      <input
-                        type="radio"
-                        name="from"
-                        value={option}
-                        checked={from === option}
-                        onChange={(e) => setFrom(e.target.value)}
-                        className="accent-yellow w-4 h-4"
-                      />
-                      {option.charAt(0).toUpperCase() + option.slice(1)}
-                    </label>
-                  ))}
-                </div>
-              </div>
-
-              <div className="flex flex-col gap-1">
-                <label className="text-white/80">Description *</label>
-                <TextField
-                  name="description"
-                  value={form.description}
-                  onChange={handleChange}
-                  placeholder="Description"
-                  containerClassName="flex-1"
-                  className="bg-black text-white border focus:border-yellow"
-                />
-              </div>
-
-              <div className="flex flex-col gap-1">
-                <label className="text-white/80">Amount *</label>
-                <TextField
-                  type="number"
-                  name="amount"
-                  value={form.amount}
-                  onChange={handleChange}
-                  placeholder="Amount *"
-                  containerClassName="flex-1"
-                  className="bg-black text-white border focus:border-yellow"
-                />
-              </div>
-
-              <div className="flex items-center gap-2 mt-3 relative">
-                <input
-                  type="checkbox"
-                  id="countable"
-                  name="countable"
-                  checked={form.countable}
-                  onChange={handleCheckboxChange}
-                  className="w-5 h-5 accent-yellow cursor-pointer"
-                />
-                <label
-                  htmlFor="countable"
-                  className="text-white/90 select-none cursor-pointer"
-                >
-                  Countable
-                </label>
-                <div className="relative flex items-center">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (isTouchDevice) setShowTooltip((prev) => !prev);
-                    }}
-                    onMouseEnter={() => {
-                      if (!isTouchDevice) setShowTooltip(true);
-                    }}
-                    onMouseLeave={() => {
-                      if (!isTouchDevice) setShowTooltip(false);
-                    }}
-                    className="text-yellow cursor-pointer"
-                  >
-                    <FiHelpCircle size={18} />
-                  </button>
-
-                  {showTooltip && (
-                    <div className="absolute left-6 bottom-5 bg-black/80 text-white text-xs p-2 rounded-lg shadow-md w-50 md:w-56 z-20">
-                      If checked, this expense will be included in your daily
-                      limit calculations.
-                    </div>
-                  )}
-                </div>
-              </div>
-
+          <div className="flex gap-2">
+            {/* Icon picker */}
+            <div className="relative">
               <button
-                type="submit"
-                disabled={createLoading}
-                className={`${
-                  createLoading
-                    ? "cursor-not-allowed opacity-80"
-                    : "cursor-pointer hover:scale-101 hover:shadow-xl transition-all"
-                } w-full py-2 rounded-xl bg-gradient-to-r from-yellow to-yellow/80 text-black text-lg mt-2 shadow-md`}
+                type="button"
+                className="w-13 h-13 flex items-center justify-center rounded-md border border-white/20 bg-black text-yellow cursor-pointer"
+                onClick={() => setShowIcons((prev) => !prev)}
               >
-                {createLoading ? <LoadingSmall /> : "Add Expense"}
+                {SelectedIcon && <SelectedIcon className="text-2xl" />}
+                <FiChevronDown className="absolute bottom-1 right-1 text-xs text-white/60" />
               </button>
-            </form>
-          </>
-        )}
+
+              {showIcons && (
+                <div className="w-60 absolute mt-1 flex flex-wrap gap-2 p-2 bg-black border border-white/20 rounded-md shadow-lg z-40">
+                  {Object.keys(expenseIcons).map((key) => {
+                    const IconComponent = expenseIcons[key as ExpenseIconKey];
+                    return (
+                      <button
+                        key={key}
+                        type="button"
+                        onClick={() => handleIconChange(key as ExpenseIconKey)}
+                        className={`p-2 rounded-md hover:bg-yellow/20 cursor-pointer ${
+                          form.icon === key ? "bg-yellow/30" : ""
+                        }`}
+                      >
+                        <IconComponent className="text-yellow text-xl" />
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+            {/* Name input */}
+            <TextField
+              name="name"
+              value={form.name}
+              onChange={handleChange}
+              placeholder="Name *"
+              className="bg-black text-white border border-white/20 focus:border-yellow"
+              containerClassName="flex-1 "
+            />
+          </div>
+
+          <div className="flex flex-col gap-1 mt-2">
+            <label className="text-white/80">Source *</label>
+            <div className="flex gap-4">
+              {["balance", "savings", "investments"].map((option) => (
+                <label
+                  key={option}
+                  className="flex items-center gap-1 text-white/90 cursor-pointer"
+                >
+                  <input
+                    type="radio"
+                    name="from"
+                    value={option}
+                    checked={from === option}
+                    onChange={(e) => setFrom(e.target.value)}
+                    className="accent-yellow w-4 h-4"
+                  />
+                  {option.charAt(0).toUpperCase() + option.slice(1)}
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <label className="text-white/80">Description *</label>
+            <TextField
+              name="description"
+              value={form.description}
+              onChange={handleChange}
+              placeholder="Description"
+              containerClassName="flex-1"
+              className="bg-black text-white border focus:border-yellow"
+            />
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <label className="text-white/80">Amount *</label>
+            <TextField
+              type="number"
+              name="amount"
+              value={form.amount}
+              onChange={handleChange}
+              placeholder="Amount *"
+              containerClassName="flex-1"
+              className="bg-black text-white border focus:border-yellow"
+            />
+          </div>
+
+          <div className="flex items-center gap-2 mt-3 relative">
+            <input
+              type="checkbox"
+              id="countable"
+              name="countable"
+              checked={form.countable}
+              onChange={handleCheckboxChange}
+              className="w-5 h-5 accent-yellow cursor-pointer"
+            />
+            <label
+              htmlFor="countable"
+              className="text-white/90 select-none cursor-pointer"
+            >
+              Countable
+            </label>
+            <div className="relative flex items-center">
+              <button
+                type="button"
+                onClick={() => {
+                  if (isTouchDevice) setShowTooltip((prev) => !prev);
+                }}
+                onMouseEnter={() => {
+                  if (!isTouchDevice) setShowTooltip(true);
+                }}
+                onMouseLeave={() => {
+                  if (!isTouchDevice) setShowTooltip(false);
+                }}
+                className="text-yellow cursor-pointer"
+              >
+                <FiHelpCircle size={18} />
+              </button>
+
+              {showTooltip && (
+                <div className="absolute left-6 bottom-5 bg-black/80 text-white text-xs p-2 rounded-lg shadow-md w-50 md:w-56 z-20">
+                  If checked, this expense will be included in your daily limit
+                  calculations.
+                </div>
+              )}
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            disabled={createLoading}
+            className={`${
+              createLoading
+                ? "cursor-not-allowed opacity-80"
+                : "cursor-pointer hover:scale-101 hover:shadow-xl transition-all"
+            } w-full py-2 rounded-xl bg-gradient-to-r from-yellow to-yellow/80 text-black text-lg mt-2 shadow-md`}
+          >
+            {createLoading ? <LoadingSmall /> : "Add Expense"}
+          </button>
+        </form>
       </div>
     </motion.div>
   );
