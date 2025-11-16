@@ -1,11 +1,6 @@
-export type SavingCategoryType = {
-  _id?: string;
-  name: string;
-};
-
 export type SavingType = {
   _id?: string;
-  category: string;
+  name: string;
   description: string;
   amount: number;
   annualRate?: string;
@@ -27,7 +22,6 @@ export type SavingType = {
 };
 
 export type SavingStoreType = {
-  categories: SavingCategoryType[];
   savings: SavingType[];
 
   hasMore: boolean;
@@ -38,16 +32,6 @@ export type SavingStoreType = {
   updateLoading: boolean;
   deleteLoading: boolean;
 
-  // Saving Category
-  getCategories: () => Promise<void>;
-  createCategories: (categories: SavingCategoryType[]) => Promise<boolean>;
-  updateCategory: (
-    categoryId: string,
-    updatedCategory: SavingCategoryType
-  ) => Promise<boolean>;
-  deleteCategory: (categoryId: string) => Promise<boolean>;
-
-  // Saving
   getSavings: (append: boolean) => Promise<void>;
   addSaving: (data: Partial<SavingType>) => Promise<boolean>;
   updateSaving: (id: string, data: Partial<SavingType>) => Promise<boolean>;

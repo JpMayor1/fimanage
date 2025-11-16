@@ -3,7 +3,7 @@ import { Document, Schema } from "mongoose";
 export type SavingType = {
   _id?: string;
   userId: Schema.Types.ObjectId;
-  category: string;
+  name: string;
   description: string;
   amount: number;
   annualRate?: string;
@@ -24,7 +24,7 @@ export type SavingType = {
 };
 
 export type SavingFilterType = Partial<
-  Pick<SavingType, "description" | "category">
+  Pick<SavingType, "description" | "name">
 >;
 
 export type SavingDocumentType = SavingType & Document;

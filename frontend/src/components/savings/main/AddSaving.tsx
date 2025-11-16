@@ -1,4 +1,3 @@
-import CustomSelect from "@/components/custom/CustomSelect";
 import LoadingBig from "@/components/custom/loading/LoadingBig";
 import LoadingSmall from "@/components/custom/loading/LoadingSmall";
 import TextField from "@/components/custom/TextField";
@@ -7,7 +6,7 @@ import { overlayAnim } from "@/constants/overlay.animation.constant";
 import { useSavingStore } from "@/stores/saving/useSavingStore";
 import type { SavingType } from "@/types/saving/saving.type";
 import { motion } from "framer-motion";
-import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
+import { useState, type ChangeEvent, type FormEvent } from "react";
 import { FiX } from "react-icons/fi";
 
 interface AddSavingI {
@@ -15,7 +14,7 @@ interface AddSavingI {
 }
 
 const initialState: Partial<SavingType> = {
-  category: "",
+  name: "",
   description: "",
   amount: 0,
   annualRate: "",
@@ -23,15 +22,9 @@ const initialState: Partial<SavingType> = {
 };
 
 const AddSaving = ({ onClose }: AddSavingI) => {
-  const { getCategories, getLoading, categories, addSaving, createLoading } =
-    useSavingStore();
+  const { getLoading, addSaving, createLoading } = useSavingStore();
 
   const [form, setForm] = useState<Partial<SavingType>>(initialState);
-
-  useEffect(() => {
-    const fetchCategories = async () => await getCategories();
-    fetchCategories();
-  }, [getCategories]);
 
   function handleChange(e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
     const { name, value } = e.target;
@@ -69,26 +62,14 @@ const AddSaving = ({ onClose }: AddSavingI) => {
                 Add Saving
               </label>
 
-              {/* Category */}
-              <CustomSelect
-                name="category"
-                value={form.category}
+              <TextField
+                name="name"
+                value={form.name}
                 onChange={handleChange}
-                required
-              >
-                <option value="" disabled className="bg-primary">
-                  Select Category
-                </option>
-                {categories.map((category) => (
-                  <option
-                    key={category._id}
-                    value={category.name}
-                    className="bg-primary"
-                  >
-                    {category.name}
-                  </option>
-                ))}
-              </CustomSelect>
+                placeholder="Name *"
+                className="bg-black text-white border border-white/20 focus:border-yellow"
+                containerClassName="flex-1 "
+              />
 
               <div className="flex flex-col gap-1">
                 <label className="text-white/80">Description *</label>

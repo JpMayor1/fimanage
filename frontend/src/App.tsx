@@ -17,7 +17,6 @@ import InvestmentCategoriesPage from "./pages/home/investment/InvestmentCategori
 import InvestmentsPage from "./pages/home/investment/InvestmentsPage";
 import ProfilePage from "./pages/home/profile/ProfilePage";
 import ReportPage from "./pages/home/report/ReportPage";
-import SavingCategoriesPage from "./pages/home/saving/SavingCategories";
 import SavingPage from "./pages/home/saving/SavingPage";
 
 function App() {
@@ -59,10 +58,6 @@ function App() {
         {
           path: "/home/expenses",
           element: <ExpensesPage />,
-        },
-        {
-          path: "/home/savings/categories",
-          element: <SavingCategoriesPage />,
         },
         {
           path: "/home/savings",

@@ -12,7 +12,6 @@ import { FaPlus } from "react-icons/fa6";
 import { MdDelete, MdEdit } from "react-icons/md";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { TbPigMoney } from "react-icons/tb";
-import { Link } from "react-router-dom";
 
 const SavingPage = () => {
   const { setOpen } = useSideBar();
@@ -78,21 +77,13 @@ const SavingPage = () => {
           </div>
         </div>
 
-        <div className="flex items-center gap-4">
-          <Link
-            to={"/home/savings/categories"}
-            className="flex flex-row gap-2 items-center text-yellow underline rounded-md cursor-pointer text-xs md:text-base"
-          >
-            Categories
-          </Link>
-          <button
-            className="bg-yellow/90 hover:bg-yellow flex flex-row gap-2 items-center text-black rounded-md py-2 px-4 cursor-pointer text-xs md:text-base"
-            onClick={() => setAddSaving(true)}
-          >
-            <FaPlus className="text-xs" />
-            Saving
-          </button>
-        </div>
+        <button
+          className="bg-yellow/90 hover:bg-yellow flex flex-row gap-2 items-center text-black rounded-md py-2 px-4 cursor-pointer text-xs md:text-base"
+          onClick={() => setAddSaving(true)}
+        >
+          <FaPlus className="text-xs" />
+          Saving
+        </button>
       </div>
 
       {/* Saving List */}
@@ -124,10 +115,7 @@ const SavingPage = () => {
                       {/* Top Row: Category + Date */}
                       <div className="flex justify-between items-center mb-1">
                         <p className="text-yellow text-xs font-medium">
-                          {saving.category}{" "}
-                          <span className="text-white/40 text-[10px]">
-                            (Saving)
-                          </span>
+                          {saving.name}
                         </p>
                         <p className="text-white/40 text-[10px]">{saving.dt}</p>
                       </div>

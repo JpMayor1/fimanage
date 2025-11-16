@@ -53,12 +53,8 @@ const DeleteSaving = ({ saving, onClose }: DeleteSavingI) => {
               Delete Saving
             </label>
             <p className="text-white text-center">
-              Are you sure you want to delete this saving?
-            </p>
-            <p className="text-yellow text-center mt-1">
-              {saving.description?.length > 20
-                ? saving.description.substring(0, 20) + "..."
-                : saving.description}
+              Are you sure you want to delete{" "}
+              <span className="text-red">{saving.name}</span>?
             </p>
           </div>
 
