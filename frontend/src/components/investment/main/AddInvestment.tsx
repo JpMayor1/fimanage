@@ -17,7 +17,7 @@ interface AddInvestmentI {
 }
 
 const initialState: Partial<InvestmentType> = {
-  icon: "MdBusinessCenter",
+  icon: "MdMoreHoriz",
   name: "",
   description: "",
   amount: 0,

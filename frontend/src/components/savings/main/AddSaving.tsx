@@ -14,7 +14,7 @@ interface AddSavingI {
 }
 
 const initialState: Partial<SavingType> = {
-  icon: "MdBusinessCenter",
+  icon: "MdMoreHoriz",
   name: "",
   description: "",
   amount: 0,

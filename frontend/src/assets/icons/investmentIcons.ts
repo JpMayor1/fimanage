@@ -1,24 +1,20 @@
-import { FaHandHoldingUsd, FaWallet } from "react-icons/fa";
-import { GiReceiveMoney } from "react-icons/gi";
-import { IoMdGift } from "react-icons/io";
+import { FaMoneyBillTransfer, FaMoneyBillTrendUp } from "react-icons/fa6";
+import { IoIosBusiness } from "react-icons/io";
+import { LiaBusinessTimeSolid } from "react-icons/lia";
 import {
-  MdBusinessCenter,
+  MdCurrencyBitcoin,
   MdMoreHoriz,
-  MdOutlineSupportAgent,
+  MdOutlineAddBusiness,
 } from "react-icons/md";
-import { TbCash, TbMoneybag, TbPigMoney } from "react-icons/tb";
 
 export const investmentIcons = {
-  MdBusinessCenter, // Business investment
-  TbMoneybag, // Money bag
-  TbCash, // Cash
-  TbPigMoney, // Piggy bank (investments/investment storage)
-  FaWallet, // Wallet
-  FaHandHoldingUsd, // Hand holding money (receiving money)
-  GiReceiveMoney, // Receiving money
-  MdOutlineSupportAgent, // Side job / commission / agent fees
-  IoMdGift, // Gift investment
-  MdMoreHoriz, // Other investment
+  MdMoreHoriz,
+  IoIosBusiness,
+  MdOutlineAddBusiness,
+  LiaBusinessTimeSolid,
+  FaMoneyBillTrendUp,
+  FaMoneyBillTransfer,
+  MdCurrencyBitcoin,
 };
 
 export type InvestmentIconKey = keyof typeof investmentIcons;

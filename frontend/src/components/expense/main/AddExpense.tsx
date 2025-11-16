@@ -13,7 +13,7 @@ interface AddExpenseI {
 }
 
 const initialState: Partial<ExpenseType> = {
-  icon: "FaUtensils",
+  icon: "MdMoreHoriz",
   name: "",
   description: "",
   amount: 0,

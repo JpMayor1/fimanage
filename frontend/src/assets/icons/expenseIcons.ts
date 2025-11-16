@@ -2,32 +2,28 @@ import {
   FaCar,
   FaHeartbeat,
   FaHome,
-  FaMoneyBillWave,
   FaRegCreditCard,
   FaShoppingCart,
   FaUtensils,
 } from "react-icons/fa";
-import { GiClothes, GiPayMoney, GiTakeMyMoney } from "react-icons/gi";
+import { GiClothes, GiPayMoney } from "react-icons/gi";
 import { MdFastfood, MdMoreHoriz, MdOutlineSchool } from "react-icons/md";
-import { TbBus, TbPigOff, TbReceipt } from "react-icons/tb";
+import { TbBus, TbReceipt } from "react-icons/tb";
 
 export const expenseIcons = {
-  FaUtensils, // Food & dining
-  MdFastfood, // Food & dining
-  FaShoppingCart, // Shopping / groceries
-  FaMoneyBillWave, // Bills & utilities
-  FaCar, // Car / transport
-  FaHome, // Housing / rent
-  FaRegCreditCard, // Credit card payments
-  FaHeartbeat, // Health / medical
-  MdOutlineSchool, // Education
-  GiTakeMyMoney, // General expenses
-  GiClothes, // Clothing / apparel
-  GiPayMoney, // Paying money
-  TbReceipt, // Receipts / invoices
-  TbPigOff, // Withdrawals / savings spent
-  TbBus, // Commuting / transport
-  MdMoreHoriz, // Other expenses
+  MdMoreHoriz,
+  FaUtensils,
+  MdFastfood,
+  FaShoppingCart,
+  FaHome,
+  TbReceipt,
+  FaRegCreditCard,
+  FaHeartbeat,
+  MdOutlineSchool,
+  GiClothes,
+  TbBus,
+  FaCar,
+  GiPayMoney,
 };
 
 export type ExpenseIconKey = keyof typeof expenseIcons;

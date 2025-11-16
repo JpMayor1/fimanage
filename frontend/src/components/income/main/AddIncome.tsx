@@ -13,7 +13,7 @@ interface AddIncomeI {
 }
 
 const initialState: Partial<IncomeType> = {
-  icon: "MdBusinessCenter",
+  icon: "MdMoreHoriz",
   name: "",
   description: "",
   amount: 0,
