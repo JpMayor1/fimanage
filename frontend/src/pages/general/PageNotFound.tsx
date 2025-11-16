@@ -1,9 +1,19 @@
 import { motion } from "framer-motion";
 import { FaRegSadTear } from "react-icons/fa";
 import { RxHome } from "react-icons/rx";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const PageNotFound: React.FC = () => {
+  const navigate = useNavigate();
+
+  const handleGoBack = () => {
+    if (window.history.length > 2) {
+      navigate(-1);
+    } else {
+      navigate("/");
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -49,21 +59,17 @@ const PageNotFound: React.FC = () => {
         Oops! The page you’re looking for doesn’t exist.
       </motion.p>
 
-      {/* Home Button */}
-      <motion.div
+      {/* Go Back Button (Dynamic) */}
+      <motion.button
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.6, duration: 0.5 }}
-        className="mt-8 z-10"
+        onClick={handleGoBack}
+        className="mt-8 z-10 flex items-center gap-2 bg-yellow hover:bg-yellow/90 text-black font-semibold px-6 py-3 rounded-xl transition-all duration-300 cursor-pointer"
       >
-        <Link
-          to="/"
-          className="flex items-center gap-2 bg-yellow hover:bg-yellow/90 text-black font-semibold px-6 py-3 rounded-xl transition-all duration-300"
-        >
-          <RxHome className="text-xl" />
-          Go Back Home
-        </Link>
-      </motion.div>
+        <RxHome className="text-xl" />
+        Go Back
+      </motion.button>
 
       {/* Animated dots */}
       <div className="flex gap-1.5 mt-8">
