@@ -1,5 +1,6 @@
 import Investment from "@/models/investment.model";
 import InvestmentCategory from "@/models/investmentCategory.model";
+import { AccountDocumentType } from "@/types/models/account.type";
 import { InvestmentType } from "@/types/models/investment.type";
 import {
   InvestmentCategoryFilterType,
@@ -61,35 +62,56 @@ export const getInvestmentsS = async (
   return { investments, total };
 };
 
-export const addInvestmentS = async (data: Partial<InvestmentType>) => {
+export const addInvestmentS = async (
+  account: AccountDocumentType,
+  data: Partial<InvestmentType>
+) => {
   const category = await InvestmentCategory.findOne({ name: data.category });
   if (!category) throw new AppError("Category not found", 404);
   const newInvestment = await Investment.create({
     ...data,
     dt: getPhDt(),
   });
+  if (data.amount && data.amount > 0) {
+    account.balance += Number(data.amount);
+    await account.save();
+  }
   return newInvestment;
 };
 
 export const updateInvestmentS = async (
+  account: AccountDocumentType,
   id: string,
   data: Partial<InvestmentType>
 ) => {
   const investment = await Investment.findById(id);
   if (!investment) throw new AppError("Investment not found", 404);
 
+  if (investment.userId.toString() !== account._id.toString()) {
+    throw new AppError("Unauthorized investment update", 403);
+  }
+
   if (data.category) {
     const category = await InvestmentCategory.findOne({ name: data.category });
     if (!category) throw new AppError("Category not found", 404);
   }
 
-  const updatedInvestment = await Investment.findByIdAndUpdate(
-    id,
-    { ...data, dt: getPhDt() },
-    { new: true }
-  ).lean();
+  if (data.amount !== undefined) {
+    const oldAmount = investment.amount;
+    const newAmount = data.amount;
 
-  return updatedInvestment;
+    const diff = Number(newAmount) - Number(oldAmount);
+
+    if (diff !== 0) {
+      account.balance += diff;
+      await account.save();
+    }
+  }
+
+  Object.assign(investment, data, { dt: getPhDt() });
+  await investment.save();
+
+  return investment.toObject();
 };
 
 export const deleteInvestmentS = async (id: string) => {

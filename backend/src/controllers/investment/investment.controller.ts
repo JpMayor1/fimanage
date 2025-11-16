@@ -110,7 +110,7 @@ export const addInvestment = async (req: CustomRequest, res: Response) => {
   if (!category) throw new AppError("Category is required.", 400);
   if (!Number(amount)) throw new AppError("Amount is required.", 400);
 
-  const newInvestment = await addInvestmentS({
+  const newInvestment = await addInvestmentS(account, {
     userId: account._id,
     category,
     description,
@@ -122,6 +122,7 @@ export const addInvestment = async (req: CustomRequest, res: Response) => {
 };
 
 export const updateInvestment = async (req: CustomRequest, res: Response) => {
+  const account = req.account;
   const { id } = req.params;
   const { description, category, amount, annualRate, frequency } = req.body;
 
@@ -130,7 +131,7 @@ export const updateInvestment = async (req: CustomRequest, res: Response) => {
   if (!category) throw new AppError("Category is required.", 400);
   if (!Number(amount)) throw new AppError("Amount is required.", 400);
 
-  const updatedInvestment = await updateInvestmentS(id, {
+  const updatedInvestment = await updateInvestmentS(account, id, {
     description,
     category,
     amount,

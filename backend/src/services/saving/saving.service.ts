@@ -1,5 +1,6 @@
 import Saving from "@/models/saving.model";
 import SavingCategory from "@/models/savingCategory.model";
+import { AccountDocumentType } from "@/types/models/account.type";
 import { SavingType } from "@/types/models/saving.type";
 import {
   SavingCategoryFilterType,
@@ -61,32 +62,56 @@ export const getSavingsS = async (
   return { savings, total };
 };
 
-export const addSavingS = async (data: Partial<SavingType>) => {
+export const addSavingS = async (
+  account: AccountDocumentType,
+  data: Partial<SavingType>
+) => {
   const category = await SavingCategory.findOne({ name: data.category });
   if (!category) throw new AppError("Category not found", 404);
   const newSaving = await Saving.create({
     ...data,
     dt: getPhDt(),
   });
+
+  if (data.amount && data.amount > 0) {
+    account.balance += Number(data.amount);
+    await account.save();
+  }
   return newSaving;
 };
 
-export const updateSavingS = async (id: string, data: Partial<SavingType>) => {
+export const updateSavingS = async (
+  account: AccountDocumentType,
+  id: string,
+  data: Partial<SavingType>
+) => {
   const saving = await Saving.findById(id);
   if (!saving) throw new AppError("Saving not found", 404);
+
+  if (saving.userId.toString() !== account._id.toString()) {
+    throw new AppError("Unauthorized saving update", 403);
+  }
 
   if (data.category) {
     const category = await SavingCategory.findOne({ name: data.category });
     if (!category) throw new AppError("Category not found", 404);
   }
 
-  const updatedSaving = await Saving.findByIdAndUpdate(
-    id,
-    { ...data, dt: getPhDt() },
-    { new: true }
-  ).lean();
+  if (data.amount !== undefined) {
+    const oldAmount = saving.amount;
+    const newAmount = data.amount;
+    const diff = Number(newAmount) - Number(oldAmount);
 
-  return updatedSaving;
+    if (diff !== 0) {
+      account.balance += diff;
+      await account.save();
+    }
+  }
+
+  Object.assign(saving, data, { dt: getPhDt() });
+  await saving.save();
+
+  return saving.toObject();
 };
 
 export const deleteSavingS = async (id: string) => {
