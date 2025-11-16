@@ -28,7 +28,7 @@ export const startDailyExpenseJob = () => {
         const yesterdayStartPH = startOfDay(yesterdayPH);
         const yesterdayEndPH = endOfDay(yesterdayPH);
 
-        // Convert PH-local range to UTC equivalents for DB queries
+        // Convert PH-local range to UTC
         const startUTC = new Date(yesterdayStartPH.toISOString());
         const endUTC = new Date(yesterdayEndPH.toISOString());
 
@@ -63,6 +63,13 @@ export const startDailyExpenseJob = () => {
             const expenseAmount =
               totalExpense.length > 0 ? totalExpense[0].total : 0;
 
+            if (expenseAmount === 0) {
+              console.log(
+                `⏭ No expenses for ${user.username} on ${yesterdayPhDateString}, skipping calendar creation.`
+              );
+              continue;
+            }
+
             // Prevent duplicate records for the same day
             const existing = await Calendar.findOne({
               userId: user._id,
@@ -71,11 +78,12 @@ export const startDailyExpenseJob = () => {
 
             if (existing) {
               console.log(
-                `ℹAlready recorded for ${user.username} (${yesterdayPhDateString}), skipping...`
+                `ℹ Already recorded for ${user.username} (${yesterdayPhDateString}), skipping...`
               );
               continue;
             }
 
+            // Create record
             await Calendar.create({
               userId: user._id,
               limit: user.limit || 500,
@@ -84,7 +92,7 @@ export const startDailyExpenseJob = () => {
             });
 
             console.log(
-              `Recorded ₱${expenseAmount.toFixed(2)} for ${
+              `✅ Recorded ₱${expenseAmount.toFixed(2)} for ${
                 user.username
               } (Date: ${yesterdayPhDateString})`
             );
@@ -93,9 +101,9 @@ export const startDailyExpenseJob = () => {
           }
         }
 
-        console.log("Daily expense computation completed successfully.");
+        console.log("🎯 Daily expense computation completed successfully.");
       } catch (error) {
-        console.error("Fatal error in daily expense job:", error);
+        console.error("💥 Fatal error in daily expense job:", error);
       }
     },
     {
