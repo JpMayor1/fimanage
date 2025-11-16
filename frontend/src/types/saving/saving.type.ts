@@ -31,9 +31,7 @@ export type SavingStoreType = {
   page: number;
 
   getLoading: boolean;
-  createLoading: boolean;
-  updateLoading: boolean;
-  deleteLoading: boolean;
+  loading: boolean;
 
   getSavings: (append: boolean) => Promise<void>;
   addSaving: (data: Partial<SavingType>) => Promise<boolean>;

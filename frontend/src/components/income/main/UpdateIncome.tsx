@@ -14,7 +14,7 @@ interface UpdateIncomeI {
 }
 
 const UpdateIncome = ({ income, onClose }: UpdateIncomeI) => {
-  const { updateIncome, updateLoading } = useIncomeStore();
+  const { updateIncome, loading } = useIncomeStore();
 
   const [form, setForm] = useState<Partial<IncomeType>>(income);
   const [showIcons, setShowIcons] = useState(false);
@@ -129,14 +129,14 @@ const UpdateIncome = ({ income, onClose }: UpdateIncomeI) => {
 
           <button
             type="submit"
-            disabled={updateLoading}
+            disabled={loading}
             className={`${
-              updateLoading
+              loading
                 ? "cursor-not-allowed opacity-80"
                 : "cursor-pointer hover:scale-101 hover:shadow-xl transition-all"
             } w-full py-2 rounded-xl bg-gradient-to-r from-yellow to-yellow/80 text-black text-lg mt-2 shadow-md`}
           >
-            {updateLoading ? <LoadingSmall /> : "Update Income"}
+            {loading ? <LoadingSmall /> : "Update Income"}
           </button>
         </form>
       </div>

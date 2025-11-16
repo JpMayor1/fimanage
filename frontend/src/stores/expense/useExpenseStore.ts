@@ -18,9 +18,7 @@ export const useExpenseStore = create<ExpenseStoreType>((set, get) => ({
   page: 0,
 
   getLoading: false,
-  createLoading: false,
-  updateLoading: false,
-  deleteLoading: false,
+  loading: false,
 
   shown: false,
 
@@ -52,7 +50,7 @@ export const useExpenseStore = create<ExpenseStoreType>((set, get) => ({
     }
   },
   addExpense: async (data) => {
-    set({ createLoading: true });
+    set({ loading: true });
     try {
       const response = await addExpenseApi(data);
       set((state) => ({
@@ -65,11 +63,11 @@ export const useExpenseStore = create<ExpenseStoreType>((set, get) => ({
       showError(error);
       return false;
     } finally {
-      set({ createLoading: false });
+      set({ loading: false });
     }
   },
   updateExpense: async (id, data) => {
-    set({ updateLoading: true });
+    set({ loading: true });
     try {
       const response = await updateExpenseApi(id, data);
       set((state) => ({
@@ -86,11 +84,11 @@ export const useExpenseStore = create<ExpenseStoreType>((set, get) => ({
       showError(error);
       return false;
     } finally {
-      set({ updateLoading: false });
+      set({ loading: false });
     }
   },
   deleteExpense: async (id) => {
-    set({ deleteLoading: true });
+    set({ loading: true });
     try {
       const response = await deleteExpenseApi(id);
       set((state) => ({
@@ -103,11 +101,11 @@ export const useExpenseStore = create<ExpenseStoreType>((set, get) => ({
       showError(error);
       return false;
     } finally {
-      set({ deleteLoading: false });
+      set({ loading: false });
     }
   },
   updateLimit: async (limit) => {
-    set({ updateLoading: true });
+    set({ loading: true });
     try {
       const response = await updateLimitApi(limit);
       set({ limit });
@@ -118,7 +116,7 @@ export const useExpenseStore = create<ExpenseStoreType>((set, get) => ({
       showError(error);
       return false;
     } finally {
-      set({ updateLoading: false });
+      set({ loading: false });
     }
   },
   setShown: () => set({ shown: true }),

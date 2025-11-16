@@ -26,7 +26,7 @@ const initialState: Partial<InvestmentType> = {
 };
 
 const AddInvestment = ({ onClose }: AddInvestmentI) => {
-  const { addInvestment, createLoading } = useInvestmentStore();
+  const { addInvestment, loading } = useInvestmentStore();
 
   const [form, setForm] = useState<Partial<InvestmentType>>(initialState);
   const [showIcons, setShowIcons] = useState(false);
@@ -178,14 +178,14 @@ const AddInvestment = ({ onClose }: AddInvestmentI) => {
           {/* Submit */}
           <button
             type="submit"
-            disabled={createLoading}
+            disabled={loading}
             className={`${
-              createLoading
+              loading
                 ? "cursor-not-allowed opacity-80"
                 : "cursor-pointer hover:scale-101 hover:shadow-xl transition-all"
             } w-full py-2 rounded-xl bg-gradient-to-r from-yellow to-yellow/80 text-black text-lg mt-2 shadow-md`}
           >
-            {createLoading ? <LoadingSmall /> : "Add Investment"}
+            {loading ? <LoadingSmall /> : "Add Investment"}
           </button>
         </form>
       </div>

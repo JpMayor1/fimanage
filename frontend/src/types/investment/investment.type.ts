@@ -31,9 +31,7 @@ export type InvestmentStoreType = {
   page: number;
 
   getLoading: boolean;
-  createLoading: boolean;
-  updateLoading: boolean;
-  deleteLoading: boolean;
+  loading: boolean;
 
   getInvestments: (append: boolean) => Promise<void>;
   addInvestment: (data: Partial<InvestmentType>) => Promise<boolean>;

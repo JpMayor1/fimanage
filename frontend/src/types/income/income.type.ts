@@ -17,9 +17,7 @@ export type IncomeStoreType = {
   page: number;
 
   getLoading: boolean;
-  createLoading: boolean;
-  updateLoading: boolean;
-  deleteLoading: boolean;
+  loading: boolean;
 
   getIncomes: (append: boolean) => Promise<void>;
   addIncome: (data: Partial<IncomeType>) => Promise<boolean>;

@@ -21,7 +21,7 @@ const initialState: Partial<ExpenseType> = {
 };
 
 const AddExpense = ({ onClose }: AddExpenseI) => {
-  const { addExpense, createLoading } = useExpenseStore();
+  const { addExpense, loading } = useExpenseStore();
 
   const [form, setForm] = useState<Partial<ExpenseType>>(initialState);
   const [showTooltip, setShowTooltip] = useState(false);
@@ -210,14 +210,14 @@ const AddExpense = ({ onClose }: AddExpenseI) => {
 
           <button
             type="submit"
-            disabled={createLoading}
+            disabled={loading}
             className={`${
-              createLoading
+              loading
                 ? "cursor-not-allowed opacity-80"
                 : "cursor-pointer hover:scale-101 hover:shadow-xl transition-all"
             } w-full py-2 rounded-xl bg-gradient-to-r from-yellow to-yellow/80 text-black text-lg mt-2 shadow-md`}
           >
-            {createLoading ? <LoadingSmall /> : "Add Expense"}
+            {loading ? <LoadingSmall /> : "Add Expense"}
           </button>
         </form>
       </div>

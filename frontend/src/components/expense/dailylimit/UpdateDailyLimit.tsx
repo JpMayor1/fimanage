@@ -12,7 +12,7 @@ interface UpdateDailyLimitI {
 }
 
 const UpdateDailyLimit = ({ onClose }: UpdateDailyLimitI) => {
-  const { limit: currentLimit, updateLimit, updateLoading } = useExpenseStore();
+  const { limit: currentLimit, updateLimit, loading } = useExpenseStore();
 
   const [limit, setLimit] = useState<string | number>(currentLimit);
 
@@ -60,14 +60,14 @@ const UpdateDailyLimit = ({ onClose }: UpdateDailyLimitI) => {
 
           <button
             type="submit"
-            disabled={updateLoading}
+            disabled={loading}
             className={`${
-              updateLoading
+              loading
                 ? "cursor-not-allowed opacity-80"
                 : "cursor-pointer hover:scale-101 hover:shadow-xl transition-all"
             } w-full py-2 rounded-xl bg-gradient-to-r from-yellow to-yellow/80 text-black text-lg mt-2 shadow-md`}
           >
-            {updateLoading ? <LoadingSmall /> : "Update Limit"}
+            {loading ? <LoadingSmall /> : "Update Limit"}
           </button>
         </form>
       </div>

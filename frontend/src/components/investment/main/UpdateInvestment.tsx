@@ -18,7 +18,7 @@ interface UpdateInvestmentI {
 }
 
 const UpdateInvestment = ({ investment, onClose }: UpdateInvestmentI) => {
-  const { updateInvestment, updateLoading } = useInvestmentStore();
+  const { updateInvestment, loading } = useInvestmentStore();
 
   const [form, setForm] = useState<Partial<InvestmentType>>(investment);
   const [showIcons, setShowIcons] = useState(false);
@@ -169,14 +169,14 @@ const UpdateInvestment = ({ investment, onClose }: UpdateInvestmentI) => {
 
           <button
             type="submit"
-            disabled={updateLoading}
+            disabled={loading}
             className={`${
-              updateLoading
+              loading
                 ? "cursor-not-allowed opacity-80"
                 : "cursor-pointer hover:scale-101 hover:shadow-xl transition-all"
             } w-full py-2 rounded-xl bg-gradient-to-r from-yellow to-yellow/80 text-black text-lg mt-2 shadow-md`}
           >
-            {updateLoading ? <LoadingSmall /> : "Update Investment"}
+            {loading ? <LoadingSmall /> : "Update Investment"}
           </button>
         </form>
       </div>

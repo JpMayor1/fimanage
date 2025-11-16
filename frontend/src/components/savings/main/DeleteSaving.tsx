@@ -12,7 +12,7 @@ interface DeleteSavingI {
 }
 
 const DeleteSaving = ({ saving, onClose }: DeleteSavingI) => {
-  const { deleteSaving, deleteLoading } = useSavingStore();
+  const { deleteSaving, loading } = useSavingStore();
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -61,13 +61,13 @@ const DeleteSaving = ({ saving, onClose }: DeleteSavingI) => {
           <button
             type="submit"
             className={`${
-              deleteLoading
+              loading
                 ? "cursor-not-allowed opacity-80"
                 : "cursor-pointer hover:scale-105 transition-all"
             } w-full py-2 rounded-xl bg-gradient-to-r from-red to-red/80 text-white text-lg mt-2 shadow-md`}
-            disabled={deleteLoading}
+            disabled={loading}
           >
-            {deleteLoading ? <LoadingSmall /> : "Delete"}
+            {loading ? <LoadingSmall /> : "Delete"}
           </button>
         </form>
       </div>

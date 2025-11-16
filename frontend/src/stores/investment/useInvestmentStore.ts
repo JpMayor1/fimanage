@@ -16,9 +16,7 @@ export const useInvestmentStore = create<InvestmentStoreType>((set, get) => ({
   page: 0,
 
   getLoading: false,
-  createLoading: false,
-  updateLoading: false,
-  deleteLoading: false,
+  loading: false,
 
   getInvestments: async (append = false) => {
     const { page, investments } = get();
@@ -46,7 +44,7 @@ export const useInvestmentStore = create<InvestmentStoreType>((set, get) => ({
     }
   },
   addInvestment: async (data) => {
-    set({ createLoading: true });
+    set({ loading: true });
     try {
       const response = await addInvestmentApi(data);
       set((state) => ({
@@ -59,11 +57,11 @@ export const useInvestmentStore = create<InvestmentStoreType>((set, get) => ({
       showError(error);
       return false;
     } finally {
-      set({ createLoading: false });
+      set({ loading: false });
     }
   },
   updateInvestment: async (id, data) => {
-    set({ updateLoading: true });
+    set({ loading: true });
     try {
       const response = await updateInvestmentApi(id, data);
       set((state) => ({
@@ -80,11 +78,11 @@ export const useInvestmentStore = create<InvestmentStoreType>((set, get) => ({
       showError(error);
       return false;
     } finally {
-      set({ updateLoading: false });
+      set({ loading: false });
     }
   },
   deleteInvestment: async (id) => {
-    set({ deleteLoading: true });
+    set({ loading: true });
     try {
       const response = await deleteInvestmentApi(id);
       set((state) => ({
@@ -99,7 +97,7 @@ export const useInvestmentStore = create<InvestmentStoreType>((set, get) => ({
       showError(error);
       return false;
     } finally {
-      set({ deleteLoading: false });
+      set({ loading: false });
     }
   },
 }));

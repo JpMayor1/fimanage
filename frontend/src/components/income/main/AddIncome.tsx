@@ -20,7 +20,7 @@ const initialState: Partial<IncomeType> = {
 };
 
 const AddIncome = ({ onClose }: AddIncomeI) => {
-  const { addIncome, createLoading } = useIncomeStore();
+  const { addIncome, loading } = useIncomeStore();
   const [form, setForm] = useState<Partial<IncomeType>>(initialState);
   const [showIcons, setShowIcons] = useState(false);
 
@@ -126,14 +126,14 @@ const AddIncome = ({ onClose }: AddIncomeI) => {
 
           <button
             type="submit"
-            disabled={createLoading}
+            disabled={loading}
             className={`${
-              createLoading
+              loading
                 ? "cursor-not-allowed opacity-80"
                 : "cursor-pointer hover:scale-101 hover:shadow-xl transition-all"
             } w-full py-2 rounded-xl bg-gradient-to-r from-yellow to-yellow/80 text-black text-lg mt-2 shadow-md`}
           >
-            {createLoading ? <LoadingSmall /> : "Add Income"}
+            {loading ? <LoadingSmall /> : "Add Income"}
           </button>
         </form>
       </div>

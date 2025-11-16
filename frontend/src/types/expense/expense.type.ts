@@ -19,9 +19,7 @@ export type ExpenseStoreType = {
   page: number;
 
   getLoading: boolean;
-  createLoading: boolean;
-  updateLoading: boolean;
-  deleteLoading: boolean;
+  loading: boolean;
 
   shown: boolean;
 

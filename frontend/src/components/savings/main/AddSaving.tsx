@@ -23,7 +23,7 @@ const initialState: Partial<SavingType> = {
 };
 
 const AddSaving = ({ onClose }: AddSavingI) => {
-  const { addSaving, createLoading } = useSavingStore();
+  const { addSaving, loading } = useSavingStore();
 
   const [form, setForm] = useState<Partial<SavingType>>(initialState);
   const [showIcons, setShowIcons] = useState(false);
@@ -172,14 +172,14 @@ const AddSaving = ({ onClose }: AddSavingI) => {
           {/* Submit */}
           <button
             type="submit"
-            disabled={createLoading}
+            disabled={loading}
             className={`${
-              createLoading
+              loading
                 ? "cursor-not-allowed opacity-80"
                 : "cursor-pointer hover:scale-101 hover:shadow-xl transition-all"
             } w-full py-2 rounded-xl bg-gradient-to-r from-yellow to-yellow/80 text-black text-lg mt-2 shadow-md`}
           >
-            {createLoading ? <LoadingSmall /> : "Add Saving"}
+            {loading ? <LoadingSmall /> : "Add Saving"}
           </button>
         </form>
       </div>

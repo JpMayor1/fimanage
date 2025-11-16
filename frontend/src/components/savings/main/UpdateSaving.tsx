@@ -15,7 +15,7 @@ interface UpdateSavingI {
 }
 
 const UpdateSaving = ({ saving, onClose }: UpdateSavingI) => {
-  const { updateSaving, updateLoading } = useSavingStore();
+  const { updateSaving, loading } = useSavingStore();
   const [showIcons, setShowIcons] = useState(false);
 
   const [form, setForm] = useState<Partial<SavingType>>(saving);
@@ -163,14 +163,14 @@ const UpdateSaving = ({ saving, onClose }: UpdateSavingI) => {
 
           <button
             type="submit"
-            disabled={updateLoading}
+            disabled={loading}
             className={`${
-              updateLoading
+              loading
                 ? "cursor-not-allowed opacity-80"
                 : "cursor-pointer hover:scale-101 hover:shadow-xl transition-all"
             } w-full py-2 rounded-xl bg-gradient-to-r from-yellow to-yellow/80 text-black text-lg mt-2 shadow-md`}
           >
-            {updateLoading ? <LoadingSmall /> : "Update Saving"}
+            {loading ? <LoadingSmall /> : "Update Saving"}
           </button>
         </form>
       </div>
