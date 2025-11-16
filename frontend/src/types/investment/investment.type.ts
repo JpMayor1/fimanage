@@ -1,5 +1,8 @@
+import type { InvestmentIconKey } from "@/assets/icons/investmentIcons";
+
 export type InvestmentType = {
   _id?: string;
+  icon: InvestmentIconKey;
   name: string;
   description: string;
   amount: number;

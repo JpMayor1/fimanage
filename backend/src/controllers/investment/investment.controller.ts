@@ -23,12 +23,14 @@ export const getInvestments = async (req: CustomRequest, res: Response) => {
 
 export const addInvestment = async (req: CustomRequest, res: Response) => {
   const account = req.account;
-  const { name, description, amount, annualRate, frequency } = req.body;
+  const { icon, name, description, amount, annualRate, frequency } = req.body;
+  if (!icon) throw new AppError("Icon is required.", 400);
   if (!name) throw new AppError("Name is required.", 400);
   if (!Number(amount)) throw new AppError("Amount is required.", 400);
 
   const newInvestment = await addInvestmentS(account, {
     userId: account._id,
+    icon,
     name,
     description: description?.trim() ? description.trim() : "No description.",
     amount,
@@ -41,13 +43,15 @@ export const addInvestment = async (req: CustomRequest, res: Response) => {
 export const updateInvestment = async (req: CustomRequest, res: Response) => {
   const account = req.account;
   const { id } = req.params;
-  const { name, description, amount, annualRate, frequency } = req.body;
+  const { icon, name, description, amount, annualRate, frequency } = req.body;
 
   if (!id) throw new AppError("Investment ID is required.", 400);
+  if (!icon) throw new AppError("Icon is required.", 400);
   if (!name) throw new AppError("Name is required.", 400);
   if (!Number(amount)) throw new AppError("Amount is required.", 400);
 
   const updatedInvestment = await updateInvestmentS(account, id, {
+    icon,
     name,
     description: description?.trim() ? description.trim() : "No description.",
     amount,
