@@ -8,7 +8,7 @@ const savingSchema = new Schema<InvestmentDocumentType>(
       ref: "Account",
       required: true,
     },
-    category: {
+    name: {
       type: String,
       required: true,
     },

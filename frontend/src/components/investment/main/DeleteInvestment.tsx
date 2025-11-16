@@ -53,12 +53,8 @@ const DeleteInvestment = ({ investment, onClose }: DeleteInvestmentI) => {
               Delete Investment
             </label>
             <p className="text-white text-center">
-              Are you sure you want to delete this investment?
-            </p>
-            <p className="text-yellow text-center mt-1">
-              {investment.description?.length > 20
-                ? investment.description.substring(0, 20) + "..."
-                : investment.description}
+              Are you sure you want to delete{" "}
+              <span className="text-red">{investment.name}</span>?
             </p>
           </div>
 

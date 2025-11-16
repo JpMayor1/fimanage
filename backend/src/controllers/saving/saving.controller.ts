@@ -20,7 +20,7 @@ export const getSavings = async (req: CustomRequest, res: Response) => {
 export const addSaving = async (req: CustomRequest, res: Response) => {
   const account = req.account;
   const { name, description, amount, annualRate, frequency } = req.body;
-  if (!name) throw new AppError("Category is required.", 400);
+  if (!name) throw new AppError("Name is required.", 400);
   if (!Number(amount)) throw new AppError("Amount is required.", 400);
 
   const newSaving = await addSavingS(account, {
@@ -40,7 +40,7 @@ export const updateSaving = async (req: CustomRequest, res: Response) => {
   const { name, description, amount, annualRate, frequency } = req.body;
 
   if (!id) throw new AppError("Saving ID is required.", 400);
-  if (!name) throw new AppError("Category is required.", 400);
+  if (!name) throw new AppError("Name is required.", 400);
   if (amount === undefined || isNaN(Number(amount)))
     throw new AppError("Amount is required.", 400);
 

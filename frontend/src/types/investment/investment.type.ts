@@ -1,11 +1,6 @@
-export type InvestmentCategoryType = {
-  _id?: string;
-  name: string;
-};
-
 export type InvestmentType = {
   _id?: string;
-  category: string;
+  name: string;
   description: string;
   amount: number;
   annualRate?: string;
@@ -27,7 +22,6 @@ export type InvestmentType = {
 };
 
 export type InvestmentStoreType = {
-  categories: InvestmentCategoryType[];
   investments: InvestmentType[];
 
   hasMore: boolean;
@@ -38,16 +32,6 @@ export type InvestmentStoreType = {
   updateLoading: boolean;
   deleteLoading: boolean;
 
-  // Investment Category
-  getCategories: () => Promise<void>;
-  createCategories: (categories: InvestmentCategoryType[]) => Promise<boolean>;
-  updateCategory: (
-    categoryId: string,
-    updatedCategory: InvestmentCategoryType
-  ) => Promise<boolean>;
-  deleteCategory: (categoryId: string) => Promise<boolean>;
-
-  // Investment
   getInvestments: (append: boolean) => Promise<void>;
   addInvestment: (data: Partial<InvestmentType>) => Promise<boolean>;
   updateInvestment: (

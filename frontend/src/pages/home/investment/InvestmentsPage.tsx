@@ -126,10 +126,7 @@ const InvestmentPage = () => {
                       {/* Top Row: Category + Date */}
                       <div className="flex justify-between items-center mb-1">
                         <p className="text-yellow text-xs font-medium">
-                          {investment.category}{" "}
-                          <span className="text-white/40 text-[10px]">
-                            (Investment)
-                          </span>
+                          {investment.name}
                         </p>
                         <p className="text-white/40 text-[10px]">
                           {investment.dt}

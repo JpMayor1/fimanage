@@ -30,7 +30,7 @@ export const addExpense = async (req: CustomRequest, res: Response) => {
   const account = req.account;
   const { icon, name, description, category, amount, countable } = req.body;
   if (!icon) throw new AppError("Icon is required.", 400);
-  if (!name) throw new AppError("Category is required.", 400);
+  if (!name) throw new AppError("Name is required.", 400);
   if (!Number(amount)) throw new AppError("Amount is required.", 400);
 
   const newExpense = await addExpenseS(account, {
@@ -50,7 +50,7 @@ export const updateExpense = async (req: CustomRequest, res: Response) => {
   const { icon, name, description, amount, countable } = req.body;
 
   if (!id) throw new AppError("Expense ID is required.", 400);
-  if (!name) throw new AppError("Category is required.", 400);
+  if (!name) throw new AppError("Name is required.", 400);
   if (!Number(amount)) throw new AppError("Amount is required.", 400);
 
   const updatedExpense = await updateExpenseS(account, id, {

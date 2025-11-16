@@ -3,7 +3,7 @@ import { Document, Schema } from "mongoose";
 export type InvestmentType = {
   _id?: string;
   userId: Schema.Types.ObjectId;
-  category: string;
+  name: string;
   description: string;
   amount: number;
   annualRate?: string;
@@ -24,7 +24,7 @@ export type InvestmentType = {
 };
 
 export type InvestmentFilterType = Partial<
-  Pick<InvestmentType, "description" | "category">
+  Pick<InvestmentType, "description" | "name">
 >;
 
 export type InvestmentDocumentType = InvestmentType & Document;
