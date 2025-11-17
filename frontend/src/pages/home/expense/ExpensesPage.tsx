@@ -122,42 +122,43 @@ const ExpensePage = () => {
             <LoadingSmall />
           </p>
         ) : (
-          <div className="w-full">
-            {expenses.length === 0 ? (
-              <div className="w-full rounded-md bg-primary shadow-lg p-6 text-center">
-                <p className="text-white/70 text-sm">
-                  No expense records found.
-                </p>
-              </div>
-            ) : (
-              <div className="w-full">
-                {/* Daily Limit */}
-                <DailyLimitCard
-                  todaySpent={todaySpent}
-                  limit={limit}
-                  onEdit={() => setUpdateLimit(true)}
-                />
-
-                {/* Grouped by date */}
-                <GroupedExpenses
-                  groupedExpenses={groupedExpenses}
-                  onUpdate={(expense) => seUpdateExpense(expense)}
-                  onDelete={(expense) => seDeleteExpense(expense)}
-                />
-
-                {getLoading && hasMore && (
-                  <p className="text-white py-3">
-                    <LoadingSmall />
+          <>
+            {/* Daily Limit */}
+            <DailyLimitCard
+              todaySpent={todaySpent}
+              limit={limit}
+              onEdit={() => setUpdateLimit(true)}
+            />
+            <div className="w-full">
+              {expenses.length === 0 ? (
+                <div className="w-full rounded-md bg-primary shadow-lg p-6 text-center">
+                  <p className="text-white/70 text-sm">
+                    No expense records found.
                   </p>
-                )}
-                {!hasMore && expenses.length > 20 && (
-                  <div className="py-4 text-center text-white/50 text-sm">
-                    All data have been loaded.
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
+                </div>
+              ) : (
+                <div className="w-full">
+                  {/* Grouped by date */}
+                  <GroupedExpenses
+                    groupedExpenses={groupedExpenses}
+                    onUpdate={(expense) => seUpdateExpense(expense)}
+                    onDelete={(expense) => seDeleteExpense(expense)}
+                  />
+
+                  {getLoading && hasMore && (
+                    <p className="text-white py-3">
+                      <LoadingSmall />
+                    </p>
+                  )}
+                  {!hasMore && expenses.length > 20 && (
+                    <div className="py-4 text-center text-white/50 text-sm">
+                      All data have been loaded.
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </>
         )}
       </div>
 
