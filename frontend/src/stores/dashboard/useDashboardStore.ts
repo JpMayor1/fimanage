@@ -30,11 +30,9 @@ export const useDashboardStore = create<DashboardStoreType>((set) => ({
         totalSavings: response.data.totalSavings,
         totalInvestments: response.data.totalInvestments,
       });
-      return response.data.balance | 0;
     } catch (error) {
       console.error("Error getting data", error);
       showError(error);
-      return 0;
     } finally {
       set({ getLoading: false });
     }

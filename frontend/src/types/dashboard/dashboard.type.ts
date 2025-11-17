@@ -15,6 +15,6 @@ export type DashboardStoreType = {
   getLoading: boolean;
   updateLoading: boolean;
 
-  getDashboardData: () => Promise<number>;
+  getDashboardData: () => Promise<void>;
   updateBalance: (balance: number) => Promise<boolean>;
 };

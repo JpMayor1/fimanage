@@ -16,10 +16,7 @@ const DashboardPage = () => {
   const [updateBalance, setUpdateBalance] = useState(false);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const balance = await getDashboardData();
-      if (balance < 1) setUpdateBalance(true);
-    };
+    const fetchData = async () => await getDashboardData();
     fetchData();
   }, [getDashboardData]);
 
