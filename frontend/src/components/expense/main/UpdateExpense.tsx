@@ -44,6 +44,9 @@ const UpdateExpense = ({ expense, onClose }: UpdateExpenseI) => {
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
+    form.savingId = form.investmentId ? "" : form.savingId;
+    form.investmentId = form.savingId ? "" : form.investmentId;
+
     const success = await updateExpense(expense._id!, form);
     if (success) return onClose();
   }

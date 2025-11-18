@@ -143,8 +143,23 @@ export const deleteExpenseS = async (
   const deletedExpense = await Expense.findByIdAndDelete(id);
   if (!deletedExpense) throw new AppError("Expense not found", 404);
 
+  const savingId = (deletedExpense.savingId || "").trim();
+  const investmentId = (deletedExpense.investmentId || "").trim();
+
   account.balance += deletedExpense.amount;
   await account.save();
+
+  if (savingId) {
+    await Saving.findByIdAndUpdate(savingId, {
+      $inc: { amount: +deletedExpense.amount },
+    });
+  }
+
+  if (investmentId) {
+    await Investment.findByIdAndUpdate(investmentId, {
+      $inc: { amount: +deletedExpense.amount },
+    });
+  }
 
   return deletedExpense;
 };
