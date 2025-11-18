@@ -1,4 +1,5 @@
 import { expenseIcons, type ExpenseIconKey } from "@/assets/icons/expenseIcons";
+import CustomSelect from "@/components/custom/CustomSelect";
 import LoadingSmall from "@/components/custom/loading/LoadingSmall";
 import TextField from "@/components/custom/TextField";
 import { overlayAnim } from "@/constants/overlay.animation.constant";
@@ -14,12 +15,13 @@ interface UpdateExpenseI {
 }
 
 const UpdateExpense = ({ expense, onClose }: UpdateExpenseI) => {
-  const { updateExpense, loading } = useExpenseStore();
+  const { updateExpense, loading, savings, investments } = useExpenseStore();
 
   const [form, setForm] = useState<Partial<ExpenseType>>(expense);
   const [showTooltip, setShowTooltip] = useState(false);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
   const [showIcons, setShowIcons] = useState(false);
+  const [from, setFrom] = useState("balance");
 
   useEffect(() => {
     const checkTouch = () => setIsTouchDevice("ontouchstart" in window);
@@ -112,6 +114,62 @@ const UpdateExpense = ({ expense, onClose }: UpdateExpenseI) => {
               containerClassName="flex-1 "
             />
           </div>
+
+          <div className="flex flex-col gap-1 mt-2">
+            <label className="text-white/80">Source *</label>
+            <div className="flex gap-4">
+              {["balance", "savings", "investments"].map((option) => (
+                <label
+                  key={option}
+                  className="flex items-center gap-1 text-white/90 cursor-pointer"
+                >
+                  <input
+                    type="radio"
+                    name="from"
+                    value={option}
+                    checked={from === option}
+                    onChange={(e) => setFrom(e.target.value)}
+                    className="accent-yellow w-4 h-4"
+                  />
+                  {option.charAt(0).toUpperCase() + option.slice(1)}
+                </label>
+              ))}
+            </div>
+          </div>
+
+          {from === "savings" && (
+            <CustomSelect
+              name="savingId"
+              value={form.savingId}
+              onChange={handleChange}
+              containerClassName="flex-1"
+              className="cursor-pointer"
+            >
+              <option value="">Select Saving</option>
+              {savings.map((saving, index) => (
+                <option key={index} value={saving._id}>
+                  {saving.name}
+                </option>
+              ))}
+            </CustomSelect>
+          )}
+
+          {from === "investments" && (
+            <CustomSelect
+              name="investmentId"
+              value={form.investmentId}
+              onChange={handleChange}
+              containerClassName="flex-1"
+              className="cursor-pointer"
+            >
+              <option value="">Select Investment</option>
+              {investments.map((investment, index) => (
+                <option key={index} value={investment._id}>
+                  {investment.name}
+                </option>
+              ))}
+            </CustomSelect>
+          )}
 
           <div className="flex flex-col gap-1">
             <label className="text-white/80">Description *</label>
