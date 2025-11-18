@@ -1,5 +1,7 @@
 import { expenseIcons } from "@/assets/icons/expenseIcons";
 import { incomeIcons } from "@/assets/icons/incomeIcons";
+import { investmentIcons } from "@/assets/icons/investmentIcons";
+import { savingIcons } from "@/assets/icons/savingIcons";
 import { useDashboardStore } from "@/stores/dashboard/useDashboardStore";
 import type { ExpenseType } from "@/types/expense/expense.type";
 import type { IncomeType } from "@/types/income/income.type";
@@ -9,12 +11,12 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useMemo, useState } from "react";
 import CustomSelect from "../custom/CustomSelect";
 
-type FilterType = "all" | "income" | "expense" | "savings" | "investment";
+type FilterType = "all" | "income" | "expense" | "saving" | "investment";
 
 type UnifiedActivity =
   | (IncomeType & { type: "income" })
   | (ExpenseType & { type: "expense" })
-  | (SavingType & { type: "savings" })
+  | (SavingType & { type: "saving" })
   | (InvestmentType & { type: "investment" });
 
 const RecentActivity = () => {
@@ -39,7 +41,7 @@ const RecentActivity = () => {
       })),
       ...totalSavings.recent.map((item) => ({
         ...item,
-        type: "savings" as const,
+        type: "saving" as const,
       })),
       ...totalInvestments.recent.map((item) => ({
         ...item,
@@ -60,6 +62,8 @@ const RecentActivity = () => {
   const getIcon = (item: UnifiedActivity) => {
     if (item.type === "income") return incomeIcons[item.icon];
     if (item.type === "expense") return expenseIcons[item.icon];
+    if (item.type === "saving") return savingIcons[item.icon];
+    if (item.type === "investment") return investmentIcons[item.icon];
     return undefined; // savings & investments have no icon in your types
   };
 
@@ -69,7 +73,7 @@ const RecentActivity = () => {
         return "text-card-income";
       case "expense":
         return "text-card-expense";
-      case "savings":
+      case "saving":
         return "text-card-savings";
       case "investment":
         return "text-card-investment";
@@ -100,7 +104,7 @@ const RecentActivity = () => {
           <option value="all">All</option>
           <option value="income">Incomes</option>
           <option value="expense">Expenses</option>
-          <option value="savings">Savings</option>
+          <option value="saving">Savings</option>
           <option value="investment">Investments</option>
         </CustomSelect>
       </div>
