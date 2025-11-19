@@ -62,7 +62,8 @@ export const updateSaving = async (req: CustomRequest, res: Response) => {
 };
 
 export const deleteSaving = async (req: CustomRequest, res: Response) => {
+  const account = req.account;
   const { id } = req.params;
-  const deletedSaving = await deleteSavingS(id);
+  const deletedSaving = await deleteSavingS(account, id);
   res.status(200).json({ message: "Saving deleted.", deletedSaving });
 };

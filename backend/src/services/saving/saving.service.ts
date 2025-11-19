@@ -64,8 +64,13 @@ export const updateSavingS = async (
   return saving.toObject();
 };
 
-export const deleteSavingS = async (id: string) => {
+export const deleteSavingS = async (
+  account: AccountDocumentType,
+  id: string
+) => {
   const deletedSaving = await Saving.findByIdAndDelete(id);
   if (!deletedSaving) throw new AppError("Saving not found", 404);
+  account.balance -= deletedSaving.amount;
+  await account.save();
   return deletedSaving;
 };

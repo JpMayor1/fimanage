@@ -64,8 +64,13 @@ export const updateInvestmentS = async (
   return investment.toObject();
 };
 
-export const deleteInvestmentS = async (id: string) => {
+export const deleteInvestmentS = async (
+  account: AccountDocumentType,
+  id: string
+) => {
   const deletedInvestment = await Investment.findByIdAndDelete(id);
   if (!deletedInvestment) throw new AppError("Investment not found", 404);
+  account.balance -= deletedInvestment.amount;
+  await account.save();
   return deletedInvestment;
 };

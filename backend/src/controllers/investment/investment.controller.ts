@@ -65,7 +65,8 @@ export const updateInvestment = async (req: CustomRequest, res: Response) => {
 };
 
 export const deleteInvestment = async (req: CustomRequest, res: Response) => {
+  const account = req.account;
   const { id } = req.params;
-  const deletedInvestment = await deleteInvestmentS(id);
+  const deletedInvestment = await deleteInvestmentS(account, id);
   res.status(200).json({ message: "Investment deleted.", deletedInvestment });
 };
