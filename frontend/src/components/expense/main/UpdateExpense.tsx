@@ -21,7 +21,13 @@ const UpdateExpense = ({ expense, onClose }: UpdateExpenseI) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
   const [showIcons, setShowIcons] = useState(false);
-  const [from, setFrom] = useState("balance");
+  const [from, setFrom] = useState(
+    expense.savingId
+      ? "savings"
+      : expense.investmentId
+      ? "investments"
+      : "balance"
+  );
 
   useEffect(() => {
     const checkTouch = () => setIsTouchDevice("ontouchstart" in window);

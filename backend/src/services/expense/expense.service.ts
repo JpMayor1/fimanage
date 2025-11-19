@@ -38,11 +38,28 @@ export const addExpenseS = async (
   const savingId = (data.savingId || "").trim();
   const investmentId = (data.investmentId || "").trim();
 
+  // Validate funds first
+  if (savingId) {
+    const saving = await Saving.findById(savingId).lean();
+    if (!saving) throw new AppError("Saving not found", 404);
+    if (saving.amount < amount)
+      throw new AppError("Insufficient saving amount", 400);
+  }
+
+  if (investmentId) {
+    const inv = await Investment.findById(investmentId).lean();
+    if (!inv) throw new AppError("Investment not found", 404);
+    if (inv.amount < amount)
+      throw new AppError("Insufficient investment amount", 400);
+  }
+
+  // Create expense
   const newExpense = await Expense.create({
     ...data,
     dt: getPhDt(),
   });
 
+  // Apply deductions
   if (amount > 0) {
     account.balance = Math.max(0, account.balance - amount);
     await account.save();
@@ -82,46 +99,54 @@ export const updateExpenseS = async (
     .toString()
     .trim();
 
-  const reverseOps: Promise<any>[] = [];
-
+  // Undo old deduction first (return back old amount)
   if (oldSavingId) {
-    reverseOps.push(
-      Saving.findByIdAndUpdate(oldSavingId, {
-        $inc: { amount: oldAmount },
-      }).exec()
-    );
-  } else if (oldInvestmentId) {
-    reverseOps.push(
-      Investment.findByIdAndUpdate(oldInvestmentId, {
-        $inc: { amount: oldAmount },
-      }).exec()
-    );
+    await Saving.findByIdAndUpdate(oldSavingId, {
+      $inc: { amount: oldAmount },
+    });
   }
-  if (reverseOps.length) await Promise.all(reverseOps);
 
+  if (oldInvestmentId) {
+    await Investment.findByIdAndUpdate(oldInvestmentId, {
+      $inc: { amount: oldAmount },
+    });
+  }
+
+  // Restore balance
   account.balance += oldAmount;
 
+  // Validate the new selected source has enough funds
+  if (newSavingId) {
+    const saving = await Saving.findById(newSavingId).lean();
+    if (!saving) throw new AppError("Saving not found", 404);
+    if (saving.amount < newAmount)
+      throw new AppError("Insufficient saving amount", 400);
+  }
+
+  if (newInvestmentId) {
+    const inv = await Investment.findById(newInvestmentId).lean();
+    if (!inv) throw new AppError("Investment not found", 404);
+    if (inv.amount < newAmount)
+      throw new AppError("Insufficient investment amount", 400);
+  }
+
+  // Apply new deductions
   account.balance = Math.max(0, account.balance - newAmount);
   await account.save();
 
-  const applyOps: Promise<any>[] = [];
-
   if (newSavingId) {
-    applyOps.push(
-      Saving.findByIdAndUpdate(newSavingId, {
-        $inc: { amount: -newAmount },
-      }).exec()
-    );
-  } else if (newInvestmentId) {
-    applyOps.push(
-      Investment.findByIdAndUpdate(newInvestmentId, {
-        $inc: { amount: -newAmount },
-      }).exec()
-    );
+    await Saving.findByIdAndUpdate(newSavingId, {
+      $inc: { amount: -newAmount },
+    });
   }
 
-  if (applyOps.length) await Promise.all(applyOps);
+  if (newInvestmentId) {
+    await Investment.findByIdAndUpdate(newInvestmentId, {
+      $inc: { amount: -newAmount },
+    });
+  }
 
+  // Update expense
   const updatedExpense = await Expense.findByIdAndUpdate(
     id,
     {
