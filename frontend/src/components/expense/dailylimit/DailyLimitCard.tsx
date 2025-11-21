@@ -35,7 +35,9 @@ const DailyLimitCard = ({ todaySpent, limit, onEdit }: DailyLimitCardProps) => {
 
       {/* Info */}
       <div className="flex justify-between mt-2 text-white/70 text-xs">
-        <p>Spent Today: ₱{todaySpent.toLocaleString()}</p>
+        <p>Spent: ₱{todaySpent.toLocaleString()}</p>
+        {limit > todaySpent && <p>Remaining: ₱{limit - todaySpent}</p>}
+
         <p>Limit: ₱{limit.toLocaleString()}</p>
       </div>
 
