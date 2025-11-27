@@ -4,7 +4,7 @@ import {
   getSavings,
   updateSaving,
 } from "@/controllers/saving/saving.controller";
-import verifier from "@/middlewares/verifier";
+import verifier from "@/middlewares/verifier.middleware";
 import { Router } from "express";
 
 const router = Router();

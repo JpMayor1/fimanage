@@ -6,7 +6,7 @@ import {
   updateExpense,
   updateLimit,
 } from "@/controllers/expense/expense.controller";
-import verifier from "@/middlewares/verifier";
+import verifier from "@/middlewares/verifier.middleware";
 import { Router } from "express";
 
 const router = Router();

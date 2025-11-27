@@ -1,12 +1,18 @@
 import AnimatedBackground from "@/components/animations/AnimatedBackground";
-import { useAuthStore } from "@/stores/auth/useAuthStore";
-import { Navigate, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 
 const UnAuthenticatedLayout = () => {
-  const { authUser } = useAuthStore();
-  if (authUser) {
-    return <Navigate to="/home/dashboard" replace />;
-  }
+  // const { verify } = useAccountStore();
+  // const navigate = useNavigate();
+
+  // useEffect(() => {
+  //   const verifyFunc = async () => {
+  //     const success = await verify();
+  //     if (!success) navigate("/auth/login");
+  //   };
+  //   verifyFunc();
+  // }, [verify, navigate]);
+
   return (
     <div className="h-[100dvh] w-screen overflow-hidden">
       <AnimatedBackground />

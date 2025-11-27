@@ -4,7 +4,7 @@ import {
   getIncomes,
   updateIncome,
 } from "@/controllers/income/income.controller";
-import verifier from "@/middlewares/verifier";
+import verifier from "@/middlewares/verifier.middleware";
 import { Router } from "express";
 
 const router = Router();

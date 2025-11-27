@@ -1,13 +1,20 @@
 import SideBar from "@/components/sidebar/SideBar";
-import { useAuthStore } from "@/stores/auth/useAuthStore";
-import { Navigate, Outlet } from "react-router-dom";
+import { useAccountStore } from "@/stores/account/account.store";
+import { useEffect } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
 
 const AuthenticatedLayout = () => {
-  const { authUser } = useAuthStore();
+  const { verify } = useAccountStore();
+  const navigate = useNavigate();
 
-  if (!authUser) {
-    return <Navigate to="/" replace />;
-  }
+  useEffect(() => {
+    const verifyFunc = async () => {
+      const success = await verify();
+      if (success) navigate("/home/dashboard");
+    };
+    verifyFunc();
+  }, [verify, navigate]);
+
   return (
     <div className="h-[100dvh] w-screen overflow-hidden flex justify-end bg-gradient-to-br from-primary via-black to-primary">
       <SideBar />

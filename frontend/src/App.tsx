@@ -10,6 +10,7 @@ import PageNotFound from "./pages/general/PageNotFound";
 import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
 
+import { useEffect } from "react";
 import DashboardPage from "./pages/home/dashboard/DashboardPage";
 import ExpensesPage from "./pages/home/expense/ExpensesPage";
 import IncomePage from "./pages/home/income/IncomePage";
@@ -17,8 +18,13 @@ import InvestmentsPage from "./pages/home/investment/InvestmentsPage";
 import ProfilePage from "./pages/home/profile/ProfilePage";
 import ReportPage from "./pages/home/report/ReportPage";
 import SavingPage from "./pages/home/saving/SavingPage";
+import { initCSRF } from "./utils/csrf/csrf.util";
 
 function App() {
+  useEffect(() => {
+    initCSRF();
+  }, []);
+
   const router = createBrowserRouter([
     {
       path: "/",

@@ -15,7 +15,7 @@ const verifier = async (
     if (!token) {
       return res
         .status(401)
-        .json({ error: "Unauthorized - No Token Provided" });
+        .json({ message: "Unauthorized - No Token Provided" });
     }
 
     // Type assertion: assume decoded has a accountId property
@@ -25,7 +25,7 @@ const verifier = async (
     ) as JwtPayload & { accountId: string };
 
     if (!decoded || !decoded.accountId) {
-      return res.status(401).json({ error: "Unauthorized - Invalid Token" });
+      return res.status(401).json({ message: "Unauthorized - Invalid Token" });
     }
 
     const account = await Account.findById(decoded.accountId).select(
@@ -33,7 +33,7 @@ const verifier = async (
     );
 
     if (!account) {
-      return res.status(404).json({ error: "Account not found" });
+      return res.status(404).json({ message: "Account not found" });
     }
 
     // Assign account to the request object

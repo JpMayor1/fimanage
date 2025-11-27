@@ -1,5 +1,5 @@
 import { updateProfile } from "@/controllers/profile/profile.controller";
-import verifier from "@/middlewares/verifier";
+import verifier from "@/middlewares/verifier.middleware";
 import { Router } from "express";
 
 const router = Router();

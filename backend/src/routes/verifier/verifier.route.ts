@@ -1,9 +1,9 @@
-import { deleteFileC } from "@/controllers/file/file.controler";
+import { verify } from "@/controllers/verifier/verifier.controller";
 import verifier from "@/middlewares/verifier.middleware";
 import { Router } from "express";
 
 const router = Router();
 
-router.delete("/delete-file/:publicId", verifier, deleteFileC);
+router.get("/", verifier, verify);
 
 export default router;

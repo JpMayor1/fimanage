@@ -4,7 +4,7 @@ import {
   getInvestments,
   updateInvestment,
 } from "@/controllers/investment/investment.controller";
-import verifier from "@/middlewares/verifier";
+import verifier from "@/middlewares/verifier.middleware";
 import { Router } from "express";
 
 const router = Router();
