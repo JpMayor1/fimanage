@@ -1,3 +1,4 @@
+import { useAccountStore } from "@/stores/account/account.store";
 import { useAuthStore } from "@/stores/auth/useAuthStore";
 import { useSideBar } from "@/stores/sidebar/useSideBar";
 import Avatar from "avatox";
@@ -11,15 +12,17 @@ import {
   MdOutlineSavings,
   MdOutlineSpaceDashboard,
 } from "react-icons/md";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import BlurImage from "../custom/BlurImage";
 
 const SideBar = () => {
-  const { authUser, logout, loading } = useAuthStore();
+  const { account } = useAccountStore();
+  const { logout, loading } = useAuthStore();
   const { open, setOpen } = useSideBar();
   const location = useLocation();
+  const navigate = useNavigate();
 
-  if (!authUser) return null;
+  if (!account) return null;
 
   const navLinks = [
     {
@@ -48,6 +51,11 @@ const SideBar = () => {
     "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors";
   const linkActive = "bg-yellow text-black font-semibold";
   const linkInactive = "text-gray-300 hover:bg-gray-800 hover:text-white";
+
+  const logoutFunc = async () => {
+    const success = await logout();
+    if (success) navigate("/auth/login");
+  };
 
   return (
     <>
@@ -94,31 +102,31 @@ const SideBar = () => {
             w-full flex items-center gap-2 p-4 border-t border-b border-gray-50/10 cursor-pointer`}
           onClick={() => setOpen(false)}
         >
-          {authUser.profilePicture ? (
+          {account.profilePicture ? (
             <BlurImage
-              src={authUser.profilePicture as string}
+              src={account.profilePicture as string}
               alt="Profile picture"
               className="h-10 w-10 rounded-full object-cover border border-primary"
               draggable={false}
             />
           ) : (
             <Avatar
-              key={authUser._id}
-              name={`${authUser.firstName} ${authUser.lastName}`}
+              key={account._id}
+              name={`${account.firstName} ${account.lastName}`}
               size="lg"
               className="bg-primary p-4 rounded-full h-10 w-10"
             />
           )}
           <div>
             <p className="font-bold">
-              {authUser.firstName} {authUser.lastName}
+              {account.firstName} {account.lastName}
             </p>
             <p
               className={`text-xs ${
                 isActive("/home/profile") ? "text-black/50" : "text-gray-50/50"
               }`}
             >
-              {authUser.email}
+              {account.email}
             </p>
           </div>
         </Link>
@@ -146,7 +154,7 @@ const SideBar = () => {
 
         {/* Sign out */}
         <button
-          onClick={logout}
+          onClick={logoutFunc}
           disabled={loading}
           className={`${
             loading

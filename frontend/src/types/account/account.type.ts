@@ -20,4 +20,5 @@ export type AccountStoreType = {
   account: AccountType | null;
   loading: boolean;
   verify: () => Promise<boolean>;
+  updateProfile: (profile: Partial<AccountType>) => Promise<boolean>;
 };

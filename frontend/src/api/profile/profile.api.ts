@@ -1,5 +1,5 @@
 import axiosInstance from "@/axios/axiosInstance";
-import type { AccountType } from "@/types/auth/auth.type";
+import type { AccountType } from "@/types/account/account.type";
 import { uploadFile } from "@/utils/file/uploadFile";
 import { deleteFileApi } from "../file/file.api";
 

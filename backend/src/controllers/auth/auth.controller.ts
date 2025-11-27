@@ -2,7 +2,7 @@ import { findAccountS, registerAccountS } from "@/services/auth/auth.service";
 import { comparePassword, hashPassword } from "@/utils/bcrypt/bcrypt";
 import { deleteFile } from "@/utils/deleteFile/deleteFile";
 import { AppError } from "@/utils/error/appError";
-import generateToken from "@/utils/jwt/generateToken";
+import { generateToken } from "@/utils/jwt/jwt.util";
 import { Request, Response } from "express";
 
 export const register = async (req: Request, res: Response): Promise<void> => {

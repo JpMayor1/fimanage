@@ -4,9 +4,9 @@ import TextField from "@/components/custom/TextField";
 import ShowImage from "@/components/image/ShowImage";
 import { imgAnim } from "@/constants/image.animation.constant";
 import { overlayAnim } from "@/constants/overlay.animation.constant";
-import { useAuthStore } from "@/stores/auth/useAuthStore";
+import { useAccountStore } from "@/stores/account/account.store";
 import { useSideBar } from "@/stores/sidebar/useSideBar";
-import type { AccountType } from "@/types/auth/auth.type";
+import type { AccountType } from "@/types/account/account.type";
 import { getFullName } from "@/utils/fullName/getFullName";
 import Avatar from "avatox";
 import { AnimatePresence, motion } from "framer-motion";
@@ -25,22 +25,22 @@ import { RxHamburgerMenu } from "react-icons/rx";
 
 const ProfilePage = () => {
   const { setOpen } = useSideBar();
-  const { authUser, updateProfile, loading } = useAuthStore();
+  const { account, updateProfile, loading } = useAccountStore();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [showImage, setShowImage] = useState<string | undefined>("");
   const [isEditing, setIsEditing] = useState(false);
-  const [form, setForm] = useState<AccountType>(authUser as AccountType);
+  const [form, setForm] = useState<AccountType>(account as AccountType);
   const [profilePreview, setProfilePreview] = useState<string | null>(
-    (authUser?.profilePicture as string) || null
+    (account?.profilePicture as string) || null
   );
 
   useEffect(() => {
-    setForm(authUser as AccountType);
-  }, [authUser]);
+    setForm(account as AccountType);
+  }, [account]);
 
-  if (!authUser) return;
+  if (!account) return;
 
   function handleProfilePicChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -133,20 +133,18 @@ const ProfilePage = () => {
             </div>
           ) : (
             <>
-              {authUser.profilePicture ? (
+              {account.profilePicture ? (
                 <BlurImage
-                  src={authUser.profilePicture as string}
+                  src={account.profilePicture as string}
                   alt="Profile picture"
                   className="w-36 h-36 rounded-full border-2 border-yellow/80 object-cover shadow-md mb-3 bg-white cursor-pointer"
                   draggable={false}
-                  onClick={() =>
-                    setShowImage(authUser.profilePicture as string)
-                  }
+                  onClick={() => setShowImage(account.profilePicture as string)}
                 />
               ) : (
                 <Avatar
-                  key={authUser._id}
-                  name={`${authUser.firstName} ${authUser.lastName}`}
+                  key={account._id}
+                  name={`${account.firstName} ${account.lastName}`}
                   size="xl"
                   className="bg-primary p-4 rounded-full h-36 w-36 border-2 border-yellow/80"
                 />
@@ -191,7 +189,7 @@ const ProfilePage = () => {
             <div className="flex items-center gap-2 mb-1">
               <FiUserCheck className="text-yellow" />
               <h2 className="text-xl font-bold font-heading text-white">
-                {getFullName(authUser)}
+                {getFullName(account)}
               </h2>
             </div>
           )}
@@ -207,7 +205,7 @@ const ProfilePage = () => {
             />
           ) : (
             <span className="text-yellow font-mono text-sm mb-2">
-              @{authUser.username}
+              @{account.username}
             </span>
           )}
         </motion.div>
@@ -228,7 +226,7 @@ const ProfilePage = () => {
             ) : (
               <div className="flex items-center gap-2 mb-2">
                 <FiMail className="text-yellow" />
-                <span className="text-white">{authUser.email}</span>
+                <span className="text-white">{account.email}</span>
               </div>
             )}
 
@@ -245,7 +243,7 @@ const ProfilePage = () => {
             ) : (
               <div className="flex items-center gap-2">
                 <FiMapPin className="text-yellow" />
-                <span className="text-white">{authUser.address}</span>
+                <span className="text-white">{account.address}</span>
               </div>
             )}
           </div>

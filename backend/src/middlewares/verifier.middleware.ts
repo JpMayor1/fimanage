@@ -1,8 +1,7 @@
 import Account from "@/models/account.model";
 import { CustomRequest } from "@/types/express/express.type";
+import { verifyToken } from "@/utils/jwt/jwt.util";
 import type { NextFunction, Response } from "express";
-import type { JwtPayload } from "jsonwebtoken";
-import jwt from "jsonwebtoken";
 
 const verifier = async (
   req: CustomRequest,
@@ -18,11 +17,7 @@ const verifier = async (
         .json({ message: "Unauthorized - No Token Provided" });
     }
 
-    // Type assertion: assume decoded has a accountId property
-    const decoded = jwt.verify(
-      token,
-      process.env.JWT_SECRET as string
-    ) as JwtPayload & { accountId: string };
+    const decoded = verifyToken(token);
 
     if (!decoded || !decoded.accountId) {
       return res.status(401).json({ message: "Unauthorized - Invalid Token" });

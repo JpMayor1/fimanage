@@ -3,6 +3,7 @@ import CalendarProgress from "@/components/dashboard/CalendarProgress";
 import RecentActivity from "@/components/dashboard/RecentActivity";
 import SummaryCards from "@/components/dashboard/SummaryCards";
 import UpdateBalanceModal from "@/components/dashboard/UpdateBalanceModal";
+import { useAccountStore } from "@/stores/account/account.store";
 import { useDashboardStore } from "@/stores/dashboard/useDashboardStore";
 import { useSideBar } from "@/stores/sidebar/useSideBar";
 import { AnimatePresence } from "framer-motion";
@@ -11,14 +12,15 @@ import { RxHamburgerMenu } from "react-icons/rx";
 
 const DashboardPage = () => {
   const { setOpen } = useSideBar();
+  const { account } = useAccountStore();
   const { getDashboardData, getLoading } = useDashboardStore();
 
   const [updateBalance, setUpdateBalance] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => await getDashboardData();
-    fetchData();
-  }, [getDashboardData]);
+    if (account) fetchData();
+  }, [account, getDashboardData]);
 
   return (
     <div className="h-[100dvh] w-full overflow-y-scroll no-scrollbar p-1 px-2 md:px-4">

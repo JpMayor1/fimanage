@@ -1,7 +1,7 @@
 import type { Response } from "express";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 
-const generateToken = (accountId: string, res: Response) => {
+export const generateToken = (accountId: string, res: Response) => {
   const token = jwt.sign({ accountId }, process.env.JWT_SECRET as string, {
     expiresIn: "15d",
   });
@@ -14,4 +14,8 @@ const generateToken = (accountId: string, res: Response) => {
   });
 };
 
-export default generateToken;
+export const verifyToken = (token: string) => {
+  return jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload & {
+    accountId: string;
+  };
+};
