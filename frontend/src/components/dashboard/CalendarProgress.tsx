@@ -190,7 +190,7 @@ const CalendarProgress: React.FC = () => {
                   cy="20"
                   r="18"
                   className={`${
-                    progress >= 100
+                    progress > 100
                       ? "stroke-red"
                       : progress >= 75
                       ? "stroke-blue"

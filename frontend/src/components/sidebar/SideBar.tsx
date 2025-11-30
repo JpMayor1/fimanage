@@ -3,6 +3,7 @@ import { useAuthStore } from "@/stores/auth/useAuthStore";
 import { useSideBar } from "@/stores/sidebar/useSideBar";
 import Avatar from "avatox";
 import { BiSolidReport } from "react-icons/bi";
+import { GrMoney } from "react-icons/gr";
 import { IoMdClose } from "react-icons/io";
 import { MdLogout, MdOutlineSpaceDashboard } from "react-icons/md";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -22,6 +23,11 @@ const SideBar = () => {
       name: "Dashboard",
       link: "/home/dashboard",
       icon: MdOutlineSpaceDashboard,
+    },
+    {
+      name: "Sources",
+      link: "/home/source",
+      icon: GrMoney,
     },
     {
       name: "Reports",

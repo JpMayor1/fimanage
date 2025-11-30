@@ -19,11 +19,11 @@
   --color-blue: #62a5fa;
   --color-yellow: #ffd700;
   /* Dashboard cards */
-  --color-card-income: #16a34a; /* emerald-600 */
-  --color-card-expense: #dc2626; /* red-600 */
-  --color-card-balance: #2563eb; /* blue-600 */
-  --color-card-savings: #facc15; /* amber-400 */
-  --color-card-investment: #9ca3af; /* gray-400 */
+  --color-income: #16a34a; /* emerald-600 */
+  --color-expense: #dc2626; /* red-600 */
+  --color-balance: #2563eb; /* blue-600 */
+  --color-savings: #facc15; /* amber-400 */
+  --color-investment: #9ca3af; /* gray-400 */
 }
 
 body {

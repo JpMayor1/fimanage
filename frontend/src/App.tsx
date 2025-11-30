@@ -14,6 +14,7 @@ import { useEffect } from "react";
 import DashboardPage from "./pages/home/dashboard/DashboardPage";
 import ProfilePage from "./pages/home/profile/ProfilePage";
 import ReportPage from "./pages/home/report/ReportPage";
+import SourcePage from "./pages/home/source/SourcePage";
 import { initCSRF } from "./utils/csrf/csrf.util";
 
 function App() {
@@ -51,6 +52,10 @@ function App() {
         {
           path: "/home/dashboard",
           element: <DashboardPage />,
+        },
+        {
+          path: "/home/source",
+          element: <SourcePage />,
         },
         {
           path: "/home/reports",

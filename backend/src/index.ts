@@ -25,6 +25,7 @@ import fileRoute from "@/routes/file/file.route";
 
 import dashboardRoute from "@/routes/dashboard/dashboard.route";
 import profileRoute from "@/routes/profile/profile.route";
+import sourceRoute from "@/routes/source/source.route";
 
 // import { startDailyExpenseJob } from "./jobs/calendarJobs";
 
@@ -102,6 +103,7 @@ const bootstrap = async () => {
   app.use("/api/profile", profileRoute);
   app.use("/api/file", fileRoute);
   app.use("/api/dashboard", dashboardRoute);
+  app.use("/api/source", sourceRoute);
 
   app.use(globalErrorHandler);
 
