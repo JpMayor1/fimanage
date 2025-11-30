@@ -18,7 +18,6 @@ export const useAccountStore = create<AccountStoreType>((set) => ({
       return true;
     } catch (error) {
       console.error("Error verifying account", error);
-      showError(error);
       return false;
     } finally {
       set({ loading: false });
