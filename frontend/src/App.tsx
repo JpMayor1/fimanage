@@ -12,6 +12,7 @@ import RegisterPage from "./pages/auth/RegisterPage";
 
 import { useEffect } from "react";
 import DashboardPage from "./pages/home/dashboard/DashboardPage";
+import DeptPage from "./pages/home/dept/DeptPage";
 import ProfilePage from "./pages/home/profile/ProfilePage";
 import ReportPage from "./pages/home/report/ReportPage";
 import SourcePage from "./pages/home/source/SourcePage";
@@ -56,6 +57,10 @@ function App() {
         {
           path: "/home/source",
           element: <SourcePage />,
+        },
+        {
+          path: "/home/dept",
+          element: <DeptPage />,
         },
         {
           path: "/home/reports",

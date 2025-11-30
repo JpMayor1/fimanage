@@ -72,3 +72,13 @@ input[disabled] {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* Chrome, Edge, Safari */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  color: #ffffff;
+}
+
+/* Firefox */
+input[type="date"] {
+  color-scheme: dark;
+}

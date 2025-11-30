@@ -3,6 +3,7 @@ import { useAuthStore } from "@/stores/auth/useAuthStore";
 import { useSideBar } from "@/stores/sidebar/useSideBar";
 import Avatar from "avatox";
 import { BiSolidReport } from "react-icons/bi";
+import { GiReceiveMoney } from "react-icons/gi";
 import { GrMoney } from "react-icons/gr";
 import { IoMdClose } from "react-icons/io";
 import { MdLogout, MdOutlineSpaceDashboard } from "react-icons/md";
@@ -28,6 +29,11 @@ const SideBar = () => {
       name: "Sources",
       link: "/home/source",
       icon: GrMoney,
+    },
+    {
+      name: "Depts",
+      link: "/home/dept",
+      icon: GiReceiveMoney,
     },
     {
       name: "Reports",
