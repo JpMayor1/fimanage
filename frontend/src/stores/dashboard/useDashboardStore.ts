@@ -1,19 +1,10 @@
-import {
-  getDashboardDataApi,
-  updateBalanceApi,
-} from "@/api/dashboard/dashboard.api";
+import { getDashboardDataApi } from "@/api/dashboard/dashboard.api";
 import type { DashboardStoreType } from "@/types/dashboard/dashboard.type";
 import { showError } from "@/utils/error/error.util";
-import toast from "react-hot-toast";
 import { create } from "zustand";
 
 export const useDashboardStore = create<DashboardStoreType>((set) => ({
-  balance: 0,
   dailyExpense: [],
-  totalIncomes: { total: 0, recent: [] },
-  totalExpenses: { total: 0, recent: [] },
-  totalSavings: { total: 0, recent: [] },
-  totalInvestments: { total: 0, recent: [] },
 
   getLoading: false,
   updateLoading: false,
@@ -23,32 +14,13 @@ export const useDashboardStore = create<DashboardStoreType>((set) => ({
     try {
       const response = await getDashboardDataApi();
       set({
-        balance: response.data.balance,
         dailyExpense: response.data.dailyExpense,
-        totalIncomes: response.data.totalIncomes,
-        totalExpenses: response.data.totalExpenses,
-        totalSavings: response.data.totalSavings,
-        totalInvestments: response.data.totalInvestments,
       });
     } catch (error) {
       console.error("Error getting data", error);
       showError(error);
     } finally {
       set({ getLoading: false });
-    }
-  },
-  updateBalance: async (balance) => {
-    set({ updateLoading: true });
-    try {
-      const response = await updateBalanceApi(balance);
-      set({ balance });
-      toast.success(response.data.message);
-      return true;
-    } catch (error) {
-      showError(error);
-      return false;
-    } finally {
-      set({ updateLoading: false });
     }
   },
 }));

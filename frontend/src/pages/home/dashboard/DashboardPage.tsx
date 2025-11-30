@@ -1,21 +1,15 @@
 import LoadingBig from "@/components/custom/loading/LoadingBig";
 import CalendarProgress from "@/components/dashboard/CalendarProgress";
-import RecentActivity from "@/components/dashboard/RecentActivity";
-import SummaryCards from "@/components/dashboard/SummaryCards";
-import UpdateBalanceModal from "@/components/dashboard/UpdateBalanceModal";
 import { useAccountStore } from "@/stores/account/account.store";
 import { useDashboardStore } from "@/stores/dashboard/useDashboardStore";
 import { useSideBar } from "@/stores/sidebar/useSideBar";
-import { AnimatePresence } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { RxHamburgerMenu } from "react-icons/rx";
 
 const DashboardPage = () => {
   const { setOpen } = useSideBar();
   const { account } = useAccountStore();
   const { getDashboardData, getLoading } = useDashboardStore();
-
-  const [updateBalance, setUpdateBalance] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => await getDashboardData();
@@ -36,22 +30,10 @@ const DashboardPage = () => {
         <LoadingBig />
       ) : (
         <div className="w-full space-y-5">
-          {/* Summary Cards */}
-          <SummaryCards onEditBalance={() => setUpdateBalance(true)} />
-
-          {/* Calendar Expense */}
+          {/* Calendar */}
           <CalendarProgress />
-
-          {/* Recent Activity */}
-          <RecentActivity />
         </div>
       )}
-
-      <AnimatePresence>
-        {updateBalance && !getLoading && (
-          <UpdateBalanceModal onClose={() => setUpdateBalance(false)} />
-        )}
-      </AnimatePresence>
     </div>
   );
 };

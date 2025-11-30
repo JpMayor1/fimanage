@@ -24,13 +24,9 @@ import cloudinary from "@/middlewares/cloudinary";
 import fileRoute from "@/routes/file/file.route";
 
 import dashboardRoute from "@/routes/dashboard/dashboard.route";
-import expenseRoute from "@/routes/expense/expense.route";
-import incomeRoute from "@/routes/income/income.route";
-import investmentRoute from "@/routes/investment/investment.route";
 import profileRoute from "@/routes/profile/profile.route";
-import savingRoute from "@/routes/saving/saving.route";
 
-import { startDailyExpenseJob } from "./jobs/calendarJobs";
+// import { startDailyExpenseJob } from "./jobs/calendarJobs";
 
 const bootstrap = async () => {
   const app = express();
@@ -106,10 +102,6 @@ const bootstrap = async () => {
   app.use("/api/profile", profileRoute);
   app.use("/api/file", fileRoute);
   app.use("/api/dashboard", dashboardRoute);
-  app.use("/api/income", incomeRoute);
-  app.use("/api/expense", expenseRoute);
-  app.use("/api/saving", savingRoute);
-  app.use("/api/investment", investmentRoute);
 
   app.use(globalErrorHandler);
 
@@ -118,7 +110,7 @@ const bootstrap = async () => {
 
   server.listen(PORT, () => {
     initDB();
-    startDailyExpenseJob();
+    // startDailyExpenseJob();
     console.log(`Server Running on port ${PORT}`);
   });
 };

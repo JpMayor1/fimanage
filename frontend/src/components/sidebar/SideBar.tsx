@@ -3,15 +3,8 @@ import { useAuthStore } from "@/stores/auth/useAuthStore";
 import { useSideBar } from "@/stores/sidebar/useSideBar";
 import Avatar from "avatox";
 import { BiSolidReport } from "react-icons/bi";
-import { FaMoneyBillTrendUp } from "react-icons/fa6";
-import { GiExpense } from "react-icons/gi";
-import { GrMoney } from "react-icons/gr";
 import { IoMdClose } from "react-icons/io";
-import {
-  MdLogout,
-  MdOutlineSavings,
-  MdOutlineSpaceDashboard,
-} from "react-icons/md";
+import { MdLogout, MdOutlineSpaceDashboard } from "react-icons/md";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import BlurImage from "../custom/BlurImage";
 
@@ -29,14 +22,6 @@ const SideBar = () => {
       name: "Dashboard",
       link: "/home/dashboard",
       icon: MdOutlineSpaceDashboard,
-    },
-    { name: "Incomes", link: "/home/incomes", icon: GrMoney },
-    { name: "Expenses", link: "/home/expenses", icon: GiExpense },
-    { name: "Savings", link: "/home/savings", icon: MdOutlineSavings },
-    {
-      name: "Investments",
-      link: "/home/investments",
-      icon: FaMoneyBillTrendUp,
     },
     {
       name: "Reports",
