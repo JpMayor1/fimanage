@@ -55,11 +55,11 @@ const AddSource = ({ onClose }: AddSourceI) => {
         </button>
 
         <form className="space-y-4" onSubmit={handleSubmit}>
-          <label className="block font-semibold text-white">Add Source</label>
+          <h2 className="block font-semibold text-white">Add Source</h2>
 
           <div className="flex flex-col gap-1">
-            <label htmlFor="lender" className="text-white text-xs">
-              Lender *
+            <label htmlFor="name" className="text-white text-xs">
+              Name *
             </label>
             <TextField
               id="name"
