@@ -1,25 +1,28 @@
 import LoadingSmall from "@/components/custom/loading/LoadingSmall";
 import TextField from "@/components/custom/TextField";
 import { overlayAnim } from "@/constants/overlay.animation.constant";
-import { useDeptStore } from "@/stores/dept/dept.store";
-import type { DeptType } from "@/types/dept/dept.type";
-import { dateToDDMMYYYY } from "@/utils/date/date.util";
+import { useReceivingStore } from "@/stores/receiving/receiving.store";
+import type { ReceivingType } from "@/types/receiving/receiving.type";
 import { motion } from "framer-motion";
 import { useState, type FormEvent } from "react";
 import { FiX } from "react-icons/fi";
 
-interface UpdateDeptI {
-  dept: DeptType;
+interface AddReceivingI {
   onClose: () => void;
 }
 
-const UpdateDept = ({ dept, onClose }: UpdateDeptI) => {
-  const { updateDept, loading } = useDeptStore();
+const initialState: Partial<ReceivingType> = {
+  borrower: "",
+  amount: 0,
+  remaining: 0,
+  dueDate: "",
+  interest: 0,
+  note: "",
+};
 
-  const [form, setForm] = useState<Partial<DeptType>>({
-    ...dept,
-    dueDate: dateToDDMMYYYY(dept.dueDate),
-  });
+const AddReceiving = ({ onClose }: AddReceivingI) => {
+  const { addReceiving, loading } = useReceivingStore();
+  const [form, setForm] = useState<Partial<ReceivingType>>(initialState);
 
   const handleChange = (
     eOrName: React.ChangeEvent<HTMLInputElement> | string,
@@ -33,15 +36,15 @@ const UpdateDept = ({ dept, onClose }: UpdateDeptI) => {
     }
   };
 
-  async function handleSubmit(e: FormEvent) {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    const success = await updateDept(dept._id!, form);
-    if (success) return onClose();
-  }
+    const success = await addReceiving(form);
+    if (success) onClose();
+  };
 
   return (
     <motion.div
-      className="fixed inset-0 z-30 flex items-center justify-center bg-black/70 p-5"
+      className="fixed inset-0 z-30 flex items-start justify-center bg-black/70 p-5 overflow-y-scroll no-scrollbar"
       initial="initial"
       animate="animate"
       exit="exit"
@@ -55,19 +58,19 @@ const UpdateDept = ({ dept, onClose }: UpdateDeptI) => {
           <FiX className="text-2xl text-red" />
         </button>
 
-        <form className="space-y-2 w-full" onSubmit={handleSubmit}>
-          <label className="block font-semibold text-white">Update Dept</label>
+        <form className="space-y-4" onSubmit={handleSubmit}>
+          <h2 className="block font-semibold text-white">Add Receiving</h2>
 
           <div className="flex flex-col gap-1">
-            <label htmlFor="lender" className="text-white text-xs">
-              Lender *
+            <label htmlFor="borrower" className="text-white text-xs">
+              Borrower *
             </label>
             <TextField
-              id="lender"
-              name="lender"
-              value={form.lender}
+              id="borrower"
+              name="borrower"
+              value={form.borrower}
               onChange={handleChange}
-              placeholder="Lender *"
+              placeholder="Borrower *"
               className="bg-black text-white border border-white/20 focus:border-yellow"
               containerClassName="flex-1"
             />
@@ -177,7 +180,7 @@ const UpdateDept = ({ dept, onClose }: UpdateDeptI) => {
                 : "cursor-pointer hover:scale-101 hover:shadow-xl transition-all"
             } w-full py-2 rounded-xl bg-gradient-to-r from-yellow to-yellow/80 text-black text-lg mt-2 shadow-md`}
           >
-            {loading ? <LoadingSmall /> : "Update Dept"}
+            {loading ? <LoadingSmall /> : "Add Receiving"}
           </button>
         </form>
       </div>
@@ -185,4 +188,4 @@ const UpdateDept = ({ dept, onClose }: UpdateDeptI) => {
   );
 };
 
-export default UpdateDept;
+export default AddReceiving;

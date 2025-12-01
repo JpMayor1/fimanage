@@ -11,7 +11,6 @@ export type SourceType = {
   updatedAt: Date;
 };
 
-// and use it in your service:
 export type SourceFilterType = Partial<Pick<SourceType, "userId" | "name">>;
 
 export type SourceDocumentType = SourceType & Document;

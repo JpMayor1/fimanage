@@ -14,6 +14,7 @@ import { useEffect } from "react";
 import DashboardPage from "./pages/home/dashboard/DashboardPage";
 import DeptPage from "./pages/home/dept/DeptPage";
 import ProfilePage from "./pages/home/profile/ProfilePage";
+import ReceivingPage from "./pages/home/receiving/ReceivingPage";
 import ReportPage from "./pages/home/report/ReportPage";
 import SourcePage from "./pages/home/source/SourcePage";
 import { initCSRF } from "./utils/csrf/csrf.util";
@@ -61,6 +62,10 @@ function App() {
         {
           path: "/home/dept",
           element: <DeptPage />,
+        },
+        {
+          path: "/home/receiving",
+          element: <ReceivingPage />,
         },
         {
           path: "/home/reports",

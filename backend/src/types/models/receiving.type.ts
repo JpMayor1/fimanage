@@ -1,9 +1,9 @@
 import { Document } from "mongoose";
 
-export type DeptType = {
+export type ReceivingType = {
   _id: string;
   userId: string;
-  lender: string;
+  borrower: string;
   amount: number;
   remaining: number;
   dueDate: string;
@@ -14,6 +14,6 @@ export type DeptType = {
   updatedAt: Date;
 };
 
-export type DeptFilterType = Partial<Pick<DeptType, "lender">>;
+export type ReceivingFilterType = Partial<Pick<ReceivingType, "borrower">>;
 
-export type DeptDocumentType = DeptType & Document;
+export type ReceivingDocumentType = ReceivingType & Document;

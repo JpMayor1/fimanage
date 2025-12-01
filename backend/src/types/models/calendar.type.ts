@@ -10,7 +10,6 @@ export type CalendarType = {
   updatedAt: Date;
 };
 
-// and use it in your service:
 export type CalendarFilterType = Partial<
   Pick<CalendarType, "userId" | "limit" | "expense">
 >;

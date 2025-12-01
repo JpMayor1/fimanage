@@ -4,7 +4,7 @@ import { overlayAnim } from "@/constants/overlay.animation.constant";
 import { useSourceStore } from "@/stores/source/source.store";
 import type { SourceType } from "@/types/source/source.type";
 import { motion } from "framer-motion";
-import { useState, type ChangeEvent, type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import { FiX } from "react-icons/fi";
 
 interface AddSourceI {
@@ -20,9 +20,16 @@ const AddSource = ({ onClose }: AddSourceI) => {
   const { addSource, loading } = useSourceStore();
   const [form, setForm] = useState<Partial<SourceType>>(initialState);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+  const handleChange = (
+    eOrName: React.ChangeEvent<HTMLInputElement> | string,
+    value?: string
+  ) => {
+    if (typeof eOrName === "string") {
+      setForm((prev) => ({ ...prev, [eOrName]: value! }));
+    } else {
+      const e = eOrName;
+      setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    }
   };
 
   const handleSubmit = async (e: FormEvent) => {
@@ -50,24 +57,41 @@ const AddSource = ({ onClose }: AddSourceI) => {
         <form className="space-y-4" onSubmit={handleSubmit}>
           <label className="block font-semibold text-white">Add Source</label>
 
-          <TextField
-            name="name"
-            value={form.name}
-            onChange={handleChange}
-            placeholder="Name *"
-            className="bg-black text-white border border-white/20 focus:border-yellow"
-            containerClassName="flex-1 "
-          />
+          <div className="flex flex-col gap-1">
+            <label htmlFor="lender" className="text-white text-xs">
+              Lender *
+            </label>
+            <TextField
+              id="name"
+              name="name"
+              value={form.name}
+              onChange={handleChange}
+              placeholder="Name *"
+              className="bg-black text-white border border-white/20 focus:border-yellow"
+              containerClassName="flex-1 "
+            />
+          </div>
 
-          {/* Balance input */}
-          <TextField
-            type="number"
-            name="balance"
-            value={form.balance}
-            onChange={handleChange}
-            placeholder="Balance *"
-            className="bg-black text-white border border-white/20 focus:border-yellow"
-          />
+          <div className="flex flex-col gap-1">
+            <label htmlFor="balance" className="text-white text-xs">
+              Balance *
+            </label>
+            <TextField
+              type="text"
+              inputMode="decimal"
+              pattern="[0-9.]*"
+              id="balance"
+              name="balance"
+              value={form.balance}
+              onChange={(e) => {
+                let val = e.target.value.replace(/[^0-9.]/g, "");
+                val = val.replace(/(\..*)\./g, "$1");
+                handleChange("balance", val);
+              }}
+              placeholder="Balance *"
+              className="bg-black text-white border border-white/20 focus:border-yellow"
+            />
+          </div>
 
           <button
             type="submit"

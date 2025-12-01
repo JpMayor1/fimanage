@@ -18,7 +18,6 @@ export type AccountType = {
   updatedAt: Date;
 };
 
-// and use it in your service:
 export type AccountFilterType = Partial<
   Pick<AccountType, "email" | "username">
 >;

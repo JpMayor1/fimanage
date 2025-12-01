@@ -4,7 +4,7 @@ import { overlayAnim } from "@/constants/overlay.animation.constant";
 import { useDeptStore } from "@/stores/dept/dept.store";
 import type { DeptType } from "@/types/dept/dept.type";
 import { motion } from "framer-motion";
-import { useState, type ChangeEvent, type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import { FiX } from "react-icons/fi";
 
 interface AddDeptI {
@@ -24,9 +24,16 @@ const AddDept = ({ onClose }: AddDeptI) => {
   const { addDept, loading } = useDeptStore();
   const [form, setForm] = useState<Partial<DeptType>>(initialState);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+  const handleChange = (
+    eOrName: React.ChangeEvent<HTMLInputElement> | string,
+    value?: string
+  ) => {
+    if (typeof eOrName === "string") {
+      setForm((prev) => ({ ...prev, [eOrName]: value! }));
+    } else {
+      const e = eOrName;
+      setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    }
   };
 
   const handleSubmit = async (e: FormEvent) => {
@@ -74,11 +81,17 @@ const AddDept = ({ onClose }: AddDeptI) => {
               Amount *
             </label>
             <TextField
-              type="number"
+              type="text"
+              inputMode="decimal"
+              pattern="[0-9.]*"
               id="amount"
               name="amount"
               value={form.amount}
-              onChange={handleChange}
+              onChange={(e) => {
+                let val = e.target.value.replace(/[^0-9.]/g, "");
+                val = val.replace(/(\..*)\./g, "$1");
+                handleChange("amount", val);
+              }}
               placeholder="Amount *"
               className="bg-black text-white border border-white/20 focus:border-yellow"
             />
@@ -89,11 +102,17 @@ const AddDept = ({ onClose }: AddDeptI) => {
               Remaining
             </label>
             <TextField
-              type="number"
+              type="text"
+              inputMode="decimal"
+              pattern="[0-9.]*"
               id="remaining"
               name="remaining"
               value={form.remaining}
-              onChange={handleChange}
+              onChange={(e) => {
+                let val = e.target.value.replace(/[^0-9.]/g, "");
+                val = val.replace(/(\..*)\./g, "$1");
+                handleChange("remaining", val);
+              }}
               placeholder="Remaining *"
               className="bg-black text-white border border-white/20 focus:border-yellow"
             />
@@ -121,16 +140,21 @@ const AddDept = ({ onClose }: AddDeptI) => {
               Interest
             </label>
             <TextField
-              type="number"
+              type="text"
+              inputMode="decimal"
+              pattern="[0-9.]*"
               id="interest"
               name="interest"
               value={form.interest}
-              onChange={handleChange}
+              onChange={(e) => {
+                let val = e.target.value.replace(/[^0-9.]/g, "");
+                val = val.replace(/(\..*)\./g, "$1");
+                handleChange("interest", val);
+              }}
               placeholder="Interest *"
               className="bg-black text-white border border-white/20 focus:border-yellow"
             />
           </div>
-
           <div className="flex flex-col gap-1">
             <label htmlFor="note" className="text-white text-xs">
               Note

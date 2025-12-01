@@ -1,24 +1,24 @@
 import LoadingSmall from "@/components/custom/loading/LoadingSmall";
 import TextField from "@/components/custom/TextField";
 import { overlayAnim } from "@/constants/overlay.animation.constant";
-import { useDeptStore } from "@/stores/dept/dept.store";
-import type { DeptType } from "@/types/dept/dept.type";
+import { useReceivingStore } from "@/stores/receiving/receiving.store";
+import type { ReceivingType } from "@/types/receiving/receiving.type";
 import { dateToDDMMYYYY } from "@/utils/date/date.util";
 import { motion } from "framer-motion";
 import { useState, type FormEvent } from "react";
 import { FiX } from "react-icons/fi";
 
-interface UpdateDeptI {
-  dept: DeptType;
+interface UpdateReceivingI {
+  receiving: ReceivingType;
   onClose: () => void;
 }
 
-const UpdateDept = ({ dept, onClose }: UpdateDeptI) => {
-  const { updateDept, loading } = useDeptStore();
+const UpdateReceiving = ({ receiving, onClose }: UpdateReceivingI) => {
+  const { updateReceiving, loading } = useReceivingStore();
 
-  const [form, setForm] = useState<Partial<DeptType>>({
-    ...dept,
-    dueDate: dateToDDMMYYYY(dept.dueDate),
+  const [form, setForm] = useState<Partial<ReceivingType>>({
+    ...receiving,
+    dueDate: dateToDDMMYYYY(receiving.dueDate),
   });
 
   const handleChange = (
@@ -35,7 +35,7 @@ const UpdateDept = ({ dept, onClose }: UpdateDeptI) => {
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    const success = await updateDept(dept._id!, form);
+    const success = await updateReceiving(receiving._id!, form);
     if (success) return onClose();
   }
 
@@ -56,18 +56,20 @@ const UpdateDept = ({ dept, onClose }: UpdateDeptI) => {
         </button>
 
         <form className="space-y-2 w-full" onSubmit={handleSubmit}>
-          <label className="block font-semibold text-white">Update Dept</label>
+          <label className="block font-semibold text-white">
+            Update Receiving
+          </label>
 
           <div className="flex flex-col gap-1">
-            <label htmlFor="lender" className="text-white text-xs">
-              Lender *
+            <label htmlFor="borrower" className="text-white text-xs">
+              Borrower *
             </label>
             <TextField
-              id="lender"
-              name="lender"
-              value={form.lender}
+              id="borrower"
+              name="borrower"
+              value={form.borrower}
               onChange={handleChange}
-              placeholder="Lender *"
+              placeholder="Borrower *"
               className="bg-black text-white border border-white/20 focus:border-yellow"
               containerClassName="flex-1"
             />
@@ -177,7 +179,7 @@ const UpdateDept = ({ dept, onClose }: UpdateDeptI) => {
                 : "cursor-pointer hover:scale-101 hover:shadow-xl transition-all"
             } w-full py-2 rounded-xl bg-gradient-to-r from-yellow to-yellow/80 text-black text-lg mt-2 shadow-md`}
           >
-            {loading ? <LoadingSmall /> : "Update Dept"}
+            {loading ? <LoadingSmall /> : "Update Receiving"}
           </button>
         </form>
       </div>
@@ -185,4 +187,4 @@ const UpdateDept = ({ dept, onClose }: UpdateDeptI) => {
   );
 };
 
-export default UpdateDept;
+export default UpdateReceiving;

@@ -26,6 +26,7 @@ import fileRoute from "@/routes/file/file.route";
 import dashboardRoute from "@/routes/dashboard/dashboard.route";
 import deptRoute from "@/routes/dept/dept.route";
 import profileRoute from "@/routes/profile/profile.route";
+import receivingRoute from "@/routes/receiving/receiving.route";
 import sourceRoute from "@/routes/source/source.route";
 
 // import { startDailyExpenseJob } from "./jobs/calendarJobs";
@@ -106,6 +107,7 @@ const bootstrap = async () => {
   app.use("/api/dashboard", dashboardRoute);
   app.use("/api/source", sourceRoute);
   app.use("/api/dept", deptRoute);
+  app.use("/api/receiving", receivingRoute);
 
   app.use(globalErrorHandler);
 
