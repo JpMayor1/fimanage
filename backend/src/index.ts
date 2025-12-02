@@ -27,6 +27,7 @@ import dashboardRoute from "@/routes/dashboard/dashboard.route";
 import deptRoute from "@/routes/dept/dept.route";
 import profileRoute from "@/routes/profile/profile.route";
 import receivingRoute from "@/routes/receiving/receiving.route";
+import reportRoute from "@/routes/report/report.route";
 import sourceRoute from "@/routes/source/source.route";
 import transactionRoute from "@/routes/transaction/transaction.route";
 
@@ -110,6 +111,7 @@ const bootstrap = async () => {
   app.use("/api/dept", deptRoute);
   app.use("/api/receiving", receivingRoute);
   app.use("/api/transaction", transactionRoute);
+  app.use("/api/report", reportRoute);
 
   app.use(globalErrorHandler);
 
