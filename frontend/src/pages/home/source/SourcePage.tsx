@@ -187,11 +187,24 @@ const SourcePage = () => {
                               {source.transactions.slice(0, 3).map((tx) => (
                                 <div
                                   key={tx.transactionId}
-                                  className="flex items-center justify-between text-[11px] md:text-xs text-white/80"
+                                  className="flex items-center justify-between gap-2 text-[11px] md:text-xs text-white/80"
                                 >
-                                  <span className="truncate max-w-[60%]">
-                                    {tx.note || "No note"}
-                                  </span>
+                                  <div className="flex items-center gap-1 truncate max-w-[70%]">
+                                    <span
+                                      className={`inline-flex items-center rounded-full px-1.5 py-0.5 text-[9px] font-semibold uppercase ${
+                                        tx.type === "income"
+                                          ? "bg-income/15 text-income"
+                                          : tx.type === "expense"
+                                          ? "bg-expense/15 text-expense"
+                                          : "bg-blue-500/15 text-blue-300"
+                                      }`}
+                                    >
+                                      {tx.type}
+                                    </span>
+                                    <span className="truncate">
+                                      {tx.note || "No note"}
+                                    </span>
+                                  </div>
                                   <span className="font-semibold">
                                     {formatAmount(tx.amount)}
                                   </span>

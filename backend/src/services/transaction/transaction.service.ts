@@ -22,22 +22,25 @@ const applyTransactionEffects = async (
     if (!source) throw new AppError("Income source is required.", 400);
     const amt = ensureNumber(amount) * factor;
 
-    await Source.findByIdAndUpdate(source, {
+    const update: Record<string, unknown> = {
       $inc: {
         income: amt,
         balance: amt,
       },
-      $push:
-        factor === 1
-          ? {
-              transactions: {
-                transactionId: trx._id,
-                note,
-                amount,
-              },
-            }
-          : undefined,
-    });
+    };
+
+    if (factor === 1) {
+      update.$push = {
+        transactions: {
+          transactionId: trx._id,
+          type: "income",
+          note,
+          amount,
+        },
+      };
+    }
+
+    await Source.findByIdAndUpdate(source, update);
 
     if (factor === -1) {
       await Source.findByIdAndUpdate(source, {
@@ -53,22 +56,25 @@ const applyTransactionEffects = async (
     if (!source) throw new AppError("Expense source is required.", 400);
     const amt = ensureNumber(amount) * factor;
 
-    await Source.findByIdAndUpdate(source, {
+    const update: Record<string, unknown> = {
       $inc: {
         expense: amt,
         balance: -amt,
       },
-      $push:
-        factor === 1
-          ? {
-              transactions: {
-                transactionId: trx._id,
-                note,
-                amount,
-              },
-            }
-          : undefined,
-    });
+    };
+
+    if (factor === 1) {
+      update.$push = {
+        transactions: {
+          transactionId: trx._id,
+          type: "expense",
+          note,
+          amount,
+        },
+      };
+    }
+
+    await Source.findByIdAndUpdate(source, update);
 
     if (factor === -1) {
       await Source.findByIdAndUpdate(source, {
@@ -84,17 +90,51 @@ const applyTransactionEffects = async (
     if (!from || !to) throw new AppError("Transfer from/to are required.", 400);
     const amt = ensureNumber(amount) * factor;
 
-    await Source.findByIdAndUpdate(from, {
+    const updateFrom: Record<string, unknown> = {
       $inc: {
         balance: -amt,
       },
-    });
+    };
 
-    await Source.findByIdAndUpdate(to, {
+    const updateTo: Record<string, unknown> = {
       $inc: {
         balance: amt,
       },
-    });
+    };
+
+    // Only attach transaction details when applying the transaction (factor === 1)
+    if (factor === 1) {
+      updateFrom.$push = {
+        transactions: {
+          transactionId: trx._id,
+          type: "transfer",
+          note: "Transfer out",
+          amount,
+        },
+      };
+
+      updateTo.$push = {
+        transactions: {
+          transactionId: trx._id,
+          type: "transfer",
+          note: "Transfer in",
+          amount,
+        },
+      };
+    }
+
+    await Source.findByIdAndUpdate(from, updateFrom);
+    await Source.findByIdAndUpdate(to, updateTo);
+
+    // When reversing (factor === -1), also remove the transaction references
+    if (factor === -1) {
+      await Source.findByIdAndUpdate(from, {
+        $pull: { transactions: { transactionId: trx._id } },
+      });
+      await Source.findByIdAndUpdate(to, {
+        $pull: { transactions: { transactionId: trx._id } },
+      });
+    }
   }
 
   if (type === "dept") {
@@ -113,22 +153,24 @@ const applyTransactionEffects = async (
         ? "pending"
         : dept.status;
 
-    await Dept.findByIdAndUpdate(source, {
+    const update: Record<string, unknown> = {
       $set: {
         remaining: newRemaining,
         status: newStatus,
       },
-      $push:
-        factor === 1
-          ? {
-              transactions: {
-                transactionId: trx._id,
-                note,
-                amount,
-              },
-            }
-          : undefined,
-    });
+    };
+
+    if (factor === 1) {
+      update.$push = {
+        transactions: {
+          transactionId: trx._id,
+          note,
+          amount,
+        },
+      };
+    }
+
+    await Dept.findByIdAndUpdate(source, update);
 
     if (factor === -1) {
       await Dept.findByIdAndUpdate(source, {
@@ -155,22 +197,24 @@ const applyTransactionEffects = async (
         ? "pending"
         : receiving.status;
 
-    await Receiving.findByIdAndUpdate(source, {
+    const update: Record<string, unknown> = {
       $set: {
         remaining: newRemaining,
         status: newStatus,
       },
-      $push:
-        factor === 1
-          ? {
-              transactions: {
-                transactionId: trx._id,
-                note,
-                amount,
-              },
-            }
-          : undefined,
-    });
+    };
+
+    if (factor === 1) {
+      update.$push = {
+        transactions: {
+          transactionId: trx._id,
+          note,
+          amount,
+        },
+      };
+    }
+
+    await Receiving.findByIdAndUpdate(source, update);
 
     if (factor === -1) {
       await Receiving.findByIdAndUpdate(source, {
