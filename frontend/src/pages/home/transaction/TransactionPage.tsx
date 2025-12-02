@@ -1,5 +1,5 @@
-import LoadingSmall from "@/components/custom/loading/LoadingSmall";
 import CustomSelect from "@/components/custom/CustomSelect";
+import LoadingSmall from "@/components/custom/loading/LoadingSmall";
 import AddTransaction from "@/components/transaction/AddTransaction";
 import DeleteTransaction from "@/components/transaction/DeleteTransaction";
 import UpdateTransaction from "@/components/transaction/UpdateTransaction";
@@ -15,12 +15,8 @@ import { RxHamburgerMenu } from "react-icons/rx";
 
 const TransactionPage = () => {
   const { setOpen } = useSideBar();
-  const {
-    getTransactions,
-    getLoading,
-    transactions,
-    hasMore,
-  } = useTransactionStore();
+  const { getTransactions, getLoading, transactions, hasMore } =
+    useTransactionStore();
 
   const [filterType, setFilterType] = useState<TransactionType["type"] | "all">(
     "all"
@@ -35,7 +31,10 @@ const TransactionPage = () => {
   useEffect(() => {
     const fetchTransactions = async () => {
       setFirstLoading(true);
-      await getTransactions(false, filterType === "all" ? undefined : filterType);
+      await getTransactions(
+        false,
+        filterType === "all" ? undefined : filterType
+      );
       setFirstLoading(false);
     };
     fetchTransactions();
@@ -114,7 +113,7 @@ const TransactionPage = () => {
             <h1 className="text-white text-xl md:text-2xl font-semibold tracking-tight">
               Transactions
             </h1>
-            <p className="text-white/60 text-xs md:text-sm mt-0.5">
+            <p className="text-white/60 text-xs md:text-sm mt-0.5 hidden md:block">
               View, add, and manage all your financial activity.
             </p>
           </div>
@@ -131,7 +130,7 @@ const TransactionPage = () => {
       </div>
 
       {/* Filters */}
-      <div className="mb-3 md:mb-4 max-w-xs">
+      <div className="mb-3 md:mb-4 w-full md:max-w-xs">
         <CustomSelect
           value={filterType}
           onChange={(e) =>
@@ -150,7 +149,7 @@ const TransactionPage = () => {
       {/* Transaction List */}
       <div
         ref={containerRef}
-        className="h-[calc(100%-90px)] md:h-[calc(100%-110px)] w-full overflow-y-scroll no-scrollbar"
+        className="h-[calc(100%-115px)] md:h-[calc(100%-135px)] w-full overflow-y-scroll no-scrollbar"
       >
         {firstLoading ? (
           <p className="text-white py-3">

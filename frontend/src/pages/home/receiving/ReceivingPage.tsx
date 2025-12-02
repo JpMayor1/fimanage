@@ -73,7 +73,7 @@ const ReceivingPage = () => {
             <h1 className="text-white text-xl md:text-2xl font-semibold tracking-tight">
               Receivings
             </h1>
-            <p className="text-white/60 text-xs md:text-sm mt-0.5">
+            <p className="text-white/60 text-xs md:text-sm mt-0.5 hidden md:block">
               Track, manage and stay on top of money others owe you.
             </p>
           </div>
@@ -92,7 +92,7 @@ const ReceivingPage = () => {
       {/* Receiving List */}
       <div
         ref={containerRef}
-        className="h-[calc(100%-60px)] md:h-[calc(100%-80px)] w-full overflow-y-scroll no-scrollbar"
+        className="h-[calc(100%-50px)] md:h-[calc(100%-70px)] w-full overflow-y-scroll no-scrollbar"
       >
         {firstLoading ? (
           <p className="text-white py-3">

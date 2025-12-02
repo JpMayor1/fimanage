@@ -65,7 +65,7 @@ const SourcePage = () => {
             <h1 className="text-white text-xl md:text-2xl font-semibold tracking-tight">
               Sources
             </h1>
-            <p className="text-white/60 text-xs md:text-sm mt-0.5">
+            <p className="text-white/60 text-xs md:text-sm mt-0.5 hidden md:block">
               Track income, expenses, and balances across your money sources.
             </p>
           </div>
@@ -84,7 +84,7 @@ const SourcePage = () => {
       {/* Source List */}
       <div
         ref={containerRef}
-        className="h-[calc(100%-60px)] md:h-[calc(100%-80px)] w-full overflow-y-scroll no-scrollbar"
+        className="h-[calc(100%-50px)] md:h-[calc(100%-70px)] w-full overflow-y-scroll no-scrollbar"
       >
         {firstLoading ? (
           <p className="text-white py-3">
