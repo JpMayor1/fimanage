@@ -5,6 +5,12 @@ import { create } from "zustand";
 
 export const useDashboardStore = create<DashboardStoreType>((set) => ({
   dailyExpense: [],
+  summary: null,
+  statistics: null,
+  expenseTrend: [],
+  transactionTypeDistribution: [],
+  topSources: [],
+  recentTransactions: [],
 
   getLoading: false,
   updateLoading: false,
@@ -14,7 +20,14 @@ export const useDashboardStore = create<DashboardStoreType>((set) => ({
     try {
       const response = await getDashboardDataApi();
       set({
-        dailyExpense: response.data.dailyExpense,
+        dailyExpense: response.data.dailyExpense || [],
+        summary: response.data.summary || null,
+        statistics: response.data.statistics || null,
+        expenseTrend: response.data.expenseTrend || [],
+        transactionTypeDistribution:
+          response.data.transactionTypeDistribution || [],
+        topSources: response.data.topSources || [],
+        recentTransactions: response.data.recentTransactions || [],
       });
     } catch (error) {
       console.error("Error getting data", error);

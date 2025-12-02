@@ -98,33 +98,33 @@ const CalendarProgress: React.FC = () => {
   }, [activeDate]);
 
   return (
-    <div className="bg-primary text-white rounded-2xl p-5 w-full mx-auto shadow-lg select-none overflow-hidden">
+    <div className="rounded-2xl border border-white/10 bg-zinc-950/70 backdrop-blur-sm p-4 md:p-6 shadow-xl select-none overflow-hidden">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-base font-bold">Daily Expense</h2>
+        <h2 className="text-white text-lg font-semibold">Daily Expense</h2>
         <div className="flex items-center gap-2">
           <button
             onClick={() => changeMonth("prev")}
-            className="p-2 rounded-md bg-green/40 hover:bg-green/50 transition-colors cursor-pointer"
+            className="p-2 rounded-lg bg-yellow/10 border border-yellow/30 hover:bg-yellow/20 transition-colors cursor-pointer"
           >
-            <FaChevronLeft className="text-primary" />
+            <FaChevronLeft className="text-yellow text-sm" />
           </button>
-          <span className="text-sm font-semibold whitespace-nowrap text-center">
+          <span className="text-white text-sm font-semibold whitespace-nowrap text-center px-2">
             {currentMonth.format("MMMM YYYY")}
           </span>
           <button
             onClick={() => changeMonth("next")}
-            className="p-2 rounded-md bg-green/40 hover:bg-green/50 transition-colors cursor-pointer"
+            className="p-2 rounded-lg bg-yellow/10 border border-yellow/30 hover:bg-yellow/20 transition-colors cursor-pointer"
           >
-            <FaChevronRight className="text-primary" />
+            <FaChevronRight className="text-yellow text-sm" />
           </button>
         </div>
       </div>
 
       {/* Days of Week */}
-      <div className="grid grid-cols-7 text-center text-gray-400 mb-3">
+      <div className="grid grid-cols-7 text-center text-white/60 mb-3">
         {daysOfWeek.map((day) => (
-          <div key={day} className="font-semibold">
+          <div key={day} className="font-semibold text-xs md:text-sm">
             {day}
           </div>
         ))}
@@ -181,7 +181,7 @@ const CalendarProgress: React.FC = () => {
                   cx="20"
                   cy="20"
                   r="18"
-                  className="stroke-gray-700"
+                  className="stroke-white/10"
                   fill="none"
                   strokeWidth="2"
                 />
@@ -193,7 +193,7 @@ const CalendarProgress: React.FC = () => {
                     progress > 100
                       ? "stroke-red"
                       : progress >= 75
-                      ? "stroke-blue"
+                      ? "stroke-yellow"
                       : "stroke-green"
                   } transition-none`}
                   fill="none"
@@ -208,8 +208,8 @@ const CalendarProgress: React.FC = () => {
               <div
                 className={`w-9 h-9 flex items-center justify-center rounded-full text-sm font-medium z-10 ${
                   isToday
-                    ? "bg-card-balance text-white"
-                    : "bg-transparent text-gray-300"
+                    ? "bg-yellow/20 border-2 border-yellow/60 text-yellow"
+                    : "bg-transparent text-white/80"
                 }`}
               >
                 {day}
@@ -218,16 +218,16 @@ const CalendarProgress: React.FC = () => {
               {/* Popover showing limit and expense */}
               {activeDate === dateKey && record && (
                 <div
-                  className="absolute bottom-11 left-1/2 -translate-x-1/2 bg-zinc-800 text-white p-3 rounded-lg shadow-lg text-xs space-y-1 z-20"
+                  className="absolute bottom-11 left-1/2 -translate-x-1/2 bg-zinc-900 border border-white/10 text-white p-3 rounded-lg shadow-xl text-xs space-y-1 z-20"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  <p className="whitespace-nowrap text-xxs">
-                    <span className="font-semibold">Limit:</span> ₱
-                    {record.limit.toLocaleString()}
+                  <p className="whitespace-nowrap text-xs">
+                    <span className="font-semibold text-white/80">Limit:</span>{" "}
+                    <span className="text-yellow">₱{record.limit.toLocaleString()}</span>
                   </p>
-                  <p className="whitespace-nowrap text-xxs">
-                    <span className="font-semibold">Expense:</span> ₱
-                    {record.expense.toLocaleString()}
+                  <p className="whitespace-nowrap text-xs">
+                    <span className="font-semibold text-white/80">Expense:</span>{" "}
+                    <span className="text-expense">₱{record.expense.toLocaleString()}</span>
                   </p>
                 </div>
               )}
