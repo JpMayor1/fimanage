@@ -113,8 +113,6 @@ const TransactionPage = () => {
             <h1 className="text-white text-xl md:text-2xl font-semibold tracking-tight">
               Transactions
             </h1>
-            {/* Filters */}
-
             <p className="text-white/60 text-xs md:text-sm mt-0.5 hidden md:block">
               View, add, and manage all your financial activity.
             </p>
@@ -209,61 +207,72 @@ const TransactionPage = () => {
                     return (
                       <div
                         key={trx._id}
-                        className="relative w-full rounded-2xl border border-white/10 bg-zinc-950/70 backdrop-blur-sm p-4 md:p-5 shadow-md hover:shadow-xl hover:border-yellow/40 transition-all duration-200"
+                        className="relative w-full rounded-2xl border border-white/10 bg-zinc-950/70 backdrop-blur-sm p-3 md:p-4 shadow-md hover:shadow-xl hover:border-yellow/40 transition-all duration-200"
                       >
-                        <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between mb-2">
-                          <div className="flex flex-col gap-1 min-w-0">
-                            <div className="flex items-center gap-2">
-                              <span
-                                className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] md:text-xs font-medium capitalize border ${typeBadgeClass(
-                                  trx.type
-                                )}`}
-                              >
-                                {trx.type}
-                              </span>
-                              <p className="text-white text-sm md:text-base font-medium truncate">
-                                {renderMainLabel(trx)}
-                              </p>
-                            </div>
-
-                            {note && (
-                              <p className="text-white/80 text-xs md:text-sm break-words">
-                                {note}
-                              </p>
-                            )}
-
-                            <p className="text-white/50 text-[11px] md:text-xs mt-0.5">
-                              {new Date(trx.createdAt).toLocaleString()}
-                            </p>
-                          </div>
-
-                          <div className="flex flex-col items-end gap-2">
-                            <span className="rounded-full bg-white/5 px-3 py-1 text-xs md:text-sm font-semibold text-white">
-                              {formatAmount(amount || 0)}
+                        {/* Top Section: Type/Label and Action Buttons */}
+                        <div className="flex justify-between items-start mb-2 gap-3">
+                          <div className="flex items-center gap-2 min-w-0 flex-1">
+                            <span
+                              className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] md:text-xs font-semibold uppercase tracking-wide border ${typeBadgeClass(
+                                trx.type
+                              )}`}
+                            >
+                              {renderMainLabel(trx)}
                             </span>
-
-                            <div className="flex items-center gap-2 sm:gap-3 self-end">
-                              <button
-                                className="inline-flex items-center justify-center rounded-full bg-green/90 px-2.5 py-1 text-[11px] md:text-xs text-white shadow hover:bg-green focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green/70 transition-all cursor-pointer"
-                                onClick={() => setUpdateTx(trx)}
-                              >
-                                <MdEdit className="text-xs md:text-sm" />
-                                <span className="hidden sm:inline ml-1">
-                                  Edit
-                                </span>
-                              </button>
-
-                              <button
-                                className="inline-flex items-center justify-center rounded-full bg-red/90 px-2.5 py-1 text-[11px] md:text-xs text-white shadow hover:bg-red focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red/70 transition-all cursor-pointer"
-                                onClick={() => setDeleteTx(trx)}
-                              >
-                                <MdDelete className="text-xs md:text-sm" />
-                                <span className="hidden sm:inline ml-1">
-                                  Delete
-                                </span>
-                              </button>
-                            </div>
                           </div>
+
+                          <div className="flex gap-2 sm:gap-3">
+                            <button
+                              className="inline-flex items-center justify-center rounded-full bg-green/90 px-2.5 py-1 text-[11px] md:text-xs text-white shadow hover:bg-green focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green/70 transition-all cursor-pointer"
+                              onClick={() => setUpdateTx(trx)}
+                            >
+                              <MdEdit className="text-xs md:text-sm" />
+                              <span className="hidden sm:inline ml-1">
+                                Edit
+                              </span>
+                            </button>
+
+                            <button
+                              className="inline-flex items-center justify-center rounded-full bg-red/90 px-2.5 py-1 text-[11px] md:text-xs text-white shadow hover:bg-red focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red/70 transition-all cursor-pointer"
+                              onClick={() => setDeleteTx(trx)}
+                            >
+                              <MdDelete className="text-xs md:text-sm" />
+                              <span className="hidden sm:inline ml-1">
+                                Delete
+                              </span>
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Note */}
+                        {note && (
+                          <p className="text-white/80 text-xs md:text-sm mb-2 break-words leading-relaxed">
+                            {note}
+                          </p>
+                        )}
+
+                        {/* Bottom Section: Date and Amount */}
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mt-2">
+                          <p className="text-white/50 text-[11px] md:text-xs">
+                            {new Date(trx.createdAt).toLocaleString()}
+                          </p>
+
+                          <span
+                            className={`rounded-full px-2.5 md:px-3 py-1 md:py-1.5 text-sm md:text-base font-bold ml-auto ${
+                              trx.type === "income"
+                                ? "bg-income/15 text-income"
+                                : trx.type === "expense"
+                                ? "bg-expense/15 text-expense"
+                                : trx.type === "transfer"
+                                ? "bg-blue-500/15 text-blue-400"
+                                : trx.type === "dept"
+                                ? "bg-yellow/15 text-yellow"
+                                : "bg-green/15 text-green"
+                            }`}
+                          >
+                            {trx.type === "expense" ? "-" : "+"}
+                            {formatAmount(amount || 0)}
+                          </span>
                         </div>
                       </div>
                     );
