@@ -15,6 +15,13 @@ const ReceivingSchema = new Schema<ReceivingDocumentType>(
       enum: ["pending", "paid", "overdue"],
       default: "pending",
     },
+    transactions: [
+      {
+        transactionId: String,
+        note: String,
+        amount: Number,
+      },
+    ],
   },
   { timestamps: true }
 );

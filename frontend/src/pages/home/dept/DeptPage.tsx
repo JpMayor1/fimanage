@@ -182,7 +182,7 @@ const DeptPage = () => {
                         )}
 
                         {/* Amount • Remaining • Interest */}
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 md:gap-3 text-xs md:text-sm">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 md:gap-3 text-xs md:text-sm mb-3">
                           <div className="flex items-center gap-2">
                             <span className="text-white/60">Amount</span>
                             <span className="rounded-full bg-white/5 px-2.5 py-1 text-white font-medium text-xs md:text-sm">
@@ -218,6 +218,34 @@ const DeptPage = () => {
                             )}
                           </div>
                         </div>
+
+                        {dept.transactions && dept.transactions.length > 0 && (
+                          <div className="mt-1 border-t border-white/10 pt-2">
+                            <p className="text-white/60 text-[11px] md:text-xs mb-1">
+                              Payments ({dept.transactions.length})
+                            </p>
+                            <div className="space-y-1 max-h-24 overflow-y-auto pr-1">
+                              {dept.transactions.slice(0, 3).map((tx) => (
+                                <div
+                                  key={tx.transactionId}
+                                  className="flex items-center justify-between text-[11px] md:text-xs text-white/80"
+                                >
+                                  <span className="truncate max-w-[60%]">
+                                    {tx.note || "No note"}
+                                  </span>
+                                  <span className="font-semibold">
+                                    {formatAmount(tx.amount)}
+                                  </span>
+                                </div>
+                              ))}
+                              {dept.transactions.length > 3 && (
+                                <p className="text-[10px] text-white/40">
+                                  +{dept.transactions.length - 3} more
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     );
                   })}

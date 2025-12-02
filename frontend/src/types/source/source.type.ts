@@ -5,6 +5,11 @@ export type SourceType = {
   income: number;
   expense: number;
   balance: number;
+  transactions: {
+    transactionId: string;
+    note: string;
+    amount: number;
+  }[];
   createdAt: string;
   updatedAt: string;
 };

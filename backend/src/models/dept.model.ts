@@ -15,6 +15,13 @@ const DeptSchema = new Schema<DeptDocumentType>(
       enum: ["pending", "paid", "overdue"],
       default: "pending",
     },
+    transactions: [
+      {
+        transactionId: String,
+        note: String,
+        amount: Number,
+      },
+    ],
   },
   { timestamps: true }
 );

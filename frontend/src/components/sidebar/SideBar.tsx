@@ -3,6 +3,7 @@ import { useAuthStore } from "@/stores/auth/useAuthStore";
 import { useSideBar } from "@/stores/sidebar/useSideBar";
 import Avatar from "avatox";
 import { BiSolidReport } from "react-icons/bi";
+import { FaReceipt } from "react-icons/fa";
 import { GiPayMoney, GiReceiveMoney } from "react-icons/gi";
 import { GrMoney } from "react-icons/gr";
 import { IoMdClose } from "react-icons/io";
@@ -39,6 +40,11 @@ const SideBar = () => {
       name: "Receivings",
       link: "/home/receiving",
       icon: GiReceiveMoney,
+    },
+    {
+      name: "Transactions",
+      link: "/home/transaction",
+      icon: FaReceipt,
     },
     {
       name: "Reports",

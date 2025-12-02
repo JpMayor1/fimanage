@@ -8,6 +8,13 @@ const SourceSchema = new Schema<SourceDocumentType>(
     income: Number,
     expense: Number,
     balance: Number,
+    transactions: [
+      {
+        transactionId: String,
+        note: String,
+        amount: Number,
+      },
+    ],
   },
   { timestamps: true }
 );

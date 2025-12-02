@@ -17,6 +17,7 @@ import ProfilePage from "./pages/home/profile/ProfilePage";
 import ReceivingPage from "./pages/home/receiving/ReceivingPage";
 import ReportPage from "./pages/home/report/ReportPage";
 import SourcePage from "./pages/home/source/SourcePage";
+import TransactionPage from "./pages/home/transaction/TransactionPage";
 import { initCSRF } from "./utils/csrf/csrf.util";
 
 function App() {
@@ -66,6 +67,10 @@ function App() {
         {
           path: "/home/receiving",
           element: <ReceivingPage />,
+        },
+        {
+          path: "/home/transaction",
+          element: <TransactionPage />,
         },
         {
           path: "/home/reports",

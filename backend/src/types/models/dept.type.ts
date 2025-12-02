@@ -10,6 +10,11 @@ export type DeptType = {
   interest: number;
   note: string;
   status: "pending" | "paid" | "overdue";
+  transactions: {
+    transactionId: string;
+    note: string;
+    amount: number;
+  }[];
   createdAt: Date;
   updatedAt: Date;
 };

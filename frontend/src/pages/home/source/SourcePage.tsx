@@ -51,35 +51,38 @@ const SourcePage = () => {
   }, [handleScroll]);
 
   return (
-    <div className="h-[100dvh] w-full p-1 px-2 md:px-4">
+    <div className="h-[100dvh] w-full p-2 md:p-4 bg-gradient-to-b from-zinc-950 via-zinc-950/95 to-black">
       {/* Header */}
-      <div className="w-full flex items-center justify-between my-2 mb-3">
-        <div className="flex items-center gap-2">
+      <div className="w-full flex items-center justify-between mb-4 md:mb-6">
+        <div className="flex items-center gap-3">
           <RxHamburgerMenu
-            className="md:hidden text-white text-2xl"
+            className="md:hidden text-white/90 text-2xl cursor-pointer hover:text-yellow transition-colors"
             onClick={() => setOpen(true)}
           />
           <div>
-            <h1 className="text-white text-lg font-bold">Sources</h1>
-            <p className="text-white/70 text-sm hidden md:block">
-              Track & manage your source sources
+            <h1 className="text-white text-xl md:text-2xl font-semibold tracking-tight">
+              Sources
+            </h1>
+            <p className="text-white/60 text-xs md:text-sm mt-0.5">
+              Track income, expenses, and balances across your money sources.
             </p>
           </div>
         </div>
 
         <button
-          className="bg-yellow/90 hover:bg-yellow flex flex-row gap-2 items-center text-black rounded-md py-2 px-4 cursor-pointer text-xs md:text-base"
+          className="inline-flex items-center gap-2 rounded-full bg-yellow/90 px-3 md:px-4 py-2 text-xs md:text-sm font-medium text-black shadow-lg shadow-yellow/20 hover:bg-yellow hover:shadow-yellow/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow/70 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 transition-all"
           onClick={() => setAddSource(true)}
         >
-          <FaPlus className="text-xs" />
-          Source
+          <FaPlus className="text-xs md:text-sm" />
+          <span className="hidden xs:inline">Add Source</span>
+          <span className="xs:hidden">New</span>
         </button>
       </div>
 
       {/* Source List */}
       <div
         ref={containerRef}
-        className="h-[calc(100%-50px)] md:h-[calc(100%-70px)] w-full overflow-y-scroll no-scrollbar"
+        className="h-[calc(100%-60px)] md:h-[calc(100%-80px)] w-full overflow-y-scroll no-scrollbar"
       >
         {firstLoading ? (
           <p className="text-white py-3">
@@ -88,10 +91,20 @@ const SourcePage = () => {
         ) : (
           <div className="w-full">
             {sources.length === 0 ? (
-              <div className="w-full rounded-md bg-primary shadow-lg p-6 text-center">
-                <p className="text-white/70 text-sm">
+              <div className="w-full rounded-2xl border border-dashed border-white/15 bg-zinc-900/60 backdrop-blur-sm p-8 text-center">
+                <p className="text-white/80 text-sm md:text-base font-medium">
                   No source records found.
                 </p>
+                <p className="text-white/50 text-xs md:text-sm mt-1">
+                  Add a source to start tracking where your money lives.
+                </p>
+                <button
+                  className="mt-4 inline-flex items-center gap-2 rounded-full bg-yellow/90 px-4 py-2 text-xs md:text-sm font-medium text-black shadow-md hover:bg-yellow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow/70 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-900 transition-all"
+                  onClick={() => setAddSource(true)}
+                >
+                  <FaPlus className="text-xs" />
+                  Add your first source
+                </button>
               </div>
             ) : (
               <>
@@ -101,58 +114,97 @@ const SourcePage = () => {
                   animate={{ height: "auto", opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
                   transition={{ duration: 0.3, ease: "easeInOut" }}
-                  className="p-2 md:p-4 space-y-2"
+                  className="p-1 md:p-2 space-y-2 md:space-y-3"
                 >
                   {sources.map((source) => {
                     return (
                       <div
                         key={source._id}
-                        className="relative w-full bg-zinc-950/60 border border-white/10 rounded-xl p-4 hover:border-yellow/30 transition-all duration-200"
+                        className="relative w-full rounded-2xl border border-white/10 bg-zinc-950/70 backdrop-blur-sm p-4 md:p-5 shadow-md hover:shadow-xl hover:border-yellow/40 transition-all duration-200"
                       >
-                        <div className="flex justify-between items-center mb-1">
-                          <p className="text-white text-sm font-medium truncate">
-                            {source.name}
-                          </p>
+                        <div className="flex justify-between items-start mb-2 gap-3">
+                          <div className="min-w-0">
+                            <p className="text-white text-sm md:text-base font-medium truncate">
+                              {source.name}
+                            </p>
+                            <p className="text-white/50 text-[11px] md:text-xs mt-0.5">
+                              Created at {new Date(source.createdAt).toLocaleDateString()}
+                            </p>
+                          </div>
 
-                          <div className="flex gap-2">
+                          <div className="flex gap-2 sm:gap-3">
                             <button
-                              className="text-white/90 bg-green/80 hover:bg-green text-sm rounded-lg p-1.5 transition-all duration-200 cursor-pointer"
+                              className="inline-flex items-center justify-center rounded-full bg-green/90 px-2.5 py-1 text-[11px] md:text-xs text-white shadow hover:bg-green focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green/70 transition-all cursor-pointer"
                               onClick={() => seUpdateSource(source)}
                             >
-                              <MdEdit />
+                              <MdEdit className="text-xs md:text-sm" />
+                              <span className="hidden sm:inline ml-1">
+                                Edit
+                              </span>
                             </button>
 
                             <button
-                              className="text-white/90 bg-red/80 hover:bg-red text-sm rounded-lg p-1.5 transition-all duration-200 cursor-pointer"
+                              className="inline-flex items-center justify-center rounded-full bg-red/90 px-2.5 py-1 text-[11px] md:text-xs text-white shadow hover:bg-red focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red/70 transition-all cursor-pointer"
                               onClick={() => seDeleteSource(source)}
                             >
-                              <MdDelete />
+                              <MdDelete className="text-xs md:text-sm" />
+                              <span className="hidden sm:inline ml-1">
+                                Delete
+                              </span>
                             </button>
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-3 gap-x-2 text-xs md:text-base font-medium">
-                          <div className="flex gap-1">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 md:gap-3 text-xs md:text-sm font-medium mb-3">
+                          <div className="flex items-center gap-1">
                             <span className="text-income">Income:</span>
-                            <span className="text-income font-bold">
+                            <span className="text-income font-bold rounded-full bg-income/10 px-2.5 py-1">
                               {formatAmount(source.income)}
                             </span>
                           </div>
 
-                          <div className="flex justify-center gap-1">
+                          <div className="flex items-center justify-start sm:justify-center gap-1">
                             <span className="text-expense">Expense:</span>
-                            <span className="text-expense font-bold">
+                            <span className="text-expense font-bold rounded-full bg-expense/10 px-2.5 py-1">
                               {formatAmount(source.expense)}
                             </span>
                           </div>
 
-                          <div className="flex justify-end gap-1">
+                          <div className="flex items-center justify-start sm:justify-end gap-1">
                             <span className="text-balance">Balance:</span>
-                            <span className="text-balance font-bold">
+                            <span className="text-balance font-bold rounded-full bg-balance/10 px-2.5 py-1">
                               {formatAmount(source.balance)}
                             </span>
                           </div>
                         </div>
+
+                        {source.transactions && source.transactions.length > 0 && (
+                          <div className="mt-1 border-t border-white/10 pt-2">
+                            <p className="text-white/60 text-[11px] md:text-xs mb-1">
+                              Recent transactions ({source.transactions.length})
+                            </p>
+                            <div className="space-y-1 max-h-24 overflow-y-auto pr-1">
+                              {source.transactions.slice(0, 3).map((tx) => (
+                                <div
+                                  key={tx.transactionId}
+                                  className="flex items-center justify-between text-[11px] md:text-xs text-white/80"
+                                >
+                                  <span className="truncate max-w-[60%]">
+                                    {tx.note || "No note"}
+                                  </span>
+                                  <span className="font-semibold">
+                                    {formatAmount(tx.amount)}
+                                  </span>
+                                </div>
+                              ))}
+                              {source.transactions.length > 3 && (
+                                <p className="text-[10px] text-white/40">
+                                  +{source.transactions.length - 3} more
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     );
                   })}
