@@ -19,11 +19,11 @@ export const useDeptStore = create<DeptStoreType>((set, get) => ({
   loading: false,
 
   getDepts: async (append = false) => {
-    const { page, depts } = get();
+    const { page, depts, hasMore, getLoading } = get();
     const limit = 20;
     const skip = append ? page * limit : 0;
 
-    if (get().getLoading || !get().hasMore) return;
+    if (getLoading || (append && !hasMore)) return;
 
     set({ getLoading: true });
 

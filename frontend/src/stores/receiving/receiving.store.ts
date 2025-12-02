@@ -19,11 +19,11 @@ export const useReceivingStore = create<ReceivingStoreType>((set, get) => ({
   loading: false,
 
   getReceivings: async (append = false) => {
-    const { page, receivings } = get();
+    const { page, receivings, hasMore, getLoading } = get();
     const limit = 20;
     const skip = append ? page * limit : 0;
 
-    if (get().getLoading || !get().hasMore) return;
+    if (getLoading || (append && !hasMore)) return;
 
     set({ getLoading: true });
 

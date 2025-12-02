@@ -19,11 +19,12 @@ export const useSourceStore = create<SourceStoreType>((set, get) => ({
   loading: false,
 
   getSources: async (append = false) => {
-    const { page, sources } = get();
+    const { page, sources, hasMore, getLoading } = get();
     const limit = 20;
     const skip = append ? page * limit : 0;
 
-    if (get().getLoading || !get().hasMore) return;
+    // Prevent duplicate loads; only respect hasMore for infinite scroll (append)
+    if (getLoading || (append && !hasMore)) return;
 
     set({ getLoading: true });
 
