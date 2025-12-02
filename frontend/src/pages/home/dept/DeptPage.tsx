@@ -10,7 +10,14 @@ import { formatAmount } from "@/utils/amount/formatAmount";
 import { getRemainingColor } from "@/utils/remaining/remaining.util";
 import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { FaPlus } from "react-icons/fa";
+import {
+  FaBalanceScale,
+  FaCalendarAlt,
+  FaDollarSign,
+  FaPercentage,
+  FaPlus,
+  FaStickyNote,
+} from "react-icons/fa";
 import { MdDelete, MdEdit } from "react-icons/md";
 import { RxHamburgerMenu } from "react-icons/rx";
 
@@ -131,26 +138,16 @@ const DeptPage = () => {
                         key={dept._id}
                         type="button"
                         onClick={() => setViewDept(dept)}
-                        className="w-full text-left relative rounded-2xl border border-white/10 bg-zinc-950/70 backdrop-blur-sm p-4 md:p-5 shadow-md hover:shadow-xl hover:border-yellow/40 transition-all duration-200 cursor-pointer"
+                        className="w-full text-left relative rounded-2xl border border-white/10 bg-zinc-950/70 backdrop-blur-sm p-3 md:p-4 shadow-md hover:shadow-xl hover:border-yellow/40 transition-all duration-200 cursor-pointer"
                       >
-                        {/* Lender + Buttons */}
-                        <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between mb-2">
-                          <div className="flex flex-col gap-1 min-w-0">
-                            <p className="text-white text-sm md:text-base font-medium truncate">
-                              {dept.lender}
-                            </p>
-                            {dept.dueDate && (
-                              <p className="text-[11px] md:text-xs text-white/60">
-                                Due on{" "}
-                                <span className="text-white/80">
-                                  {dept.dueDate}
-                                </span>
-                              </p>
-                            )}
-                          </div>
+                        {/* Top Section: Lender, Status and Action Buttons */}
+                        <div className="flex justify-between items-start mb-2 gap-3">
+                          <p className="text-white text-sm md:text-base font-medium truncate flex-1 min-w-0">
+                            {dept.lender}
+                          </p>
 
                           <div
-                            className="flex items-center gap-2 sm:gap-3 self-end"
+                            className="flex items-center gap-2 sm:gap-3"
                             onClick={(e) => e.stopPropagation()}
                           >
                             <span
@@ -181,45 +178,56 @@ const DeptPage = () => {
                           </div>
                         </div>
 
-                        {/* Note (only if has value) */}
-                        {dept.note && (
-                          <p className="text-white/80 text-xs md:text-sm mb-2 break-words">
-                            {dept.note}
-                          </p>
-                        )}
+                        {/* Note and Due Date - Aligned */}
+                        <div className="flex items-center justify-between gap-2 mb-2">
+                          {dept.note && (
+                            <div className="flex items-center gap-1.5 flex-1 min-w-0">
+                              <FaStickyNote className="text-white/60 text-xs md:text-sm flex-shrink-0" />
+                              <p className="text-white/80 text-xs md:text-sm truncate">
+                                {dept.note}
+                              </p>
+                            </div>
+                          )}
+                          {dept.dueDate && (
+                            <div className="flex items-center gap-1.5 whitespace-nowrap ml-auto">
+                              <FaCalendarAlt className="text-white/60 text-xs md:text-sm" />
+                              <span className="text-[11px] md:text-xs text-white/80">
+                                {dept.dueDate}
+                              </span>
+                            </div>
+                          )}
+                        </div>
 
                         {/* Amount • Remaining • Interest */}
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 md:gap-3 text-xs md:text-sm">
+                        <div className="flex items-center justify-between gap-2 md:gap-3 text-xs md:text-sm flex-wrap">
                           <div className="flex items-center gap-2">
-                            <span className="text-white/60">Amount</span>
-                            <span className="rounded-full bg-white/5 px-2.5 py-1 text-white font-medium text-xs md:text-sm">
+                            <FaDollarSign className="text-white/60 text-xs md:text-sm" />
+                            <span className="rounded-full bg-white/5 px-2.5 py-1 text-white font-medium text-xs md:text-sm whitespace-nowrap">
                               {formatAmount(dept.amount)}
                             </span>
                           </div>
 
-                          <div className="flex items-center gap-2 sm:justify-center">
-                            <span className={`${remainingColor} text-xs`}>
-                              Remaining
-                            </span>
+                          <div className="flex items-center gap-2">
+                            <FaBalanceScale
+                              className={`${remainingColor} text-xs md:text-sm`}
+                            />
                             <span
-                              className={`rounded-full px-2.5 py-1 font-medium text-xs md:text-sm ${remainingColor} bg-white/5`}
+                              className={`rounded-full px-2.5 py-1 font-medium text-xs md:text-sm ${remainingColor} bg-white/5 whitespace-nowrap`}
                             >
                               {formatAmount(dept.remaining)}
                             </span>
                           </div>
 
-                          <div className="flex items-center gap-2 sm:justify-end">
+                          <div className="flex items-center gap-2">
                             {dept.interest ? (
-                              <>
-                                <span className="text-white/60 text-xs">
-                                  Interest
-                                </span>
-                                <span className="rounded-full bg-balance/10 px-2.5 py-1 text-balance text-xs md:text-sm font-medium">
+                              <div className="flex items-center gap-2">
+                                <FaPercentage className="text-white/60 text-xs md:text-sm" />
+                                <span className="rounded-full bg-balance/10 px-2.5 py-1 text-balance text-xs md:text-sm font-medium whitespace-nowrap">
                                   {dept.interest}%
                                 </span>
-                              </>
+                              </div>
                             ) : (
-                              <span className="text-white/40 text-xs">
+                              <span className="text-white/40 text-xs whitespace-nowrap">
                                 No interest
                               </span>
                             )}
