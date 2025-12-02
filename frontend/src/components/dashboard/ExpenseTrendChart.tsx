@@ -1,5 +1,4 @@
 import { useDashboardStore } from "@/stores/dashboard/useDashboardStore";
-import { formatAmount } from "@/utils/amount/formatAmount";
 import dayjs from "dayjs";
 
 const ExpenseTrendChart = () => {
@@ -54,7 +53,8 @@ const ExpenseTrendChart = () => {
           <polyline
             points={expenseTrend
               .map((item, index) => {
-                const x = padding + (index * chartWidth) / (expenseTrend.length - 1);
+                const x =
+                  padding + (index * chartWidth) / (expenseTrend.length - 1);
                 const y =
                   padding +
                   chartHeight -
@@ -72,7 +72,8 @@ const ExpenseTrendChart = () => {
           <polyline
             points={expenseTrend
               .map((item, index) => {
-                const x = padding + (index * chartWidth) / (expenseTrend.length - 1);
+                const x =
+                  padding + (index * chartWidth) / (expenseTrend.length - 1);
                 const y =
                   padding +
                   chartHeight -
@@ -89,7 +90,8 @@ const ExpenseTrendChart = () => {
 
           {/* Data points */}
           {expenseTrend.map((item, index) => {
-            const x = padding + (index * chartWidth) / (expenseTrend.length - 1);
+            const x =
+              padding + (index * chartWidth) / (expenseTrend.length - 1);
             const y =
               padding + chartHeight - (item.expense / maxExpense) * chartHeight;
             return (
@@ -106,8 +108,10 @@ const ExpenseTrendChart = () => {
 
           {/* X-axis labels (every 5 days) */}
           {expenseTrend.map((item, index) => {
-            if (index % 5 !== 0 && index !== expenseTrend.length - 1) return null;
-            const x = padding + (index * chartWidth) / (expenseTrend.length - 1);
+            if (index % 5 !== 0 && index !== expenseTrend.length - 1)
+              return null;
+            const x =
+              padding + (index * chartWidth) / (expenseTrend.length - 1);
             return (
               <text
                 key={index}
@@ -137,4 +141,3 @@ const ExpenseTrendChart = () => {
 };
 
 export default ExpenseTrendChart;
-

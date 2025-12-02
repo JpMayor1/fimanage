@@ -3,7 +3,10 @@ import { useDashboardStore } from "@/stores/dashboard/useDashboardStore";
 const TransactionTypeChart = () => {
   const { transactionTypeDistribution } = useDashboardStore();
 
-  if (!transactionTypeDistribution || transactionTypeDistribution.length === 0) {
+  if (
+    !transactionTypeDistribution ||
+    transactionTypeDistribution.length === 0
+  ) {
     return (
       <div className="rounded-2xl border border-white/10 bg-zinc-950/70 backdrop-blur-sm p-4 md:p-6 shadow-xl">
         <h3 className="text-white text-lg font-semibold mb-4">
@@ -48,7 +51,7 @@ const TransactionTypeChart = () => {
       </h3>
       <div className="flex flex-col md:flex-row items-center gap-6">
         <svg width="160" height="160" className="flex-shrink-0">
-          {transactionTypeDistribution.map((item, index) => {
+          {transactionTypeDistribution.map((item) => {
             if (item.count === 0) return null;
             const percentage = (item.count / total) * 100;
             const angle = (percentage / 100) * 360;
@@ -85,9 +88,13 @@ const TransactionTypeChart = () => {
         </svg>
         <div className="flex-1 space-y-2">
           {transactionTypeDistribution.map((item) => {
-            const percentage = total > 0 ? ((item.count / total) * 100).toFixed(1) : 0;
+            const percentage =
+              total > 0 ? ((item.count / total) * 100).toFixed(1) : 0;
             return (
-              <div key={item.type} className="flex items-center justify-between">
+              <div
+                key={item.type}
+                className="flex items-center justify-between"
+              >
                 <div className="flex items-center gap-2">
                   <div
                     className="w-3 h-3 rounded-full"
@@ -115,4 +122,3 @@ const TransactionTypeChart = () => {
 };
 
 export default TransactionTypeChart;
-
