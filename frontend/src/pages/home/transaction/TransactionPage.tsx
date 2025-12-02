@@ -103,7 +103,7 @@ const TransactionPage = () => {
   return (
     <div className="h-[100dvh] w-full p-2 md:p-4 bg-gradient-to-b from-zinc-950 via-zinc-950/95 to-black">
       {/* Header */}
-      <div className="w-full flex items-center justify-between mb-4 md:mb-6">
+      <div className="w-full flex items-center justify-between gap-5 mb-4 md:mb-6">
         <div className="flex items-center gap-3">
           <RxHamburgerMenu
             className="md:hidden text-white/90 text-2xl cursor-pointer hover:text-yellow transition-colors"
@@ -113,10 +113,28 @@ const TransactionPage = () => {
             <h1 className="text-white text-xl md:text-2xl font-semibold tracking-tight">
               Transactions
             </h1>
+            {/* Filters */}
+
             <p className="text-white/60 text-xs md:text-sm mt-0.5 hidden md:block">
               View, add, and manage all your financial activity.
             </p>
           </div>
+        </div>
+
+        <div className="w-full max-w-xl hidden md:block">
+          <CustomSelect
+            value={filterType}
+            onChange={(e) =>
+              setFilterType(e.target.value as TransactionType["type"] | "all")
+            }
+          >
+            <option value="all">All types</option>
+            <option value="income">Income</option>
+            <option value="expense">Expense</option>
+            <option value="transfer">Transfer</option>
+            <option value="dept">Dept</option>
+            <option value="receiving">Receiving</option>
+          </CustomSelect>
         </div>
 
         <button
@@ -130,7 +148,7 @@ const TransactionPage = () => {
       </div>
 
       {/* Filters */}
-      <div className="mb-3 md:mb-4 w-full md:max-w-xs">
+      <div className="mb-3 md:mb-4 w-full md:max-w-xs md:hidden">
         <CustomSelect
           value={filterType}
           onChange={(e) =>
@@ -149,7 +167,7 @@ const TransactionPage = () => {
       {/* Transaction List */}
       <div
         ref={containerRef}
-        className="h-[calc(100%-115px)] md:h-[calc(100%-135px)] w-full overflow-y-scroll no-scrollbar"
+        className="h-[calc(100%-115px)] md:h-[calc(100%-70px)] w-full overflow-y-scroll no-scrollbar"
       >
         {firstLoading ? (
           <p className="text-white py-3">
