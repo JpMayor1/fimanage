@@ -5,6 +5,7 @@ import ShowImage from "@/components/image/ShowImage";
 import { useAccountStore } from "@/stores/account/account.store";
 import { useSideBar } from "@/stores/sidebar/useSideBar";
 import type { AccountType } from "@/types/account/account.type";
+import { formatAmount } from "@/utils/amount/formatAmount";
 import { getFullName } from "@/utils/fullName/getFullName";
 import Avatar from "avatox";
 import { AnimatePresence } from "framer-motion";
@@ -53,8 +54,11 @@ const ProfilePage = () => {
   }
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    const { name, value, type } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: type === "number" ? parseFloat(value) || 0 : value,
+    }));
   }
 
   const handleSave = async () => {
@@ -159,45 +163,70 @@ const ProfilePage = () => {
             {isEditing ? (
               <div className="w-full space-y-4 mt-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div className="space-y-1.5">
+                    <label className="text-white/80 text-xs font-medium">
+                      First Name *
+                    </label>
+                    <TextField
+                      name="firstName"
+                      placeholder="First Name *"
+                      value={form.firstName}
+                      onChange={handleChange}
+                      required
+                      icon={<FiUser />}
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-white/80 text-xs font-medium">
+                      Middle Name
+                    </label>
+                    <TextField
+                      name="middleName"
+                      placeholder="Middle Name"
+                      value={form.middleName}
+                      onChange={handleChange}
+                      icon={<FiUser />}
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-white/80 text-xs font-medium">
+                      Last Name *
+                    </label>
+                    <TextField
+                      name="lastName"
+                      placeholder="Last Name *"
+                      value={form.lastName}
+                      onChange={handleChange}
+                      required
+                      icon={<FiUser />}
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-white/80 text-xs font-medium">
+                      Suffix
+                    </label>
+                    <TextField
+                      name="suffix"
+                      placeholder="Suffix"
+                      value={form.suffix}
+                      onChange={handleChange}
+                      icon={<FiUser />}
+                    />
+                  </div>
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-white/80 text-xs font-medium">
+                    Username *
+                  </label>
                   <TextField
-                    name="firstName"
-                    placeholder="First Name *"
-                    value={form.firstName}
+                    name="username"
+                    placeholder="Username *"
+                    value={form.username}
                     onChange={handleChange}
                     required
-                    icon={<FiUser />}
-                  />
-                  <TextField
-                    name="middleName"
-                    placeholder="Middle Name"
-                    value={form.middleName}
-                    onChange={handleChange}
-                    icon={<FiUser />}
-                  />
-                  <TextField
-                    name="lastName"
-                    placeholder="Last Name *"
-                    value={form.lastName}
-                    onChange={handleChange}
-                    required
-                    icon={<FiUser />}
-                  />
-                  <TextField
-                    name="suffix"
-                    placeholder="Suffix"
-                    value={form.suffix}
-                    onChange={handleChange}
-                    icon={<FiUser />}
+                    icon={<FiAtSign />}
                   />
                 </div>
-                <TextField
-                  name="username"
-                  placeholder="Username *"
-                  value={form.username}
-                  onChange={handleChange}
-                  required
-                  icon={<FiAtSign />}
-                />
               </div>
             ) : (
               <div className="flex flex-col items-center gap-2 mt-4">
@@ -225,24 +254,34 @@ const ProfilePage = () => {
             <div className="space-y-3">
               {isEditing ? (
                 <>
-                  <TextField
-                    type="email"
-                    name="email"
-                    placeholder="Email *"
-                    value={form.email}
-                    onChange={handleChange}
-                    required
-                    icon={<FiMail />}
-                  />
-                  <TextField
-                    type="address"
-                    name="address"
-                    placeholder="Address *"
-                    value={form.address}
-                    onChange={handleChange}
-                    required
-                    icon={<IoLocationOutline />}
-                  />
+                  <div className="space-y-1.5">
+                    <label className="text-white/80 text-xs font-medium">
+                      Email *
+                    </label>
+                    <TextField
+                      type="email"
+                      name="email"
+                      placeholder="Email *"
+                      value={form.email}
+                      onChange={handleChange}
+                      required
+                      icon={<FiMail />}
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-white/80 text-xs font-medium">
+                      Address *
+                    </label>
+                    <TextField
+                      type="address"
+                      name="address"
+                      placeholder="Address *"
+                      value={form.address}
+                      onChange={handleChange}
+                      required
+                      icon={<IoLocationOutline />}
+                    />
+                  </div>
                 </>
               ) : (
                 <>
@@ -269,6 +308,50 @@ const ProfilePage = () => {
                     </div>
                   </div>
                 </>
+              )}
+            </div>
+          </div>
+
+          {/* Daily Limit */}
+          <div className="w-full space-y-4">
+            <h3 className="text-white/80 text-xs md:text-sm font-semibold uppercase tracking-wide">
+              Settings
+            </h3>
+            <div className="space-y-3">
+              {isEditing ? (
+                <div className="space-y-1.5">
+                  <label className="text-white/80 text-xs font-medium">
+                    Daily limit *
+                  </label>
+                  <TextField
+                    type="number"
+                    name="limit"
+                    placeholder="Daily limit *"
+                    value={(
+                      (form as AccountType & { limit?: number }).limit ??
+                      (account as AccountType & { limit?: number }).limit ??
+                      500
+                    ).toString()}
+                    onChange={handleChange}
+                    required
+                    icon={<span className="text-white text-lg">₱</span>}
+                  />
+                </div>
+              ) : (
+                <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-white/5 transition-colors">
+                  <div className="p-2 rounded-lg bg-yellow/10">
+                    <span className="text-yellow text-lg font-semibold">₱</span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-white/60 text-xs mb-0.5">Daily limit</p>
+                    <p className="text-white text-sm font-medium">
+                      {formatAmount(
+                        (account as AccountType & { limit?: number }).limit ??
+                          500
+                      )}
+                    </p>
+                  </div>
+                </div>
               )}
             </div>
           </div>

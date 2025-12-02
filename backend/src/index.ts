@@ -30,7 +30,7 @@ import receivingRoute from "@/routes/receiving/receiving.route";
 import sourceRoute from "@/routes/source/source.route";
 import transactionRoute from "@/routes/transaction/transaction.route";
 
-// import { startDailyExpenseJob } from "./jobs/calendarJobs";
+import { startDailyExpenseJob } from "./jobs/calendarJobs";
 
 const bootstrap = async () => {
   const app = express();
@@ -118,7 +118,7 @@ const bootstrap = async () => {
 
   server.listen(PORT, () => {
     initDB();
-    // startDailyExpenseJob();
+    startDailyExpenseJob();
     console.log(`Server Running on port ${PORT}`);
   });
 };
