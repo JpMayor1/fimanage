@@ -2,14 +2,12 @@ import BlurImage from "@/components/custom/BlurImage";
 import LoadingSmall from "@/components/custom/loading/LoadingSmall";
 import TextField from "@/components/custom/TextField";
 import ShowImage from "@/components/image/ShowImage";
-import { imgAnim } from "@/constants/image.animation.constant";
-import { overlayAnim } from "@/constants/overlay.animation.constant";
 import { useAccountStore } from "@/stores/account/account.store";
 import { useSideBar } from "@/stores/sidebar/useSideBar";
 import type { AccountType } from "@/types/account/account.type";
 import { getFullName } from "@/utils/fullName/getFullName";
 import Avatar from "avatox";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import {
   FiAtSign,
@@ -69,49 +67,42 @@ const ProfilePage = () => {
   };
 
   return (
-    <motion.div
-      key="complete-profile-modal"
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      variants={overlayAnim}
-      className={`w-full h-full flex justify-center p-5 ${
-        isEditing
-          ? "items-start md:items-center overflow-y-scroll no-scrollbar"
-          : "items-center"
-      }`}
-    >
+    <div className="h-[100dvh] w-full p-2 md:p-4 bg-gradient-to-b from-zinc-950 via-zinc-950/95 to-black overflow-y-scroll no-scrollbar">
       <RxHamburgerMenu
-        className="md:hidden text-white text-2xl absolute top-3.5 left-3 z-10"
+        className="md:hidden text-white/90 text-2xl cursor-pointer hover:text-yellow transition-colors mb-4"
         onClick={() => setOpen(true)}
       />
-      <div className="w-full max-w-3xl border border-primary/10 bg-primary/90 rounded-2xl shadow-2xl py-8 px-4 md:px-8 relative flex flex-col items-center">
-        {/* Edit Button */}
-        <button
-          onClick={() => (isEditing ? setIsEditing(false) : setIsEditing(true))}
-          className="absolute top-5 right-3 md:right-5 bg-yellow text-black px-3 py-1 rounded-lg flex items-center gap-1 hover:bg-yellow/80 transition cursor-pointer"
-        >
-          {isEditing ? (
-            "Cancel"
-          ) : (
-            <>
-              <FiEdit2 /> Edit
-            </>
-          )}
-        </button>
+      <div className="w-full max-w-4xl mx-auto">
+        {/* Header */}
+        <div className="w-full flex items-center justify-between mb-6">
+          <div>
+            <h1 className="text-white text-xl md:text-2xl font-semibold tracking-tight">
+              Profile
+            </h1>
+            <p className="text-white/60 text-xs md:text-sm mt-0.5 hidden md:block">
+              Manage your account information and preferences.
+            </p>
+          </div>
+          <button
+            onClick={() =>
+              isEditing ? setIsEditing(false) : setIsEditing(true)
+            }
+            className="inline-flex items-center gap-2 rounded-full bg-yellow/90 px-3 md:px-4 py-2 text-xs md:text-sm font-medium text-black shadow-lg shadow-yellow/20 hover:bg-yellow hover:shadow-yellow/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow/70 transition-all cursor-pointer"
+          >
+            <FiEdit2 className="text-xs md:text-sm" />
+            <span>{isEditing ? "Cancel" : "Edit"}</span>
+          </button>
+        </div>
 
-        {/* Profile Section */}
-        <motion.div
-          initial="initial"
-          animate="animate"
-          exit="exit"
-          variants={imgAnim}
-          className="flex flex-col items-center mb-5 w-full"
-        >
-          {isEditing ? (
-            <div className="flex flex-col items-center mb-3">
-              <div onClick={() => fileInputRef.current?.click()}>
-                <div className="h-36 w-36 rounded-full bg-yellow-100 border-2 border-yellow-300 flex items-center justify-center overflow-hidden shadow cursor-pointer hover:ring-2 hover:ring-yellow-400 transition">
+        <div className="w-full space-y-6">
+          {/* Profile Picture Section */}
+          <div className="flex flex-col items-center mb-6">
+            {isEditing ? (
+              <div
+                onClick={() => fileInputRef.current?.click()}
+                className="relative group cursor-pointer"
+              >
+                <div className="h-32 w-32 md:h-40 md:w-40 rounded-full bg-gradient-to-br from-yellow/20 to-yellow/10 border-2 border-yellow/40 flex items-center justify-center overflow-hidden transition-all hover:scale-105">
                   {profilePreview ? (
                     <img
                       src={profilePreview}
@@ -119,149 +110,183 @@ const ProfilePage = () => {
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <FiImage className="text-4xl text-yellow-400" />
+                    <FiImage className="text-3xl md:text-4xl text-yellow/60" />
                   )}
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={handleProfilePicChange}
-                  />
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <FiEdit2 className="text-yellow text-xl" />
+                  </div>
                 </div>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleProfilePicChange}
+                />
               </div>
-            </div>
-          ) : (
-            <>
-              {account.profilePicture ? (
-                <BlurImage
-                  src={account.profilePicture as string}
-                  alt="Profile picture"
-                  className="w-36 h-36 rounded-full border-2 border-yellow/80 object-cover shadow-md mb-3 bg-white cursor-pointer"
-                  draggable={false}
-                  onClick={() => setShowImage(account.profilePicture as string)}
-                />
-              ) : (
-                <Avatar
-                  key={account._id}
-                  name={`${account.firstName} ${account.lastName}`}
-                  size="xl"
-                  className="bg-primary p-4 rounded-full h-36 w-36 border-2 border-yellow/80"
-                />
-              )}
-            </>
-          )}
-
-          {isEditing ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-2">
-              <TextField
-                name="firstName"
-                placeholder="First Name *"
-                value={form.firstName}
-                onChange={handleChange}
-                required
-                icon={<FiUser />}
-              />
-              <TextField
-                name="middleName"
-                placeholder="Middle Name"
-                value={form.middleName}
-                onChange={handleChange}
-                icon={<FiUser />}
-              />
-              <TextField
-                name="lastName"
-                placeholder="Last Name *"
-                value={form.lastName}
-                onChange={handleChange}
-                required
-                icon={<FiUser />}
-              />
-              <TextField
-                name="suffix"
-                placeholder="Suffix"
-                value={form.suffix}
-                onChange={handleChange}
-                icon={<FiUser />}
-              />
-            </div>
-          ) : (
-            <div className="flex items-center gap-2 mb-1">
-              <FiUserCheck className="text-yellow" />
-              <h2 className="text-xl font-bold font-heading text-white">
-                {getFullName(account)}
-              </h2>
-            </div>
-          )}
-
-          {isEditing ? (
-            <TextField
-              name="username"
-              placeholder="Username *"
-              value={form.username}
-              onChange={handleChange}
-              required
-              icon={<FiAtSign />}
-            />
-          ) : (
-            <span className="text-yellow font-mono text-sm mb-2">
-              @{account.username}
-            </span>
-          )}
-        </motion.div>
-
-        {/* Contact & Info */}
-        <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-6 mb-7">
-          <div className="space-y-2">
-            {isEditing ? (
-              <TextField
-                type="email"
-                name="email"
-                placeholder="Email *"
-                value={form.email}
-                onChange={handleChange}
-                required
-                icon={<FiMail />}
-              />
             ) : (
-              <div className="flex items-center gap-2 mb-2">
-                <FiMail className="text-yellow" />
-                <span className="text-white">{account.email}</span>
+              <div
+                className="relative group cursor-pointer"
+                onClick={() =>
+                  account.profilePicture &&
+                  setShowImage(account.profilePicture as string)
+                }
+              >
+                {account.profilePicture ? (
+                  <BlurImage
+                    src={account.profilePicture as string}
+                    alt="Profile picture"
+                    className="w-32 h-32 md:w-40 md:h-40 rounded-full border-2 border-yellow/60 object-cover transition-all hover:scale-105"
+                    draggable={false}
+                  />
+                ) : (
+                  <Avatar
+                    key={account._id}
+                    name={`${account.firstName} ${account.lastName}`}
+                    size="xl"
+                    className="bg-gradient-to-br from-yellow/20 to-yellow/10 p-4 rounded-full h-32 w-32 md:h-40 md:w-40 border-2 border-yellow/60"
+                  />
+                )}
+                {account.profilePicture && (
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-full flex items-center justify-center">
+                    <FiImage className="text-yellow text-xl" />
+                  </div>
+                )}
               </div>
             )}
 
+            {/* Name and Username */}
             {isEditing ? (
-              <TextField
-                type="address"
-                name="address"
-                placeholder="Address *"
-                value={form.address}
-                onChange={handleChange}
-                required
-                icon={<IoLocationOutline />}
-              />
+              <div className="w-full space-y-4 mt-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <TextField
+                    name="firstName"
+                    placeholder="First Name *"
+                    value={form.firstName}
+                    onChange={handleChange}
+                    required
+                    icon={<FiUser />}
+                  />
+                  <TextField
+                    name="middleName"
+                    placeholder="Middle Name"
+                    value={form.middleName}
+                    onChange={handleChange}
+                    icon={<FiUser />}
+                  />
+                  <TextField
+                    name="lastName"
+                    placeholder="Last Name *"
+                    value={form.lastName}
+                    onChange={handleChange}
+                    required
+                    icon={<FiUser />}
+                  />
+                  <TextField
+                    name="suffix"
+                    placeholder="Suffix"
+                    value={form.suffix}
+                    onChange={handleChange}
+                    icon={<FiUser />}
+                  />
+                </div>
+                <TextField
+                  name="username"
+                  placeholder="Username *"
+                  value={form.username}
+                  onChange={handleChange}
+                  required
+                  icon={<FiAtSign />}
+                />
+              </div>
             ) : (
-              <div className="flex items-center gap-2">
-                <FiMapPin className="text-yellow" />
-                <span className="text-white">{account.address}</span>
+              <div className="flex flex-col items-center gap-2 mt-4">
+                <div className="flex items-center gap-2">
+                  <FiUserCheck className="text-yellow text-lg" />
+                  <h2 className="text-xl md:text-2xl font-bold text-white">
+                    {getFullName(account)}
+                  </h2>
+                </div>
+                <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-yellow/10 border border-yellow/30">
+                  <FiAtSign className="text-yellow text-sm" />
+                  <span className="text-yellow font-mono text-sm font-medium">
+                    {account.username}
+                  </span>
+                </div>
               </div>
             )}
           </div>
-        </div>
 
-        {isEditing && (
-          <button
-            disabled={loading}
-            onClick={handleSave}
-            className={`${
-              loading
-                ? "cursor-not-allowed opacity-80"
-                : "cursor-pointer hover:scale-101 hover:shadow-xl transition-all"
-            } w-full py-3 rounded-xl bg-gradient-to-r from-yellow-700 to-yellow-500 text-white font-bold text-lg shadow-md`}
-          >
-            {loading ? <LoadingSmall /> : "Update"}
-          </button>
-        )}
+          {/* Contact & Info */}
+          <div className="w-full space-y-4">
+            <h3 className="text-white/80 text-xs md:text-sm font-semibold uppercase tracking-wide">
+              Contact Information
+            </h3>
+            <div className="space-y-3">
+              {isEditing ? (
+                <>
+                  <TextField
+                    type="email"
+                    name="email"
+                    placeholder="Email *"
+                    value={form.email}
+                    onChange={handleChange}
+                    required
+                    icon={<FiMail />}
+                  />
+                  <TextField
+                    type="address"
+                    name="address"
+                    placeholder="Address *"
+                    value={form.address}
+                    onChange={handleChange}
+                    required
+                    icon={<IoLocationOutline />}
+                  />
+                </>
+              ) : (
+                <>
+                  <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-white/5 transition-colors">
+                    <div className="p-2 rounded-lg bg-yellow/10">
+                      <FiMail className="text-yellow text-lg" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-white/60 text-xs mb-0.5">Email</p>
+                      <p className="text-white text-sm font-medium truncate">
+                        {account.email}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-white/5 transition-colors">
+                    <div className="p-2 rounded-lg bg-yellow/10">
+                      <FiMapPin className="text-yellow text-lg" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-white/60 text-xs mb-0.5">Address</p>
+                      <p className="text-white text-sm font-medium break-words">
+                        {account.address}
+                      </p>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+
+          {isEditing && (
+            <button
+              disabled={loading}
+              onClick={handleSave}
+              className={`${
+                loading
+                  ? "cursor-not-allowed opacity-80"
+                  : "cursor-pointer hover:scale-[1.02] hover:shadow-yellow/30 transition-all"
+              } w-full mt-6 py-3 rounded-xl bg-gradient-to-r from-yellow-600 to-yellow-500 text-black font-bold text-sm md:text-base shadow-lg shadow-yellow/20 flex items-center justify-center gap-2`}
+            >
+              {loading ? <LoadingSmall /> : "Update Profile"}
+            </button>
+          )}
+        </div>
       </div>
       <AnimatePresence>
         {showImage && (
@@ -271,7 +296,7 @@ const ProfilePage = () => {
           />
         )}
       </AnimatePresence>
-    </motion.div>
+    </div>
   );
 };
 
