@@ -1,5 +1,7 @@
 import Account from "@/models/account.model";
 import Calendar from "@/models/calendar.model";
+import Dept from "@/models/dept.model";
+import Receiving from "@/models/receiving.model";
 import Transaction from "@/models/transaction.model";
 import { endOfDay, startOfDay, subDays } from "date-fns";
 import { formatInTimeZone, toZonedTime } from "date-fns-tz";
@@ -100,6 +102,93 @@ export const startDailyExpenseJob = () => {
         );
       } catch (error) {
         console.error("💥 Fatal error in daily expense job:", error);
+      }
+    },
+    {
+      timezone: "Asia/Manila",
+    }
+  );
+};
+
+export const startOverdueCheckJob = () => {
+  cron.schedule(
+    "0 1 * * *", // runs at 1:00 AM (Asia/Manila) - after the expense job
+    async () => {
+      const timeZone = "Asia/Manila";
+      const now = new Date();
+      const phTime = toZonedTime(now, timeZone);
+
+      console.log(
+        `🕛 [${formatInTimeZone(
+          phTime,
+          timeZone,
+          "yyyy-MM-dd HH:mm:ss"
+        )}] Running overdue check job...`
+      );
+
+      try {
+        // Get today's date in PH timezone
+        const todayPhDateString = formatInTimeZone(
+          phTime,
+          timeZone,
+          "yyyy-MM-dd"
+        );
+
+        // Find all depts that are pending and overdue
+        const overdueDepts = await Dept.find({
+          status: "pending",
+          dueDate: { $exists: true, $ne: "", $lt: todayPhDateString },
+        });
+
+        // Update overdue depts
+        if (overdueDepts.length > 0) {
+          const result = await Dept.updateMany(
+            {
+              status: "pending",
+              dueDate: { $exists: true, $ne: "", $lt: todayPhDateString },
+            },
+            {
+              $set: { status: "overdue" },
+            }
+          );
+
+          console.log(
+            `📋 Updated ${result.modifiedCount} dept(s) to overdue status`
+          );
+        } else {
+          console.log("📋 No overdue depts found");
+        }
+
+        // Find all receivings that are pending and overdue
+        const overdueReceivings = await Receiving.find({
+          status: "pending",
+          dueDate: { $exists: true, $ne: "", $lt: todayPhDateString },
+        });
+
+        // Update overdue receivings
+        if (overdueReceivings.length > 0) {
+          const result = await Receiving.updateMany(
+            {
+              status: "pending",
+              dueDate: { $exists: true, $ne: "", $lt: todayPhDateString },
+            },
+            {
+              $set: { status: "overdue" },
+            }
+          );
+
+          console.log(
+            `💰 Updated ${result.modifiedCount} receiving(s) to overdue status`
+          );
+        } else {
+          console.log("💰 No overdue receivings found");
+        }
+
+        console.log(
+          `🎯 Overdue check completed successfully for ${todayPhDateString}.`
+        );
+      } catch (error) {
+        console.error("💥 Fatal error in overdue check job:", error);
       }
     },
     {
