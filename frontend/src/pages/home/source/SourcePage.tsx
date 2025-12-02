@@ -9,7 +9,7 @@ import type { SourceType } from "@/types/source/source.type";
 import { formatAmount } from "@/utils/amount/formatAmount";
 import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { FaPlus } from "react-icons/fa";
+import { FaArrowDown, FaArrowUp, FaBalanceScale, FaPlus } from "react-icons/fa";
 import { MdDelete, MdEdit } from "react-icons/md";
 import { RxHamburgerMenu } from "react-icons/rx";
 
@@ -124,7 +124,7 @@ const SourcePage = () => {
                         key={source._id}
                         type="button"
                         onClick={() => setViewSource(source)}
-                        className="w-full text-left relative rounded-2xl border border-white/10 bg-zinc-950/70 backdrop-blur-sm p-4 md:p-5 shadow-md hover:shadow-xl hover:border-yellow/40 transition-all duration-200 cursor-pointer"
+                        className="w-full text-left relative rounded-2xl border border-white/10 bg-zinc-950/70 backdrop-blur-sm p-3 md:p-4 shadow-md hover:shadow-xl hover:border-yellow/40 transition-all duration-200 cursor-pointer"
                       >
                         <div className="flex justify-between items-start mb-2 gap-3">
                           <div className="min-w-0">
@@ -163,24 +163,24 @@ const SourcePage = () => {
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 md:gap-3 text-xs md:text-sm font-medium">
-                          <div className="flex items-center gap-1">
-                            <span className="text-income">Income:</span>
-                            <span className="text-income font-bold rounded-full bg-income/10 px-2.5 py-1">
+                        <div className="flex items-center justify-between gap-2 md:gap-3 text-xs md:text-sm flex-wrap">
+                          <div className="flex items-center gap-2">
+                            <FaArrowDown className="text-income text-xs md:text-sm" />
+                            <span className="text-income font-bold rounded-full bg-income/10 px-2.5 py-1 whitespace-nowrap">
                               {formatAmount(source.income)}
                             </span>
                           </div>
 
-                          <div className="flex items-center justify-start sm:justify-center gap-1">
-                            <span className="text-expense">Expense:</span>
-                            <span className="text-expense font-bold rounded-full bg-expense/10 px-2.5 py-1">
+                          <div className="flex items-center gap-2">
+                            <FaArrowUp className="text-expense text-xs md:text-sm" />
+                            <span className="text-expense font-bold rounded-full bg-expense/10 px-2.5 py-1 whitespace-nowrap">
                               {formatAmount(source.expense)}
                             </span>
                           </div>
 
-                          <div className="flex items-center justify-start sm:justify-end gap-1">
-                            <span className="text-balance">Balance:</span>
-                            <span className="text-balance font-bold rounded-full bg-balance/10 px-2.5 py-1">
+                          <div className="flex items-center gap-2">
+                            <FaBalanceScale className="text-balance text-xs md:text-sm" />
+                            <span className="text-balance font-bold rounded-full bg-balance/10 px-2.5 py-1 whitespace-nowrap">
                               {formatAmount(source.balance)}
                             </span>
                           </div>

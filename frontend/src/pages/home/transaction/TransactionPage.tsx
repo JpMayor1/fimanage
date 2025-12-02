@@ -9,7 +9,12 @@ import type { TransactionType } from "@/types/transaction/transaction.type";
 import { formatAmount } from "@/utils/amount/formatAmount";
 import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { FaPlus } from "react-icons/fa";
+import {
+  FaCalendarAlt,
+  FaDollarSign,
+  FaPlus,
+  FaStickyNote,
+} from "react-icons/fa";
 import { MdDelete, MdEdit } from "react-icons/md";
 import { RxHamburgerMenu } from "react-icons/rx";
 
@@ -211,7 +216,7 @@ const TransactionPage = () => {
                       >
                         {/* Top Section: Type/Label and Action Buttons */}
                         <div className="flex justify-between items-start mb-2 gap-3">
-                          <div className="flex items-center gap-2 min-w-0 flex-1">
+                          <div className="flex items-center min-w-0 flex-1">
                             <span
                               className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] md:text-xs font-semibold uppercase tracking-wide border ${typeBadgeClass(
                                 trx.type
@@ -244,36 +249,99 @@ const TransactionPage = () => {
                           </div>
                         </div>
 
-                        {/* Note */}
-                        {note && (
-                          <p className="text-white/80 text-xs md:text-sm mb-2 break-words leading-relaxed">
-                            {note}
-                          </p>
+                        {note ? (
+                          <>
+                            {/* Note - Centered */}
+                            <div className="flex items-center justify-start gap-1.5 mb-2">
+                              <FaStickyNote className="text-white/60 text-xs md:text-sm flex-shrink-0" />
+                              <p className="text-white/80 text-xs md:text-sm truncate text-left">
+                                {note}
+                              </p>
+                            </div>
+
+                            {/* Date and Amount - Aligned */}
+                            <div className="flex items-center justify-between gap-2">
+                              <div className="flex items-center gap-1.5 whitespace-nowrap">
+                                <FaCalendarAlt className="text-white/60 text-xs md:text-sm" />
+                                <span className="text-white/50 text-[11px] md:text-xs">
+                                  {new Date(trx.createdAt).toLocaleString()}
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <FaDollarSign
+                                  className={`text-xs md:text-sm ${
+                                    trx.type === "income"
+                                      ? "text-income"
+                                      : trx.type === "expense"
+                                      ? "text-expense"
+                                      : trx.type === "transfer"
+                                      ? "text-blue-400"
+                                      : trx.type === "dept"
+                                      ? "text-yellow"
+                                      : "text-green"
+                                  }`}
+                                />
+                                <span
+                                  className={`rounded-full px-2.5 md:px-3 py-1 md:py-1.5 text-sm md:text-base font-bold ${
+                                    trx.type === "income"
+                                      ? "bg-income/15 text-income"
+                                      : trx.type === "expense"
+                                      ? "bg-expense/15 text-expense"
+                                      : trx.type === "transfer"
+                                      ? "bg-blue-500/15 text-blue-400"
+                                      : trx.type === "dept"
+                                      ? "bg-yellow/15 text-yellow"
+                                      : "bg-green/15 text-green"
+                                  }`}
+                                >
+                                  {trx.type === "expense" ? "-" : "+"}
+                                  {formatAmount(amount || 0)}
+                                </span>
+                              </div>
+                            </div>
+                          </>
+                        ) : (
+                          /* Date and Amount - Aligned */
+                          <div className="flex items-center justify-between gap-2">
+                            <div className="flex items-center gap-1.5 whitespace-nowrap">
+                              <FaCalendarAlt className="text-white/60 text-xs md:text-sm" />
+                              <span className="text-white/50 text-[11px] md:text-xs">
+                                {new Date(trx.createdAt).toLocaleString()}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <FaDollarSign
+                                className={`text-xs md:text-sm ${
+                                  trx.type === "income"
+                                    ? "text-income"
+                                    : trx.type === "expense"
+                                    ? "text-expense"
+                                    : trx.type === "transfer"
+                                    ? "text-blue-400"
+                                    : trx.type === "dept"
+                                    ? "text-yellow"
+                                    : "text-green"
+                                }`}
+                              />
+                              <span
+                                className={`rounded-full px-2.5 md:px-3 py-1 md:py-1.5 text-sm md:text-base font-bold ${
+                                  trx.type === "income"
+                                    ? "bg-income/15 text-income"
+                                    : trx.type === "expense"
+                                    ? "bg-expense/15 text-expense"
+                                    : trx.type === "transfer"
+                                    ? "bg-blue-500/15 text-blue-400"
+                                    : trx.type === "dept"
+                                    ? "bg-yellow/15 text-yellow"
+                                    : "bg-green/15 text-green"
+                                }`}
+                              >
+                                {trx.type === "expense" ? "-" : "+"}
+                                {formatAmount(amount || 0)}
+                              </span>
+                            </div>
+                          </div>
                         )}
-
-                        {/* Bottom Section: Date and Amount */}
-                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mt-2">
-                          <p className="text-white/50 text-[11px] md:text-xs">
-                            {new Date(trx.createdAt).toLocaleString()}
-                          </p>
-
-                          <span
-                            className={`rounded-full px-2.5 md:px-3 py-1 md:py-1.5 text-sm md:text-base font-bold ml-auto ${
-                              trx.type === "income"
-                                ? "bg-income/15 text-income"
-                                : trx.type === "expense"
-                                ? "bg-expense/15 text-expense"
-                                : trx.type === "transfer"
-                                ? "bg-blue-500/15 text-blue-400"
-                                : trx.type === "dept"
-                                ? "bg-yellow/15 text-yellow"
-                                : "bg-green/15 text-green"
-                            }`}
-                          >
-                            {trx.type === "expense" ? "-" : "+"}
-                            {formatAmount(amount || 0)}
-                          </span>
-                        </div>
                       </div>
                     );
                   })}
