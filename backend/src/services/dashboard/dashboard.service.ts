@@ -1,3 +1,4 @@
+import Account from "@/models/account.model";
 import Calendar from "@/models/calendar.model";
 import Dept from "@/models/dept.model";
 import Receiving from "@/models/receiving.model";
@@ -16,24 +17,20 @@ export const getDashboardDataS = async (userId: string) => {
   const endDate = endOfDay(phTime);
 
   // Get all data in parallel
-  const [
-    dailyExpense,
-    sources,
-    transactions,
-    depts,
-    receivings,
-  ] = await Promise.all([
-    Calendar.find({ userId }).sort({ date: -1 }).lean(),
-    Source.find({ userId }).lean(),
-    Transaction.find({
-      userId,
-      createdAt: { $gte: startDate, $lte: endDate },
-    })
-      .sort({ createdAt: -1 })
-      .lean(),
-    Dept.find({ userId }).lean(),
-    Receiving.find({ userId }).lean(),
-  ]);
+  const [dailyExpense, sources, transactions, depts, receivings, account] =
+    await Promise.all([
+      Calendar.find({ userId }).sort({ date: -1 }).lean(),
+      Source.find({ userId }).lean(),
+      Transaction.find({
+        userId,
+        createdAt: { $gte: startDate, $lte: endDate },
+      })
+        .sort({ createdAt: -1 })
+        .lean(),
+      Dept.find({ userId }).lean(),
+      Receiving.find({ userId }).lean(),
+      Account.findById(userId).lean(),
+    ]);
 
   // Calculate summary statistics
   const totalIncome = sources.reduce((sum, s) => sum + (s.income || 0), 0);
@@ -59,7 +56,9 @@ export const getDashboardDataS = async (userId: string) => {
   // Transaction statistics (last 30 days)
   const incomeTransactions = transactions.filter((t) => t.type === "income");
   const expenseTransactions = transactions.filter((t) => t.type === "expense");
-  const transferTransactions = transactions.filter((t) => t.type === "transfer");
+  const transferTransactions = transactions.filter(
+    (t) => t.type === "transfer"
+  );
   const deptTransactions = transactions.filter((t) => t.type === "dept");
   const receivingTransactions = transactions.filter(
     (t) => t.type === "receiving"
@@ -108,8 +107,8 @@ export const getDashboardDataS = async (userId: string) => {
     .sort((a, b) => b.balance - a.balance)
     .slice(0, 5);
 
-  // Recent transactions (last 10)
-  const recentTransactions = transactions.slice(0, 10).map((t) => ({
+  // Recent transactions (last 6)
+  const recentTransactions = transactions.slice(0, 6).map((t) => ({
     _id: t._id,
     type: t.type,
     amount:
@@ -131,7 +130,7 @@ export const getDashboardDataS = async (userId: string) => {
   // Today's expense
   const todayExpense = dailyExpense.find((e) => e.date === today);
   const todayExpenseAmount = todayExpense?.expense || 0;
-  const todayLimit = todayExpense?.limit || 500;
+  const accountLimit = account?.limit || 500;
 
   return {
     dailyExpense,
@@ -144,7 +143,7 @@ export const getDashboardDataS = async (userId: string) => {
       overdueDepts,
       overdueReceivings,
       todayExpense: todayExpenseAmount,
-      todayLimit,
+      todayLimit: accountLimit,
     },
     statistics: {
       totalIncome30Days,
