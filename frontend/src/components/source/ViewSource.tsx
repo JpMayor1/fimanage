@@ -1,0 +1,144 @@
+import { overlayAnim } from "@/constants/overlay.animation.constant";
+import type { SourceType } from "@/types/source/source.type";
+import { formatAmount } from "@/utils/amount/formatAmount";
+import { motion } from "framer-motion";
+import { FiX } from "react-icons/fi";
+
+interface ViewSourceI {
+  source: SourceType;
+  onClose: () => void;
+}
+
+const ViewSource = ({ source, onClose }: ViewSourceI) => {
+  return (
+    <motion.div
+      className="fixed inset-0 z-30 flex items-start justify-center bg-black/70 p-5 overflow-y-auto no-scrollbar"
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      variants={overlayAnim}
+    >
+      <div className="w-full max-w-2xl bg-primary rounded-2xl shadow-2xl py-7 px-5 md:px-7 relative">
+        <button
+          className="absolute top-3 right-3 p-2 rounded-full hover:bg-red/20 cursor-pointer"
+          onClick={onClose}
+        >
+          <FiX className="text-2xl text-red" />
+        </button>
+
+        <div className="space-y-5">
+          <div>
+            <h2 className="text-white text-lg md:text-xl font-semibold">
+              Source details
+            </h2>
+            <p className="text-white/60 text-xs md:text-sm mt-1">
+              Full overview of this money source, including recent transactions.
+            </p>
+          </div>
+
+          {/* Basic info */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm md:text-base">
+            <div className="space-y-1">
+              <p className="text-white/50 text-xs uppercase tracking-wide">
+                Name
+              </p>
+              <p className="text-white font-medium break-words">
+                {source.name}
+              </p>
+            </div>
+
+            <div className="space-y-1">
+              <p className="text-white/50 text-xs uppercase tracking-wide">
+                Created
+              </p>
+              <p className="text-white font-medium">
+                {new Date(source.createdAt).toLocaleString()}
+              </p>
+            </div>
+
+            <div className="space-y-1">
+              <p className="text-white/50 text-xs uppercase tracking-wide">
+                Last updated
+              </p>
+              <p className="text-white font-medium">
+                {new Date(source.updatedAt).toLocaleString()}
+              </p>
+            </div>
+          </div>
+
+          {/* Financial summary */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs md:text-sm font-medium">
+            <div className="flex flex-col gap-1 rounded-xl bg-income/5 border border-income/20 px-3 py-2">
+              <span className="text-income">Total income</span>
+              <span className="text-income font-semibold text-sm md:text-base">
+                {formatAmount(source.income)}
+              </span>
+            </div>
+
+            <div className="flex flex-col gap-1 rounded-xl bg-expense/5 border border-expense/20 px-3 py-2">
+              <span className="text-expense">Total expense</span>
+              <span className="text-expense font-semibold text-sm md:text-base">
+                {formatAmount(source.expense)}
+              </span>
+            </div>
+
+            <div className="flex flex-col gap-1 rounded-xl bg-balance/5 border border-balance/20 px-3 py-2">
+              <span className="text-balance">Balance</span>
+              <span className="text-balance font-semibold text-sm md:text-base">
+                {formatAmount(source.balance)}
+              </span>
+            </div>
+          </div>
+
+          {/* Transactions */}
+          <div className="mt-2">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-white/80 text-sm font-medium">
+                Transactions ({source.transactions?.length ?? 0})
+              </p>
+            </div>
+
+            {source.transactions && source.transactions.length > 0 ? (
+              <div className="max-h-72 overflow-y-auto no-scrollbar space-y-1.5 pr-1">
+                {source.transactions.map((tx) => (
+                  <div
+                    key={tx.transactionId}
+                    className="flex items-center justify-between gap-2 rounded-lg bg-black/30 border border-white/10 px-3 py-1.5 text-[11px] md:text-xs text-white/85"
+                  >
+                    <div className="flex items-center gap-2 truncate max-w-[70%]">
+                      <span
+                        className={`inline-flex items-center rounded-full px-1.5 py-0.5 text-[9px] font-semibold uppercase ${
+                          tx.type === "income"
+                            ? "bg-income/15 text-income"
+                            : tx.type === "expense"
+                            ? "bg-expense/15 text-expense"
+                            : "bg-blue-500/15 text-blue-300"
+                        }`}
+                      >
+                        {tx.type}
+                      </span>
+                      <span className="truncate">
+                        {tx.note || "No note"}
+                      </span>
+                    </div>
+                    <span className="font-semibold">
+                      {formatAmount(tx.amount)}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-white/50 text-xs">
+                No transactions recorded for this source yet.
+              </p>
+            )}
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
+export default ViewSource;
+
+

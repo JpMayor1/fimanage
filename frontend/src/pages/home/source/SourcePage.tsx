@@ -2,6 +2,7 @@ import LoadingSmall from "@/components/custom/loading/LoadingSmall";
 import AddSource from "@/components/source/AddSource";
 import DeleteSource from "@/components/source/DeleteSource";
 import UpdateSource from "@/components/source/UpdateSource";
+import ViewSource from "@/components/source/ViewSource";
 import { useSideBar } from "@/stores/sidebar/useSideBar";
 import { useSourceStore } from "@/stores/source/source.store";
 import type { SourceType } from "@/types/source/source.type";
@@ -20,6 +21,7 @@ const SourcePage = () => {
   const [firstLoading, setFirstLoading] = useState(false);
   const [updateSource, seUpdateSource] = useState<SourceType | null>(null);
   const [deleteSource, seDeleteSource] = useState<SourceType | null>(null);
+  const [viewSource, setViewSource] = useState<SourceType | null>(null);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
 
@@ -118,9 +120,11 @@ const SourcePage = () => {
                 >
                   {sources.map((source) => {
                     return (
-                      <div
+                      <button
                         key={source._id}
-                        className="relative w-full rounded-2xl border border-white/10 bg-zinc-950/70 backdrop-blur-sm p-4 md:p-5 shadow-md hover:shadow-xl hover:border-yellow/40 transition-all duration-200"
+                        type="button"
+                        onClick={() => setViewSource(source)}
+                        className="w-full text-left relative rounded-2xl border border-white/10 bg-zinc-950/70 backdrop-blur-sm p-4 md:p-5 shadow-md hover:shadow-xl hover:border-yellow/40 transition-all duration-200 cursor-pointer"
                       >
                         <div className="flex justify-between items-start mb-2 gap-3">
                           <div className="min-w-0">
@@ -128,11 +132,15 @@ const SourcePage = () => {
                               {source.name}
                             </p>
                             <p className="text-white/50 text-[11px] md:text-xs mt-0.5">
-                              Created at {new Date(source.createdAt).toLocaleDateString()}
+                              Created at{" "}
+                              {new Date(source.createdAt).toLocaleDateString()}
                             </p>
                           </div>
 
-                          <div className="flex gap-2 sm:gap-3">
+                          <div
+                            className="flex gap-2 sm:gap-3"
+                            onClick={(e) => e.stopPropagation()}
+                          >
                             <button
                               className="inline-flex items-center justify-center rounded-full bg-green/90 px-2.5 py-1 text-[11px] md:text-xs text-white shadow hover:bg-green focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green/70 transition-all cursor-pointer"
                               onClick={() => seUpdateSource(source)}
@@ -155,7 +163,7 @@ const SourcePage = () => {
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 md:gap-3 text-xs md:text-sm font-medium mb-3">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 md:gap-3 text-xs md:text-sm font-medium">
                           <div className="flex items-center gap-1">
                             <span className="text-income">Income:</span>
                             <span className="text-income font-bold rounded-full bg-income/10 px-2.5 py-1">
@@ -177,48 +185,7 @@ const SourcePage = () => {
                             </span>
                           </div>
                         </div>
-
-                        {source.transactions && source.transactions.length > 0 && (
-                          <div className="mt-1 border-t border-white/10 pt-2">
-                            <p className="text-white/60 text-[11px] md:text-xs mb-1">
-                              Recent transactions ({source.transactions.length})
-                            </p>
-                            <div className="space-y-1 max-h-24 overflow-y-auto pr-1">
-                              {source.transactions.slice(0, 3).map((tx) => (
-                                <div
-                                  key={tx.transactionId}
-                                  className="flex items-center justify-between gap-2 text-[11px] md:text-xs text-white/80"
-                                >
-                                  <div className="flex items-center gap-1 truncate max-w-[70%]">
-                                    <span
-                                      className={`inline-flex items-center rounded-full px-1.5 py-0.5 text-[9px] font-semibold uppercase ${
-                                        tx.type === "income"
-                                          ? "bg-income/15 text-income"
-                                          : tx.type === "expense"
-                                          ? "bg-expense/15 text-expense"
-                                          : "bg-blue-500/15 text-blue-300"
-                                      }`}
-                                    >
-                                      {tx.type}
-                                    </span>
-                                    <span className="truncate">
-                                      {tx.note || "No note"}
-                                    </span>
-                                  </div>
-                                  <span className="font-semibold">
-                                    {formatAmount(tx.amount)}
-                                  </span>
-                                </div>
-                              ))}
-                              {source.transactions.length > 3 && (
-                                <p className="text-[10px] text-white/40">
-                                  +{source.transactions.length - 3} more
-                                </p>
-                              )}
-                            </div>
-                          </div>
-                        )}
-                      </div>
+                      </button>
                     );
                   })}
                 </motion.div>
@@ -251,6 +218,9 @@ const SourcePage = () => {
             source={deleteSource}
             onClose={() => seDeleteSource(null)}
           />
+        )}
+        {viewSource && (
+          <ViewSource source={viewSource} onClose={() => setViewSource(null)} />
         )}
       </AnimatePresence>
     </div>

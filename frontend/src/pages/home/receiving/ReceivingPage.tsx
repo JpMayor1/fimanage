@@ -2,6 +2,7 @@ import LoadingSmall from "@/components/custom/loading/LoadingSmall";
 import AddReceiving from "@/components/receiving/AddReceiving";
 import DeleteReceiving from "@/components/receiving/DeleteReceiving";
 import UpdateReceiving from "@/components/receiving/UpdateReceiving";
+import ViewReceiving from "@/components/receiving/ViewReceiving";
 import { useReceivingStore } from "@/stores/receiving/receiving.store";
 import { useSideBar } from "@/stores/sidebar/useSideBar";
 import type { ReceivingType } from "@/types/receiving/receiving.type";
@@ -24,6 +25,9 @@ const ReceivingPage = () => {
     null
   );
   const [deleteReceiving, seDeleteReceiving] = useState<ReceivingType | null>(
+    null
+  );
+  const [viewReceiving, setViewReceiving] = useState<ReceivingType | null>(
     null
   );
 
@@ -129,9 +133,11 @@ const ReceivingPage = () => {
                     );
 
                     return (
-                      <div
+                      <button
                         key={receiving._id}
-                        className="relative w-full rounded-2xl border border-white/10 bg-zinc-950/70 backdrop-blur-sm p-4 md:p-5 shadow-md hover:shadow-xl hover:border-yellow/40 transition-all duration-200"
+                        type="button"
+                        onClick={() => setViewReceiving(receiving)}
+                        className="w-full text-left relative rounded-2xl border border-white/10 bg-zinc-950/70 backdrop-blur-sm p-4 md:p-5 shadow-md hover:shadow-xl hover:border-yellow/40 transition-all duration-200 cursor-pointer"
                       >
                         {/* Borrower + Buttons */}
                         <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between mb-2">
@@ -149,7 +155,10 @@ const ReceivingPage = () => {
                             )}
                           </div>
 
-                          <div className="flex items-center gap-2 sm:gap-3 self-end">
+                          <div
+                            className="flex items-center gap-2 sm:gap-3 self-end"
+                            onClick={(e) => e.stopPropagation()}
+                          >
                             <span
                               className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] md:text-xs font-medium capitalize border ${remainingColor}`}
                             >
@@ -180,13 +189,13 @@ const ReceivingPage = () => {
 
                         {/* Note (only if has value) */}
                         {receiving.note && (
-                          <p className="text-white/80 text-xs md:text-sm mb-3 break-words">
+                          <p className="text-white/80 text-xs md:text-sm mb-2 break-words">
                             {receiving.note}
                           </p>
                         )}
 
                         {/* Amount • Remaining • Interest */}
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 md:gap-3 text-xs md:text-sm mb-3">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 md:gap-3 text-xs md:text-sm">
                           <div className="flex items-center gap-2">
                             <span className="text-white/60">Amount</span>
                             <span className="rounded-full bg-white/5 px-2.5 py-1 text-white font-medium text-xs md:text-sm">
@@ -222,36 +231,7 @@ const ReceivingPage = () => {
                             )}
                           </div>
                         </div>
-
-                        {receiving.transactions &&
-                          receiving.transactions.length > 0 && (
-                            <div className="mt-1 border-t border-white/10 pt-2">
-                              <p className="text-white/60 text-[11px] md:text-xs mb-1">
-                                Payments ({receiving.transactions.length})
-                              </p>
-                              <div className="space-y-1 max-h-24 overflow-y-auto pr-1">
-                                {receiving.transactions.slice(0, 3).map((tx) => (
-                                  <div
-                                    key={tx.transactionId}
-                                    className="flex items-center justify-between text-[11px] md:text-xs text-white/80"
-                                  >
-                                    <span className="truncate max-w-[60%]">
-                                      {tx.note || "No note"}
-                                    </span>
-                                    <span className="font-semibold">
-                                      {formatAmount(tx.amount)}
-                                    </span>
-                                  </div>
-                                ))}
-                                {receiving.transactions.length > 3 && (
-                                  <p className="text-[10px] text-white/40">
-                                    +{receiving.transactions.length - 3} more
-                                  </p>
-                                )}
-                              </div>
-                            </div>
-                          )}
-                      </div>
+                      </button>
                     );
                   })}
                 </motion.div>
@@ -286,6 +266,12 @@ const ReceivingPage = () => {
           <DeleteReceiving
             receiving={deleteReceiving}
             onClose={() => seDeleteReceiving(null)}
+          />
+        )}
+        {viewReceiving && (
+          <ViewReceiving
+            receiving={viewReceiving}
+            onClose={() => setViewReceiving(null)}
           />
         )}
       </AnimatePresence>

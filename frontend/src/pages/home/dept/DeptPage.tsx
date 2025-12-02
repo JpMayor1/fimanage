@@ -2,6 +2,7 @@ import LoadingSmall from "@/components/custom/loading/LoadingSmall";
 import AddDept from "@/components/dept/AddDept";
 import DeleteDept from "@/components/dept/DeleteDept";
 import UpdateDept from "@/components/dept/UpdateDept";
+import ViewDept from "@/components/dept/ViewDept";
 import { useDeptStore } from "@/stores/dept/dept.store";
 import { useSideBar } from "@/stores/sidebar/useSideBar";
 import type { DeptType } from "@/types/dept/dept.type";
@@ -21,6 +22,7 @@ const DeptPage = () => {
   const [firstLoading, setFirstLoading] = useState(false);
   const [updateDept, seUpdateDept] = useState<DeptType | null>(null);
   const [deleteDept, seDeleteDept] = useState<DeptType | null>(null);
+  const [viewDept, setViewDept] = useState<DeptType | null>(null);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
 
@@ -97,8 +99,8 @@ const DeptPage = () => {
                   No dept records yet
                 </p>
                 <p className="text-white/50 text-xs md:text-sm mt-1">
-                  Start by adding your first dept to keep everything organized in
-                  one place.
+                  Start by adding your first dept to keep everything organized
+                  in one place.
                 </p>
                 <button
                   className="mt-4 inline-flex items-center gap-2 rounded-full bg-yellow/90 px-4 py-2 text-xs md:text-sm font-medium text-black shadow-md hover:bg-yellow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow/70 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-900 transition-all"
@@ -125,9 +127,11 @@ const DeptPage = () => {
                     );
 
                     return (
-                      <div
+                      <button
                         key={dept._id}
-                        className="relative w-full rounded-2xl border border-white/10 bg-zinc-950/70 backdrop-blur-sm p-4 md:p-5 shadow-md hover:shadow-xl hover:border-yellow/40 transition-all duration-200"
+                        type="button"
+                        onClick={() => setViewDept(dept)}
+                        className="w-full text-left relative rounded-2xl border border-white/10 bg-zinc-950/70 backdrop-blur-sm p-4 md:p-5 shadow-md hover:shadow-xl hover:border-yellow/40 transition-all duration-200 cursor-pointer"
                       >
                         {/* Lender + Buttons */}
                         <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between mb-2">
@@ -145,7 +149,10 @@ const DeptPage = () => {
                             )}
                           </div>
 
-                          <div className="flex items-center gap-2 sm:gap-3 self-end">
+                          <div
+                            className="flex items-center gap-2 sm:gap-3 self-end"
+                            onClick={(e) => e.stopPropagation()}
+                          >
                             <span
                               className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] md:text-xs font-medium capitalize border ${remainingColor}`}
                             >
@@ -176,13 +183,13 @@ const DeptPage = () => {
 
                         {/* Note (only if has value) */}
                         {dept.note && (
-                          <p className="text-white/80 text-xs md:text-sm mb-3 break-words">
+                          <p className="text-white/80 text-xs md:text-sm mb-2 break-words">
                             {dept.note}
                           </p>
                         )}
 
                         {/* Amount • Remaining • Interest */}
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 md:gap-3 text-xs md:text-sm mb-3">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 md:gap-3 text-xs md:text-sm">
                           <div className="flex items-center gap-2">
                             <span className="text-white/60">Amount</span>
                             <span className="rounded-full bg-white/5 px-2.5 py-1 text-white font-medium text-xs md:text-sm">
@@ -218,35 +225,7 @@ const DeptPage = () => {
                             )}
                           </div>
                         </div>
-
-                        {dept.transactions && dept.transactions.length > 0 && (
-                          <div className="mt-1 border-t border-white/10 pt-2">
-                            <p className="text-white/60 text-[11px] md:text-xs mb-1">
-                              Payments ({dept.transactions.length})
-                            </p>
-                            <div className="space-y-1 max-h-24 overflow-y-auto pr-1">
-                              {dept.transactions.slice(0, 3).map((tx) => (
-                                <div
-                                  key={tx.transactionId}
-                                  className="flex items-center justify-between text-[11px] md:text-xs text-white/80"
-                                >
-                                  <span className="truncate max-w-[60%]">
-                                    {tx.note || "No note"}
-                                  </span>
-                                  <span className="font-semibold">
-                                    {formatAmount(tx.amount)}
-                                  </span>
-                                </div>
-                              ))}
-                              {dept.transactions.length > 3 && (
-                                <p className="text-[10px] text-white/40">
-                                  +{dept.transactions.length - 3} more
-                                </p>
-                              )}
-                            </div>
-                          </div>
-                        )}
-                      </div>
+                      </button>
                     );
                   })}
                 </motion.div>
@@ -274,6 +253,9 @@ const DeptPage = () => {
         )}
         {deleteDept && (
           <DeleteDept dept={deleteDept} onClose={() => seDeleteDept(null)} />
+        )}
+        {viewDept && (
+          <ViewDept dept={viewDept} onClose={() => setViewDept(null)} />
         )}
       </AnimatePresence>
     </div>
