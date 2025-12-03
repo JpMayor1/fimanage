@@ -1,7 +1,10 @@
 import LoadingSmall from "@/components/custom/loading/LoadingSmall";
 import CustomSelect from "@/components/custom/CustomSelect";
 import TextField from "@/components/custom/TextField";
+import LimitWarningModal from "@/components/transaction/LimitWarningModal";
 import { overlayAnim } from "@/constants/overlay.animation.constant";
+import { useAccountStore } from "@/stores/account/account.store";
+import { useDashboardStore } from "@/stores/dashboard/useDashboardStore";
 import { useDeptStore } from "@/stores/dept/dept.store";
 import { useReceivingStore } from "@/stores/receiving/receiving.store";
 import { useSourceStore } from "@/stores/source/source.store";
@@ -24,17 +27,24 @@ const AddTransaction = ({ onClose }: AddTransactionI) => {
   const { sources, getSources } = useSourceStore();
   const { depts, getDepts } = useDeptStore();
   const { receivings, getReceivings } = useReceivingStore();
+  const { account } = useAccountStore();
+  const { summary, getDashboardData } = useDashboardStore();
 
   const [form, setForm] = useState<TxForm>({
     baseType: "income",
   });
+  const [showLimitWarning, setShowLimitWarning] = useState(false);
+  const [limitWarningShown, setLimitWarningShown] = useState(false);
+  const [pendingExpensePayload, setPendingExpensePayload] = useState<Partial<TransactionType> | null>(null);
 
   useEffect(() => {
     // Preload data needed for selects (first page only)
     if (!sources.length) void getSources(false);
     if (!depts.length) void getDepts(false);
     if (!receivings.length) void getReceivings(false);
-  }, [sources.length, depts.length, receivings.length, getSources, getDepts, getReceivings]);
+    // Fetch dashboard data to get today's expense
+    if (!summary) void getDashboardData();
+  }, [sources.length, depts.length, receivings.length, getSources, getDepts, getReceivings, summary, getDashboardData]);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -55,11 +65,24 @@ const AddTransaction = ({ onClose }: AddTransactionI) => {
     }
 
     if (form.baseType === "expense") {
+      const expenseAmount = amountNumber(form.expense?.amount);
       payload.expense = {
         source: form.expense?.source || "",
         note: form.expense?.note || "",
-        amount: amountNumber(form.expense?.amount),
+        amount: expenseAmount,
       };
+
+      // Check if limit is reached (only show once per transaction attempt)
+      const accountLimit = account?.limit || 500;
+      const todayExpense = summary?.todayExpense || 0;
+      const totalAfterAdd = todayExpense + expenseAmount;
+
+      if (totalAfterAdd >= accountLimit && !limitWarningShown) {
+        setPendingExpensePayload(payload);
+        setShowLimitWarning(true);
+        setLimitWarningShown(true);
+        return; // Don't submit yet, wait for user to acknowledge
+      }
     }
 
     if (form.baseType === "transfer") {
@@ -87,17 +110,48 @@ const AddTransaction = ({ onClose }: AddTransactionI) => {
     }
 
     const success = await addTransaction(payload);
-    if (success) onClose();
+    if (success) {
+      // Reset limit warning flag and pending payload on successful add
+      setLimitWarningShown(false);
+      setPendingExpensePayload(null);
+      onClose();
+    }
   };
 
+  const handleLimitWarningAcknowledge = async () => {
+    setShowLimitWarning(false);
+    // Submit the pending expense after user acknowledges
+    if (pendingExpensePayload) {
+      const success = await addTransaction(pendingExpensePayload);
+      if (success) {
+        setLimitWarningShown(false);
+        setPendingExpensePayload(null);
+        onClose();
+      }
+    }
+  };
+
+  const accountLimit = account?.limit || 500;
+  const todayExpense = summary?.todayExpense || 0;
+  const expenseAmount = pendingExpensePayload?.expense?.amount || 0;
+  const totalExpenseAfterAdd = todayExpense + expenseAmount;
+
   return (
-    <motion.div
-      className="fixed inset-0 z-30 flex items-start justify-center bg-black/70 p-5 overflow-y-scroll no-scrollbar"
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      variants={overlayAnim}
-    >
+    <>
+      {showLimitWarning && (
+        <LimitWarningModal
+          onClose={handleLimitWarningAcknowledge}
+          currentExpense={totalExpenseAfterAdd}
+          limit={accountLimit}
+        />
+      )}
+      <motion.div
+        className="fixed inset-0 z-30 flex items-start justify-center bg-black/70 p-5 overflow-y-scroll no-scrollbar"
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        variants={overlayAnim}
+      >
       <div className="w-full max-w-2xl bg-primary rounded-2xl shadow-2xl py-8 px-6 relative">
         <button
           className="absolute top-3 right-3 p-2 rounded-full hover:bg-red/20 cursor-pointer"
@@ -113,12 +167,15 @@ const AddTransaction = ({ onClose }: AddTransactionI) => {
             <label className="text-white text-xs">Type *</label>
             <CustomSelect
               value={form.baseType}
-              onChange={(e) =>
+              onChange={(e) => {
                 setForm((prev) => ({
                   ...prev,
                   baseType: e.target.value as TransactionType["type"],
-                }))
-              }
+                }));
+                // Reset limit warning when changing transaction type
+                setLimitWarningShown(false);
+                setPendingExpensePayload(null);
+              }}
             >
               <option value="income">Income</option>
               <option value="expense">Expense</option>
@@ -479,6 +536,7 @@ const AddTransaction = ({ onClose }: AddTransactionI) => {
         </form>
       </div>
     </motion.div>
+    </>
   );
 };
 
