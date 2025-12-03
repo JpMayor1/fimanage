@@ -10,12 +10,11 @@ export type TutorialStep = {
 export type OnboardingStoreType = {
   isActive: boolean;
   currentStep: number;
-  completedPages: string[];
   steps: TutorialStep[];
   startTutorial: () => void;
   nextStep: () => void;
   previousStep: () => void;
-  completeTutorial: () => void;
-  skipTutorial: () => void;
+  completeTutorial: () => Promise<void>;
+  skipTutorial: () => Promise<void>;
   setSteps: (steps: TutorialStep[]) => void;
 };

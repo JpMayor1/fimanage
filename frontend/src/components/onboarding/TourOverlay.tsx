@@ -95,12 +95,12 @@ const TourOverlay = ({ targetElement, onClose }: TourOverlayProps) => {
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="fixed border-4 border-yellow shadow-[0_0_0_9999px_rgba(0,0,0,0.5)] z-[9998] pointer-events-none rounded-lg"
+        className="fixed border-2 md:border-4 border-yellow shadow-[0_0_0_9999px_rgba(0,0,0,0.5)] z-[9998] pointer-events-none rounded-lg"
         style={{
-          top: `${rect.top - 4}px`,
-          left: `${rect.left - 4}px`,
-          width: `${rect.width + 8}px`,
-          height: `${rect.height + 8}px`,
+          top: `${rect.top - 2}px`,
+          left: `${rect.left - 2}px`,
+          width: `${rect.width + 4}px`,
+          height: `${rect.height + 4}px`,
         }}
       />
     </>

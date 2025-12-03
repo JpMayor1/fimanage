@@ -14,6 +14,7 @@ export type AccountType = {
   address: string;
   recoveryCode?: string;
   limit: number;
+  completedOnboardingPages?: string[];
   createdAt: Date;
   updatedAt: Date;
 };
