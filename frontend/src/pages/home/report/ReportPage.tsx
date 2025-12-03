@@ -29,12 +29,12 @@ const ReportPage = () => {
     if (account) fetchData();
   }, [account, getReportData, period]);
 
-  const handleDownloadPDF = () => {
+  const handleDownloadPDF = async () => {
     if (!reportRef.current || !reportData) return;
     const title = `Financial Report - ${
       period.charAt(0).toUpperCase() + period.slice(1)
     } - ${dayjs().format("MMMM YYYY")}`;
-    generatePDF(title, reportRef.current);
+    await generatePDF(title, reportRef.current);
   };
 
   if (!reportData && !getLoading) {
