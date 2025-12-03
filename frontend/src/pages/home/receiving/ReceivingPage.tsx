@@ -144,9 +144,8 @@ const ReceivingPage = () => {
                     );
 
                     return (
-                      <button
+                      <div
                         key={receiving._id}
-                        type="button"
                         onClick={() => setViewReceiving(receiving)}
                         className="w-full text-left relative rounded-2xl border border-white/10 bg-zinc-950/70 backdrop-blur-sm p-3 md:p-4 shadow-md hover:shadow-xl hover:border-yellow/40 transition-all duration-200 cursor-pointer"
                       >
@@ -243,7 +242,7 @@ const ReceivingPage = () => {
                             )}
                           </div>
                         </div>
-                      </button>
+                      </div>
                     );
                   })}
                 </motion.div>
