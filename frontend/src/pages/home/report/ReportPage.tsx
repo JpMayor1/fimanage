@@ -322,12 +322,12 @@ const ReportPage = () => {
                         key={index}
                         className="flex items-center justify-between p-3 rounded-lg bg-white/5 border border-white/10"
                       >
-                        <div className="flex items-center gap-3 flex-1">
-                          <span className="text-yellow text-sm font-bold w-6">
+                        <div className="flex items-center gap-2.5 flex-1">
+                          <span className="text-yellow text-sm font-bold">
                             {index + 1}
                           </span>
                           <div className="flex-1">
-                            <p className="text-white font-medium">
+                            <p className="text-white font-medium truncate">
                               {source.name}
                             </p>
                             <div className="flex items-center gap-3 mt-1">
