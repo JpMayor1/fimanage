@@ -91,6 +91,7 @@ const OnboardingTour = () => {
             currentStep={currentStep}
             totalSteps={steps.length}
             position={currentStepData.position}
+            targetElement={targetElement}
           />
         </>
       )}
