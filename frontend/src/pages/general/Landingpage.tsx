@@ -244,19 +244,13 @@ export default function LandingPage() {
 
       {/* Features Section */}
       <section className="relative z-10 py-20 px-4 md:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="max-w-7xl mx-auto"
-        >
+        <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
               className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold mb-4"
             >
               <span className="bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent">
@@ -266,8 +260,8 @@ export default function LandingPage() {
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.1 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.4, delay: 0.1, ease: "easeOut" }}
               className="text-white/60 text-sm sm:text-base md:text-lg max-w-2xl mx-auto px-4"
             >
               Everything you need to manage your finances effectively, all in
@@ -279,12 +273,20 @@ export default function LandingPage() {
             {features.map((feature, idx) => (
               <motion.div
                 key={idx}
-                initial={{ opacity: 0, y: 40 }}
+                initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: idx * 0.1 }}
-                whileHover={{ scale: 1.05, y: -5 }}
-                className={`relative p-6 rounded-2xl bg-gradient-to-br ${feature.color} border backdrop-blur-sm hover:shadow-2xl transition-all cursor-pointer group`}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{
+                  duration: 0.4,
+                  delay: idx * 0.05,
+                  ease: [0.25, 0.46, 0.45, 0.94],
+                }}
+                whileHover={{
+                  scale: 1.03,
+                  y: -8,
+                  transition: { duration: 0.2, ease: "easeOut" },
+                }}
+                className={`relative p-6 rounded-2xl bg-gradient-to-br ${feature.color} border backdrop-blur-sm hover:shadow-2xl transition-shadow duration-300 cursor-pointer group`}
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
                 <div className="relative z-10">
@@ -299,7 +301,7 @@ export default function LandingPage() {
               </motion.div>
             ))}
           </div>
-        </motion.div>
+        </div>
       </section>
 
       {/* CTA Section */}
