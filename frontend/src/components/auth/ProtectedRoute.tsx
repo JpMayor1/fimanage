@@ -1,13 +1,20 @@
-import { Navigate } from "react-router-dom";
+import { useAccountStore } from "@/stores/account/account.store";
 import { useAuthStore } from "@/stores/auth/useAuthStore";
+import { useEffect } from "react";
+import { Navigate, Outlet } from "react-router-dom";
+import SideBar from "../sidebar/SideBar";
 import SplashScreen from "../splash/SplashScreen";
 
-interface ProtectedRouteProps {
-  children: React.ReactNode;
-}
-
-const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
+const ProtectedRoute = () => {
   const { isAuthenticated } = useAuthStore();
+  const { account, verify } = useAccountStore();
+
+  useEffect(() => {
+    // Load account details if authenticated and account not loaded
+    if (isAuthenticated && !account) {
+      verify();
+    }
+  }, [isAuthenticated, account, verify]);
 
   // Show splash while checking authentication
   if (isAuthenticated === null) {
@@ -20,8 +27,14 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   }
 
   // User is authenticated, render the protected content
-  return <>{children}</>;
+  return (
+    <div className="h-[100dvh] w-screen overflow-hidden flex justify-end bg-gradient-to-br from-primary via-black to-primary">
+      <SideBar />
+      <div className="h-full w-full md:w-[calc(100%-280px)]">
+        <Outlet />
+      </div>
+    </div>
+  );
 };
 
 export default ProtectedRoute;
-

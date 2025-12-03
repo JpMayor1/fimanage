@@ -8,7 +8,7 @@ import { GiPayMoney, GiReceiveMoney } from "react-icons/gi";
 import { GrMoney } from "react-icons/gr";
 import { IoMdClose } from "react-icons/io";
 import { MdLogout, MdOutlineSpaceDashboard } from "react-icons/md";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import BlurImage from "../custom/BlurImage";
 
 const SideBar = () => {
@@ -16,7 +16,6 @@ const SideBar = () => {
   const { logout, loading } = useAuthStore();
   const { open, setOpen } = useSideBar();
   const location = useLocation();
-  const navigate = useNavigate();
 
   if (!account) return null;
 
@@ -61,11 +60,7 @@ const SideBar = () => {
   const linkInactive = "text-gray-300 hover:bg-gray-800 hover:text-white";
 
   const logoutFunc = async () => {
-    const success = await logout();
-    if (success) {
-      // Navigate will be handled by ProtectedRoute redirecting unauthenticated users
-      navigate("/auth/login", { replace: true });
-    }
+    await logout();
   };
 
   return (

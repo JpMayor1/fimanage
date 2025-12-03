@@ -1,8 +1,9 @@
 import { Toaster } from "react-hot-toast";
-import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom";
-
-import AuthenticatedLayout from "./layouts/AuthenticatedLayout";
-import UnAuthenticatedLayout from "./layouts/UnAuthenticatedLayout";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from "react-router-dom";
 
 import LandingPage from "./pages/general/Landingpage";
 import PageNotFound from "./pages/general/PageNotFound";
@@ -11,7 +12,6 @@ import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
 
 import { useEffect } from "react";
-import { useAuthStore } from "./stores/auth/useAuthStore";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import PublicRoute from "./components/auth/PublicRoute";
 import SplashScreen from "./components/splash/SplashScreen";
@@ -22,6 +22,7 @@ import ReceivingPage from "./pages/home/receiving/ReceivingPage";
 import ReportPage from "./pages/home/report/ReportPage";
 import SourcePage from "./pages/home/source/SourcePage";
 import TransactionPage from "./pages/home/transaction/TransactionPage";
+import { useAuthStore } from "./stores/auth/useAuthStore";
 import { initCSRF } from "./utils/csrf/csrf.util";
 
 function App() {
@@ -60,11 +61,7 @@ function App() {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: (
-        <PublicRoute>
-          <UnAuthenticatedLayout />
-        </PublicRoute>
-      ),
+      element: <PublicRoute />,
       children: [
         {
           path: "/",
@@ -82,11 +79,7 @@ function App() {
     },
     {
       path: "/home",
-      element: (
-        <ProtectedRoute>
-          <AuthenticatedLayout />
-        </ProtectedRoute>
-      ),
+      element: <ProtectedRoute />,
       children: [
         {
           path: "/home/profile",

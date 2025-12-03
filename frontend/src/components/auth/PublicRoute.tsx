@@ -1,12 +1,9 @@
-import { Navigate } from "react-router-dom";
 import { useAuthStore } from "@/stores/auth/useAuthStore";
+import { Navigate, Outlet } from "react-router-dom";
+import AnimatedBackground from "../animations/AnimatedBackground";
 import SplashScreen from "../splash/SplashScreen";
 
-interface PublicRouteProps {
-  children: React.ReactNode;
-}
-
-const PublicRoute = ({ children }: PublicRouteProps) => {
+const PublicRoute = () => {
   const { isAuthenticated } = useAuthStore();
 
   // Show splash while checking authentication
@@ -20,8 +17,14 @@ const PublicRoute = ({ children }: PublicRouteProps) => {
   }
 
   // User is not authenticated, render the public content
-  return <>{children}</>;
+  return (
+    <div className="h-[100dvh] w-screen overflow-hidden">
+      <AnimatedBackground />
+      <div className="relative h-full w-full">
+        <Outlet />
+      </div>
+    </div>
+  );
 };
 
 export default PublicRoute;
-
