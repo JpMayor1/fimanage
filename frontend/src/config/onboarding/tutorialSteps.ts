@@ -57,18 +57,6 @@ export const dashboardSteps: TutorialStep[] = [
   },
 ];
 
-export const sidebarSteps: TutorialStep[] = [
-  {
-    id: "sidebar-navigation",
-    target: "[data-tour='sidebar']",
-    title: "Navigation Menu",
-    content:
-      "Use this sidebar to navigate between different features. You can access Dashboard, Sources, Depts, Receivings, Transactions, Reports, and Profile.",
-    position: "right",
-    page: "sidebar",
-  },
-];
-
 export const sourcesSteps: TutorialStep[] = [
   {
     id: "sources-header",
@@ -257,4 +245,3 @@ export const profileSteps: TutorialStep[] = [
     page: "profile",
   },
 ];
-

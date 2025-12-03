@@ -1,4 +1,7 @@
-import type { OnboardingStoreType, TutorialStep } from "@/types/onboarding/onboarding.type";
+import type {
+  OnboardingStoreType,
+  TutorialStep,
+} from "@/types/onboarding/onboarding.type";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -7,15 +10,13 @@ export const useOnboardingStore = create<OnboardingStoreType>()(
     (set, get) => ({
       isActive: false,
       currentStep: 0,
-      currentPage: null,
       completedPages: [],
       steps: [],
 
-      startTutorial: (page: string) => {
+      startTutorial: () => {
         set({
           isActive: true,
           currentStep: 0,
-          currentPage: page,
         });
       },
 
@@ -36,26 +37,26 @@ export const useOnboardingStore = create<OnboardingStoreType>()(
       },
 
       completeTutorial: () => {
-        const { currentPage, completedPages } = get();
-        if (currentPage) {
+        const { steps, completedPages } = get();
+        const page = steps[0]?.page;
+        if (page) {
           set({
             isActive: false,
             currentStep: 0,
-            completedPages: [...completedPages, currentPage],
-            currentPage: null,
+            completedPages: [...completedPages, page],
             steps: [],
           });
         }
       },
 
       skipTutorial: () => {
-        const { currentPage, completedPages } = get();
-        if (currentPage) {
+        const { steps, completedPages } = get();
+        const page = steps[0]?.page;
+        if (page) {
           set({
             isActive: false,
             currentStep: 0,
-            completedPages: [...completedPages, currentPage],
-            currentPage: null,
+            completedPages: [...completedPages, page],
             steps: [],
           });
         }
@@ -70,4 +71,3 @@ export const useOnboardingStore = create<OnboardingStoreType>()(
     }
   )
 );
-

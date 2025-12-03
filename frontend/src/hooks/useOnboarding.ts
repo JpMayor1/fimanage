@@ -1,26 +1,20 @@
-import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
-import { useOnboardingStore } from "@/stores/onboarding/onboarding.store";
 import {
   dashboardSteps,
-  sidebarSteps,
-  sourcesSteps,
   deptsSteps,
-  receivingsSteps,
-  transactionsSteps,
-  reportsSteps,
   profileSteps,
+  receivingsSteps,
+  reportsSteps,
+  sourcesSteps,
+  transactionsSteps,
 } from "@/config/onboarding/tutorialSteps";
+import { useOnboardingStore } from "@/stores/onboarding/onboarding.store";
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 export const useOnboarding = () => {
   const location = useLocation();
-  const {
-    startTutorial,
-    setSteps,
-    completedPages,
-    currentPage,
-    isActive,
-  } = useOnboardingStore();
+  const { startTutorial, setSteps, completedPages, isActive } =
+    useOnboardingStore();
 
   useEffect(() => {
     // Don't start if tutorial is already active
@@ -58,11 +52,10 @@ export const useOnboarding = () => {
       // Small delay to ensure DOM is ready
       const timer = setTimeout(() => {
         setSteps(steps);
-        startTutorial(page);
+        startTutorial();
       }, 500);
 
       return () => clearTimeout(timer);
     }
   }, [location.pathname, completedPages, isActive, startTutorial, setSteps]);
 };
-
