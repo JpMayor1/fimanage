@@ -29,9 +29,44 @@ const OnboardingTour = () => {
 
     // Small delay to ensure DOM is ready
     const findElement = () => {
-      const element = document.querySelector(
+      // Query all matching elements
+      const elements = document.querySelectorAll(
         currentStepData.target
-      ) as HTMLElement;
+      ) as NodeListOf<HTMLElement>;
+
+      let element: HTMLElement | null = null;
+
+      if (elements.length === 0) {
+        // No elements found, retry
+        timeoutRef.current = setTimeout(findElement, 100);
+        return;
+      } else if (elements.length === 1) {
+        // Only one element, use it
+        element = elements[0];
+      } else {
+        // Multiple elements found, find the visible one
+        for (const el of Array.from(elements)) {
+          const style = window.getComputedStyle(el);
+          const rect = el.getBoundingClientRect();
+          
+          // Check if element is visible (not hidden, has dimensions, and is in viewport)
+          if (
+            style.display !== "none" &&
+            style.visibility !== "hidden" &&
+            style.opacity !== "0" &&
+            rect.width > 0 &&
+            rect.height > 0
+          ) {
+            element = el;
+            break;
+          }
+        }
+        
+        // If no visible element found, use the first one as fallback
+        if (!element) {
+          element = elements[0];
+        }
+      }
 
       if (element) {
         setTargetElement(element);

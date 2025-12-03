@@ -128,7 +128,7 @@ const TransactionPage = () => {
           </div>
         </div>
 
-        <div data-tour="transactions-filter" className="w-full max-w-xl hidden md:block">
+        <div data-tour="transactions-filter-desktop" className="w-full max-w-xl hidden md:block">
           <CustomSelect
             value={filterType}
             onChange={(e) =>
@@ -156,7 +156,7 @@ const TransactionPage = () => {
       </div>
 
       {/* Filters */}
-      <div data-tour="transactions-filter" className="mb-3 md:mb-4 w-full md:max-w-xs md:hidden">
+      <div data-tour="transactions-filter-mobile" className="mb-3 md:mb-4 w-full md:max-w-xs md:hidden">
         <CustomSelect
           value={filterType}
           onChange={(e) =>

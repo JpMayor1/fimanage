@@ -159,7 +159,7 @@ export const transactionsSteps: TutorialStep[] = [
   },
   {
     id: "transactions-filter",
-    target: "[data-tour='transactions-filter']",
+    target: "[data-tour='transactions-filter-desktop'], [data-tour='transactions-filter-mobile']",
     title: "Filter Transactions",
     content:
       "Use this dropdown to filter transactions by type: Income, Expense, Transfer, Dept Payment, or Receiving Payment.",
