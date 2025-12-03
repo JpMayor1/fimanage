@@ -30,7 +30,6 @@ const TourTooltip = ({
   const [isMobile, setIsMobile] = useState(false);
   const [tooltipStyle, setTooltipStyle] = useState<React.CSSProperties>({});
   const [isAbove, setIsAbove] = useState(false);
-  const [arrowOffset, setArrowOffset] = useState(0);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -145,17 +144,6 @@ const TourTooltip = ({
 
       setIsAbove(finalIsAbove);
 
-      // Calculate arrow offset (to point to center of target element)
-      // Constrain arrow to stay within tooltip bounds (max 40% from center)
-      const tooltipCenterX = leftPosition + tooltipMaxWidth / 2;
-      const rawOffset = elementCenterX - tooltipCenterX;
-      const maxOffset = tooltipMaxWidth * 0.4; // Max 40% of tooltip width
-      const constrainedOffset = Math.max(
-        -maxOffset,
-        Math.min(maxOffset, rawOffset)
-      );
-      setArrowOffset(constrainedOffset);
-
       // Set position with proper constraints
       const style: React.CSSProperties = {
         left: `${leftPosition}px`,
@@ -199,30 +187,6 @@ const TourTooltip = ({
         style={tooltipStyle}
       >
         <div className="bg-zinc-900 border-2 border-yellow/50 rounded-xl md:rounded-2xl p-4 md:p-6 shadow-2xl max-w-sm w-full md:w-auto backdrop-blur-sm relative">
-          {/* Arrow pointing to target element */}
-          {targetElement && position !== "center" && (
-            <div
-              className={`absolute ${
-                isAbove
-                  ? "bottom-0 translate-y-full"
-                  : "top-0 -translate-y-full"
-              }`}
-              style={{
-                left: `calc(50% + ${arrowOffset}px)`,
-                transform: `translateX(-50%) ${
-                  isAbove ? "translateY(100%)" : "translateY(-100%)"
-                }`,
-              }}
-            >
-              <div
-                className={`w-0 h-0 border-l-[8px] border-r-[8px] ${
-                  isAbove
-                    ? "border-t-[8px] border-t-yellow/50 border-l-transparent border-r-transparent"
-                    : "border-b-[8px] border-b-yellow/50 border-l-transparent border-r-transparent"
-                }`}
-              />
-            </div>
-          )}
           {/* Header */}
           <div className="flex items-start justify-between mb-3 md:mb-4 gap-2">
             <div className="flex-1 min-w-0">
