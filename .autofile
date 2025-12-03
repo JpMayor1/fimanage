@@ -3,7 +3,7 @@ dev {
   $ taskkill /F /IM node.exe
   + cd backend && npm run dev
   + cd frontend && npm run dev
-  $ code .
+  $ cursor .
   $ wr http://localhost:5173
 }
 

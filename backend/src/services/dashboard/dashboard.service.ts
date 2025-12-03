@@ -127,9 +127,19 @@ export const getDashboardDataS = async (userId: string) => {
     createdAt: t.createdAt,
   }));
 
-  // Today's expense
-  const todayExpense = dailyExpense.find((e) => e.date === today);
-  const todayExpenseAmount = todayExpense?.expense || 0;
+  // Today's expense - calculate from today's transactions
+  const todayStart = startOfDay(phTime);
+  const todayEnd = endOfDay(phTime);
+  const todayTransactions = await Transaction.find({
+    userId,
+    type: "expense",
+    createdAt: { $gte: todayStart, $lte: todayEnd },
+  }).lean();
+
+  const todayExpenseAmount = todayTransactions.reduce(
+    (sum, t) => sum + (t.expense?.amount || 0),
+    0
+  );
   const accountLimit = account?.limit || 500;
 
   return {
