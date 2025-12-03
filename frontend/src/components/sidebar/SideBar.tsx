@@ -62,7 +62,10 @@ const SideBar = () => {
 
   const logoutFunc = async () => {
     const success = await logout();
-    if (success) navigate("/auth/login");
+    if (success) {
+      // Navigate will be handled by ProtectedRoute redirecting unauthenticated users
+      navigate("/auth/login", { replace: true });
+    }
   };
 
   return (

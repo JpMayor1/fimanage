@@ -37,7 +37,8 @@ const LoginPage: React.FC = () => {
         username: "",
         password: "",
       });
-      navigate("/home/dashboard");
+      // Navigate will be handled by PublicRoute redirecting authenticated users
+      navigate("/home/dashboard", { replace: true });
     }
   };
   return (

@@ -1,5 +1,5 @@
 import { Toaster } from "react-hot-toast";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom";
 
 import AuthenticatedLayout from "./layouts/AuthenticatedLayout";
 import UnAuthenticatedLayout from "./layouts/UnAuthenticatedLayout";
@@ -11,6 +11,10 @@ import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
 
 import { useEffect } from "react";
+import { useAuthStore } from "./stores/auth/useAuthStore";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
+import PublicRoute from "./components/auth/PublicRoute";
+import SplashScreen from "./components/splash/SplashScreen";
 import DashboardPage from "./pages/home/dashboard/DashboardPage";
 import DeptPage from "./pages/home/dept/DeptPage";
 import ProfilePage from "./pages/home/profile/ProfilePage";
@@ -21,14 +25,46 @@ import TransactionPage from "./pages/home/transaction/TransactionPage";
 import { initCSRF } from "./utils/csrf/csrf.util";
 
 function App() {
-  useEffect(() => {
-    initCSRF();
-  }, []);
+  const { isAuthenticated, checkAuth } = useAuthStore();
 
+  useEffect(() => {
+    const initializeApp = async () => {
+      // Initialize CSRF
+      await initCSRF();
+
+      // Check authentication status silently
+      // Ensure splash screen shows for minimum 1 second
+      const startTime = Date.now();
+      await checkAuth();
+      const elapsed = Date.now() - startTime;
+      const minDisplayTime = 1000; // 1 second minimum
+
+      if (elapsed < minDisplayTime) {
+        // Wait for remaining time to meet minimum display duration
+        await new Promise((resolve) =>
+          setTimeout(resolve, minDisplayTime - elapsed)
+        );
+      }
+    };
+
+    initializeApp();
+  }, [checkAuth]);
+
+  // Show splash screen while checking authentication
+  if (isAuthenticated === null) {
+    return <SplashScreen />;
+  }
+
+  // Create router with proper route protection
+  // Router is recreated when isAuthenticated changes to ensure proper redirects
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <UnAuthenticatedLayout />,
+      element: (
+        <PublicRoute>
+          <UnAuthenticatedLayout />
+        </PublicRoute>
+      ),
       children: [
         {
           path: "/",
@@ -46,7 +82,11 @@ function App() {
     },
     {
       path: "/home",
-      element: <AuthenticatedLayout />,
+      element: (
+        <ProtectedRoute>
+          <AuthenticatedLayout />
+        </ProtectedRoute>
+      ),
       children: [
         {
           path: "/home/profile",
@@ -75,6 +115,10 @@ function App() {
         {
           path: "/home/reports",
           element: <ReportPage />,
+        },
+        {
+          index: true,
+          element: <Navigate to="/home/dashboard" replace />,
         },
       ],
     },

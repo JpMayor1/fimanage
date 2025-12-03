@@ -2,7 +2,9 @@ import type { AccountType } from "../account/account.type";
 
 export type AuthStateType = {
   loading: boolean;
+  isAuthenticated: boolean | null;
 
+  checkAuth: () => Promise<boolean>;
   registerccount: ({
     profilePicture,
     firstName,
