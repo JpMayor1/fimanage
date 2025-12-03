@@ -18,11 +18,16 @@ const TopSources = () => {
     <div className="rounded-2xl border border-white/10 bg-zinc-950/70 backdrop-blur-sm p-4 md:p-6 shadow-xl">
       <h3 className="text-white text-lg font-semibold mb-4">Top Sources</h3>
       <div className="space-y-3">
-        {topSources.map((source, index) => (
-          <div
-            key={source._id}
-            className="flex items-center justify-between p-3 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
-          >
+        {topSources.map((source, index) => {
+          // Hide items beyond 3rd (index >= 3) on large screens only
+          const isHiddenOnLarge = index >= 3;
+          return (
+            <div
+              key={source._id}
+              className={`flex items-center justify-between p-3 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors ${
+                isHiddenOnLarge ? "lg:hidden" : ""
+              }`}
+            >
             <div className="flex items-center gap-3 flex-1 min-w-0">
               <div className="flex-shrink-0 w-8 h-8 rounded-full bg-yellow/10 border border-yellow/30 flex items-center justify-center">
                 <span className="text-yellow text-xs font-bold">{index + 1}</span>
@@ -52,7 +57,8 @@ const TopSources = () => {
               </span>
             </div>
           </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

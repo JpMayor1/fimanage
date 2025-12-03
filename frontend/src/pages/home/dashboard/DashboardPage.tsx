@@ -1,7 +1,6 @@
 import LoadingBig from "@/components/custom/loading/LoadingBig";
 import Alerts from "@/components/dashboard/Alerts";
 import CalendarProgress from "@/components/dashboard/CalendarProgress";
-import ExpenseTrendChart from "@/components/dashboard/ExpenseTrendChart";
 import RecentTransactions from "@/components/dashboard/RecentTransactions";
 import SummaryCards from "@/components/dashboard/SummaryCards";
 import TopSources from "@/components/dashboard/TopSources";
@@ -57,17 +56,14 @@ const DashboardPage = () => {
           {/* Calendar */}
           <CalendarProgress />
 
-          {/* Charts Row */}
+          {/* Charts Row - Transaction Types & Top Sources side by side */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
-            <ExpenseTrendChart />
             <TransactionTypeChart />
+            <TopSources />
           </div>
 
-          {/* Bottom Row */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
-            <TopSources />
-            <RecentTransactions />
-          </div>
+          {/* Recent Transactions - Full Width */}
+          <RecentTransactions />
         </div>
       )}
     </div>

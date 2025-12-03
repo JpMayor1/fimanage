@@ -93,7 +93,7 @@ const TransactionTypeChart = () => {
             return (
               <div
                 key={item.type}
-                className="flex items-center justify-between"
+                className="flex items-center justify-between gap-5"
               >
                 <div className="flex items-center gap-2">
                   <div

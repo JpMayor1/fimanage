@@ -101,7 +101,9 @@ const CalendarProgress: React.FC = () => {
     <div className="rounded-2xl border border-white/10 bg-zinc-950/70 backdrop-blur-sm p-4 md:p-6 shadow-xl select-none overflow-hidden">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-white text-lg font-semibold">Daily Expense</h2>
+        <h2 className="text-white text-base md:text-lg font-semibold">
+          Daily Expense
+        </h2>
         <div className="flex items-center gap-2">
           <button
             onClick={() => changeMonth("prev")}
@@ -223,11 +225,17 @@ const CalendarProgress: React.FC = () => {
                 >
                   <p className="whitespace-nowrap text-xs">
                     <span className="font-semibold text-white/80">Limit:</span>{" "}
-                    <span className="text-yellow">₱{record.limit.toLocaleString()}</span>
+                    <span className="text-yellow">
+                      ₱{record.limit.toLocaleString()}
+                    </span>
                   </p>
                   <p className="whitespace-nowrap text-xs">
-                    <span className="font-semibold text-white/80">Expense:</span>{" "}
-                    <span className="text-expense">₱{record.expense.toLocaleString()}</span>
+                    <span className="font-semibold text-white/80">
+                      Expense:
+                    </span>{" "}
+                    <span className="text-expense">
+                      ₱{record.expense.toLocaleString()}
+                    </span>
                   </p>
                 </div>
               )}
