@@ -1,4 +1,5 @@
 import { useDashboardStore } from "@/stores/dashboard/useDashboardStore";
+import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 
 const TransactionTypeChart = () => {
   const { transactionTypeDistribution } = useDashboardStore();
@@ -17,11 +18,6 @@ const TransactionTypeChart = () => {
     );
   }
 
-  const total = transactionTypeDistribution.reduce(
-    (sum, item) => sum + item.count,
-    0
-  );
-
   const colors = {
     income: "#10b981",
     expense: "#ef4444",
@@ -38,75 +34,110 @@ const TransactionTypeChart = () => {
     receiving: "Receiving",
   };
 
-  // Calculate angles for pie chart
-  let currentAngle = -90;
-  const radius = 60;
-  const centerX = 80;
-  const centerY = 80;
+  // Prepare data for recharts
+  const chartData = transactionTypeDistribution
+    .filter((item) => item.count > 0)
+    .map((item) => ({
+      name: typeLabels[item.type],
+      value: item.count,
+      type: item.type,
+      color: colors[item.type],
+    }));
+
+  const total = chartData.reduce((sum, item) => sum + item.value, 0);
+
+  // Custom tooltip
+  const CustomTooltip = ({
+    active,
+    payload,
+  }: {
+    active?: boolean;
+    payload?: Array<{
+      name: string;
+      value: number;
+      payload: { name: string; value: number; type: string; color: string };
+    }>;
+  }) => {
+    if (active && payload && payload.length) {
+      const data = payload[0];
+      const percentage = ((data.value / total) * 100).toFixed(1);
+      return (
+        <div className="bg-zinc-900/95 backdrop-blur-sm border border-white/20 rounded-lg p-3 shadow-xl">
+          <p className="text-white font-semibold mb-1">{data.name}</p>
+          <p className="text-white/80 text-sm">
+            Count: <span className="font-medium">{data.value}</span>
+          </p>
+          <p className="text-white/80 text-sm">
+            Percentage: <span className="font-medium">{percentage}%</span>
+          </p>
+        </div>
+      );
+    }
+    return null;
+  };
+
+  // Custom label function
+  const renderLabel = (entry: {
+    cx?: number;
+    cy?: number;
+    midAngle?: number;
+    innerRadius?: number;
+    outerRadius?: number;
+    percent?: number;
+    value?: number;
+    name?: string;
+  }) => {
+    if (entry.percent === undefined) return "";
+    const percentage = (entry.percent * 100).toFixed(1);
+    return `${percentage}%`;
+  };
 
   return (
     <div className="rounded-2xl border border-white/10 bg-zinc-950/70 backdrop-blur-sm p-4 md:p-6 shadow-xl">
       <h3 className="text-white text-lg font-semibold mb-4">
         Transaction Types
       </h3>
-      <div className="flex flex-col md:flex-row items-center gap-6">
-        <svg width="160" height="160" className="flex-shrink-0">
-          {transactionTypeDistribution.map((item) => {
-            if (item.count === 0) return null;
-            const percentage = (item.count / total) * 100;
-            const angle = (percentage / 100) * 360;
-            const largeArcFlag = angle > 180 ? 1 : 0;
-
-            const startAngle = currentAngle;
-            const endAngle = currentAngle + angle;
-
-            const x1 =
-              centerX + radius * Math.cos((startAngle * Math.PI) / 180);
-            const y1 =
-              centerY + radius * Math.sin((startAngle * Math.PI) / 180);
-            const x2 = centerX + radius * Math.cos((endAngle * Math.PI) / 180);
-            const y2 = centerY + radius * Math.sin((endAngle * Math.PI) / 180);
-
-            const pathData = [
-              `M ${centerX} ${centerY}`,
-              `L ${x1} ${y1}`,
-              `A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2}`,
-              "Z",
-            ].join(" ");
-
-            currentAngle = endAngle;
-
-            return (
-              <path
-                key={item.type}
-                d={pathData}
-                fill={colors[item.type]}
-                className="hover:opacity-80 transition-opacity"
-              />
-            );
-          })}
-        </svg>
-        <div className="flex-1 space-y-2">
-          {transactionTypeDistribution.map((item) => {
-            const percentage =
-              total > 0 ? ((item.count / total) * 100).toFixed(1) : 0;
+      <div className="w-full">
+        <ResponsiveContainer width="100%" height={200}>
+          <PieChart>
+            <Pie
+              data={chartData}
+              cx="50%"
+              cy="50%"
+              labelLine={false}
+              label={renderLabel}
+              outerRadius={70}
+              innerRadius={30}
+              fill="#8884d8"
+              dataKey="value"
+              stroke="none"
+            >
+              {chartData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={entry.color} />
+              ))}
+            </Pie>
+            <Tooltip content={<CustomTooltip />} />
+          </PieChart>
+        </ResponsiveContainer>
+        {/* Custom Legend */}
+        <div className="flex flex-col gap-2 mt-4">
+          {chartData.map((item, index) => {
+            const percentage = ((item.value / total) * 100).toFixed(1);
             return (
               <div
-                key={item.type}
-                className="flex items-center justify-between gap-5"
+                key={index}
+                className="flex items-center justify-between gap-3"
               >
                 <div className="flex items-center gap-2">
                   <div
                     className="w-3 h-3 rounded-full"
-                    style={{ backgroundColor: colors[item.type] }}
+                    style={{ backgroundColor: item.color }}
                   />
-                  <span className="text-white/80 text-sm">
-                    {typeLabels[item.type]}
-                  </span>
+                  <span className="text-white/80 text-sm">{item.name}</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <span className="text-white text-sm font-medium">
-                    {item.count}
+                    {item.value}
                   </span>
                   <span className="text-white/50 text-xs w-12 text-right">
                     {percentage}%
