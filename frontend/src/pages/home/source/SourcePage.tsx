@@ -56,7 +56,10 @@ const SourcePage = () => {
   return (
     <div className="h-[100dvh] w-full p-2 md:p-4 bg-gradient-to-b from-zinc-950 via-zinc-950/95 to-black">
       {/* Header */}
-      <div className="w-full flex items-center justify-between mb-4 md:mb-6">
+      <div
+        data-tour="sources-header"
+        className="w-full flex items-center justify-between mb-4 md:mb-6"
+      >
         <div className="flex items-center gap-3">
           <RxHamburgerMenu
             className="md:hidden text-white/90 text-2xl cursor-pointer hover:text-yellow transition-colors"
@@ -73,6 +76,7 @@ const SourcePage = () => {
         </div>
 
         <button
+          data-tour="sources-add"
           className="inline-flex items-center gap-2 rounded-full bg-yellow/90 px-3 md:px-4 py-2 text-xs md:text-sm font-medium text-black shadow-lg shadow-yellow/20 hover:bg-yellow hover:shadow-yellow/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow/70 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 transition-all"
           onClick={() => setAddSource(true)}
         >
@@ -85,6 +89,7 @@ const SourcePage = () => {
       {/* Source List */}
       <div
         ref={containerRef}
+        data-tour="sources-list"
         className="h-[calc(100%-50px)] md:h-[calc(100%-70px)] w-full overflow-y-scroll no-scrollbar"
       >
         {firstLoading ? (

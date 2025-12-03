@@ -66,6 +66,7 @@ const SideBar = () => {
   return (
     <>
       <div
+        data-tour="sidebar"
         className={`
         fixed top-0 left-0 h-full bg-none z-20 transform 
         transition-transform duration-300 ease-in-out overflow-hidden

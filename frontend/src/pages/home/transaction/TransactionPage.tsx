@@ -109,7 +109,10 @@ const TransactionPage = () => {
   return (
     <div className="h-[100dvh] w-full p-2 md:p-4 bg-gradient-to-b from-zinc-950 via-zinc-950/95 to-black">
       {/* Header */}
-      <div className="w-full flex items-center justify-between gap-5 mb-4 md:mb-6">
+      <div
+        data-tour="transactions-header"
+        className="w-full flex items-center justify-between gap-5 mb-4 md:mb-6"
+      >
         <div className="flex items-center gap-3">
           <RxHamburgerMenu
             className="md:hidden text-white/90 text-2xl cursor-pointer hover:text-yellow transition-colors"
@@ -125,7 +128,7 @@ const TransactionPage = () => {
           </div>
         </div>
 
-        <div className="w-full max-w-xl hidden md:block">
+        <div data-tour="transactions-filter" className="w-full max-w-xl hidden md:block">
           <CustomSelect
             value={filterType}
             onChange={(e) =>
@@ -142,6 +145,7 @@ const TransactionPage = () => {
         </div>
 
         <button
+          data-tour="transactions-add"
           className="inline-flex items-center gap-2 rounded-full bg-yellow/90 px-3 md:px-4 py-2 text-xs md:text-sm font-medium text-black shadow-lg shadow-yellow/20 hover:bg-yellow hover:shadow-yellow/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow/70 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 transition-all"
           onClick={() => setAddTx(true)}
         >
@@ -152,7 +156,7 @@ const TransactionPage = () => {
       </div>
 
       {/* Filters */}
-      <div className="mb-3 md:mb-4 w-full md:max-w-xs md:hidden">
+      <div data-tour="transactions-filter" className="mb-3 md:mb-4 w-full md:max-w-xs md:hidden">
         <CustomSelect
           value={filterType}
           onChange={(e) =>
@@ -171,6 +175,7 @@ const TransactionPage = () => {
       {/* Transaction List */}
       <div
         ref={containerRef}
+        data-tour="transactions-list"
         className="h-[calc(100%-115px)] md:h-[calc(100%-70px)] w-full overflow-y-scroll no-scrollbar"
       >
         {firstLoading ? (

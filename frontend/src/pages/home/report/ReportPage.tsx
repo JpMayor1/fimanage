@@ -65,7 +65,10 @@ const ReportPage = () => {
   return (
     <div className="h-[100dvh] w-full overflow-y-scroll no-scrollbar p-2 md:p-4 bg-gradient-to-b from-zinc-950 via-zinc-950/95 to-black">
       {/* Header */}
-      <div className="w-full flex flex-col md:flex-row md:items-center md:justify-between gap-3 md:gap-4 mb-4 md:mb-6">
+      <div
+        data-tour="reports-header"
+        className="w-full flex flex-col md:flex-row md:items-center md:justify-between gap-3 md:gap-4 mb-4 md:mb-6"
+      >
         <div className="flex items-center gap-3">
           <RxHamburgerMenu
             className="md:hidden text-white/90 text-2xl cursor-pointer hover:text-yellow transition-colors"
@@ -82,7 +85,7 @@ const ReportPage = () => {
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="w-full md:w-auto md:max-w-xs">
+          <div data-tour="reports-period" className="w-full md:w-auto md:max-w-xs">
             <CustomSelect
               value={period}
               onChange={(e) => setPeriod(e.target.value as ReportPeriod)}
@@ -94,6 +97,7 @@ const ReportPage = () => {
             </CustomSelect>
           </div>
           <button
+            data-tour="reports-download"
             onClick={handleDownloadPDF}
             disabled={!reportData || getLoading}
             className="inline-flex items-center gap-2 rounded-full bg-yellow/90 px-3 md:px-4 py-3 text-xs md:text-sm font-medium text-black shadow-lg shadow-yellow/20 hover:bg-yellow hover:shadow-yellow/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow/70 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
@@ -110,8 +114,8 @@ const ReportPage = () => {
       ) : (
         reportData && (
           <div className="w-full max-w-7xl mx-auto space-y-4 md:space-y-6">
-            {/* Report Content - Hidden for PDF generation */}
-            <div className="space-y-6">
+            {/* Report Content */}
+            <div data-tour="reports-content" className="space-y-6">
               {/* Header Section */}
               <div className="rounded-2xl border border-white/10 bg-zinc-950/70 backdrop-blur-sm p-4 md:p-6 shadow-xl">
                 <h2 className="text-white text-2xl font-bold mb-2">

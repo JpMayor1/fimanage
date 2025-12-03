@@ -1,13 +1,18 @@
 import { useAccountStore } from "@/stores/account/account.store";
 import { useAuthStore } from "@/stores/auth/useAuthStore";
+import { useOnboarding } from "@/hooks/useOnboarding";
 import { useEffect } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import SideBar from "../sidebar/SideBar";
 import SplashScreen from "../splash/SplashScreen";
+import OnboardingTour from "../onboarding/OnboardingTour";
 
 const ProtectedRoute = () => {
   const { isAuthenticated } = useAuthStore();
   const { account, verify } = useAccountStore();
+  
+  // Initialize onboarding for current page
+  useOnboarding();
 
   useEffect(() => {
     // Load account details if authenticated and account not loaded
@@ -28,12 +33,15 @@ const ProtectedRoute = () => {
 
   // User is authenticated, render the protected content
   return (
-    <div className="h-[100dvh] w-screen overflow-hidden flex justify-end bg-gradient-to-br from-primary via-black to-primary">
-      <SideBar />
-      <div className="h-full w-full md:w-[calc(100%-280px)]">
-        <Outlet />
+    <>
+      <div className="h-[100dvh] w-screen overflow-hidden flex justify-end bg-gradient-to-br from-primary via-black to-primary">
+        <SideBar />
+        <div className="h-full w-full md:w-[calc(100%-280px)]">
+          <Outlet />
+        </div>
       </div>
-    </div>
+      <OnboardingTour />
+    </>
   );
 };
 

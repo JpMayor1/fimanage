@@ -78,7 +78,10 @@ const ProfilePage = () => {
       />
       <div className="w-full max-w-4xl mx-auto">
         {/* Header */}
-        <div className="w-full flex items-center justify-between mb-6">
+        <div
+          data-tour="profile-header"
+          className="w-full flex items-center justify-between mb-6"
+        >
           <div>
             <h1 className="text-white text-xl md:text-2xl font-semibold tracking-tight">
               Profile
@@ -313,7 +316,7 @@ const ProfilePage = () => {
           </div>
 
           {/* Daily Limit */}
-          <div className="w-full space-y-4">
+          <div data-tour="profile-daily-limit" className="w-full space-y-4">
             <h3 className="text-white/80 text-xs md:text-sm font-semibold uppercase tracking-wide">
               Settings
             </h3>

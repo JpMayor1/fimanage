@@ -24,7 +24,10 @@ const DashboardPage = () => {
   return (
     <div className="h-[100dvh] w-full overflow-y-scroll no-scrollbar p-2 md:p-4 bg-gradient-to-b from-zinc-950 via-zinc-950/95 to-black">
       {/* Header */}
-      <div className="w-full flex items-center justify-between mb-4 md:mb-6">
+      <div
+        data-tour="dashboard-header"
+        className="w-full flex items-center justify-between mb-4 md:mb-6"
+      >
         <div className="flex items-center gap-3">
           <RxHamburgerMenu
             className="md:hidden text-white/90 text-2xl cursor-pointer hover:text-yellow transition-colors"
@@ -49,19 +52,29 @@ const DashboardPage = () => {
           <Alerts />
 
           {/* Summary Cards */}
-          <SummaryCards />
+          <div data-tour="summary-cards">
+            <SummaryCards />
+          </div>
 
           {/* Calendar */}
-          <CalendarProgress />
+          <div data-tour="calendar-progress">
+            <CalendarProgress />
+          </div>
 
           {/* Charts Row - Transaction Types & Top Sources side by side */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
-            <TransactionTypeChart />
-            <TopSources />
+            <div data-tour="transaction-types">
+              <TransactionTypeChart />
+            </div>
+            <div data-tour="top-sources">
+              <TopSources />
+            </div>
           </div>
 
           {/* Recent Transactions - Full Width */}
-          <RecentTransactions />
+          <div data-tour="recent-transactions">
+            <RecentTransactions />
+          </div>
         </div>
       )}
     </div>
