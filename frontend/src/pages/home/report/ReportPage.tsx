@@ -7,7 +7,7 @@ import type { ReportPeriod } from "@/types/report/report.type";
 import { formatAmount } from "@/utils/amount/formatAmount";
 import { generatePDF } from "@/utils/pdf/generatePDF";
 import dayjs from "dayjs";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import {
   FaArrowDown,
   FaArrowUp,
@@ -22,7 +22,6 @@ const ReportPage = () => {
   const { account } = useAccountStore();
   const { reportData, getReportData, getLoading, period, setPeriod } =
     useReportStore();
-  const reportRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchData = async () => await getReportData();
@@ -30,11 +29,11 @@ const ReportPage = () => {
   }, [account, getReportData, period]);
 
   const handleDownloadPDF = async () => {
-    if (!reportRef.current || !reportData) return;
+    if (!reportData) return;
     const title = `Financial Report - ${
       period.charAt(0).toUpperCase() + period.slice(1)
     } - ${dayjs().format("MMMM YYYY")}`;
-    await generatePDF(title, reportRef.current);
+    await generatePDF(title, reportData);
   };
 
   if (!reportData && !getLoading) {
@@ -114,7 +113,7 @@ const ReportPage = () => {
         reportData && (
           <div className="w-full max-w-7xl mx-auto space-y-4 md:space-y-6">
             {/* Report Content - Hidden for PDF generation */}
-            <div ref={reportRef} className="space-y-6">
+            <div className="space-y-6">
               {/* Header Section */}
               <div className="rounded-2xl border border-white/10 bg-zinc-950/70 backdrop-blur-sm p-4 md:p-6 shadow-xl">
                 <h2 className="text-white text-2xl font-bold mb-2">

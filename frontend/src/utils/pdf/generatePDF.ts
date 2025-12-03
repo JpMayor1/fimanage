@@ -1,241 +1,429 @@
-import html2canvas from "html2canvas";
+import type { ReportData } from "@/types/report/report.type";
+import { formatAmount } from "@/utils/amount/formatAmount";
+import dayjs from "dayjs";
 import jsPDF from "jspdf";
 
-export const generatePDF = async (title: string, content: HTMLElement) => {
+export const generatePDF = async (title: string, reportData: ReportData) => {
   try {
-    // Clone content to avoid modifying the original
-    const clonedContent = content.cloneNode(true) as HTMLElement;
+    // Create PDF document
+    const pdf = new jsPDF("p", "mm", "a4");
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+    const margin = 15;
+    let yPosition = margin;
 
-    // Remove buttons and interactive elements that shouldn't be in PDF
-    const buttons = clonedContent.querySelectorAll("button, .no-print");
-    buttons.forEach((btn) => btn.remove());
-
-    // Convert all computed styles to inline RGB styles to avoid oklab parsing
-    const convertStylesToInlineRGB = (element: HTMLElement) => {
-      const allElements = element.querySelectorAll("*");
-      allElements.forEach((el) => {
-        const htmlEl = el as HTMLElement;
-        try {
-          const computedStyle = window.getComputedStyle(htmlEl);
-
-          // Convert and inline all color-related properties
-          const properties = [
-            "color",
-            "backgroundColor",
-            "borderColor",
-            "borderTopColor",
-            "borderRightColor",
-            "borderBottomColor",
-            "borderLeftColor",
-          ];
-
-          properties.forEach((prop) => {
-            try {
-              const value = computedStyle.getPropertyValue(prop);
-              if (
-                value &&
-                value.trim() &&
-                value !== "rgba(0, 0, 0, 0)" &&
-                value !== "transparent"
-              ) {
-                // Force conversion to RGB by setting and reading back
-                const originalValue = htmlEl.style.getPropertyValue(prop);
-                htmlEl.style.setProperty(prop, value);
-                const computed = window
-                  .getComputedStyle(htmlEl)
-                  .getPropertyValue(prop);
-                if (computed && computed.includes("rgb")) {
-                  htmlEl.style.setProperty(prop, computed, "important");
-                } else {
-                  htmlEl.style.setProperty(prop, originalValue);
-                }
-              }
-            } catch (e) {
-              // Ignore individual property errors
-            }
-          });
-        } catch (e) {
-          // Ignore element errors
-        }
-      });
+    // Helper function to add a new page if needed
+    const checkPageBreak = (requiredHeight: number) => {
+      if (yPosition + requiredHeight > pageHeight - margin) {
+        pdf.addPage();
+        yPosition = margin;
+        return true;
+      }
+      return false;
     };
 
-    // Inject style override directly into cloned content to ensure it's processed first
-    const styleOverride = document.createElement("style");
-    styleOverride.id = "pdf-color-override";
-    styleOverride.textContent = `
-      /* Force all colors to RGB to avoid oklab parsing errors */
-      * {
-        /* Override computed styles */
-      }
-    `;
-    clonedContent.insertBefore(styleOverride, clonedContent.firstChild);
+    // Helper function to draw a line
+    const drawLine = (y: number) => {
+      pdf.setDrawColor(200, 200, 200);
+      pdf.line(margin, y, pageWidth - margin, y);
+    };
 
-    // Also add to document head for global override
-    const globalStyle = document.createElement("style");
-    globalStyle.id = "pdf-global-override";
-    globalStyle.textContent = `
-      /* Comprehensive color overrides for html2canvas compatibility */
-      .text-white, [class*="text-white"] { color: rgb(255, 255, 255) !important; }
-      .text-income { color: rgb(16, 185, 129) !important; }
-      .text-expense { color: rgb(239, 68, 68) !important; }
-      .text-balance { color: rgb(59, 130, 246) !important; }
-      .text-yellow { color: rgb(245, 158, 11) !important; }
-      .text-red { color: rgb(239, 68, 68) !important; }
-      .text-green { color: rgb(16, 185, 129) !important; }
-      .text-blue-400 { color: rgb(96, 165, 250) !important; }
-      .bg-zinc-950, .bg-primary { background-color: rgb(255, 255, 255) !important; }
-      [class*="bg-zinc-950"] { background-color: rgb(24, 24, 27) !important; }
-      [class*="bg-income"] { background-color: rgba(16, 185, 129, 0.1) !important; }
-      [class*="bg-expense"] { background-color: rgba(239, 68, 68, 0.1) !important; }
-      [class*="bg-balance"] { background-color: rgba(59, 130, 246, 0.1) !important; }
-      [class*="bg-yellow"] { background-color: rgba(245, 158, 11, 0.1) !important; }
-      [class*="bg-white"] { background-color: rgba(255, 255, 255, 0.1) !important; }
-      [class*="bg-green"] { background-color: rgba(16, 185, 129, 0.1) !important; }
-      [class*="bg-red"] { background-color: rgba(239, 68, 68, 0.1) !important; }
-      [class*="border-white"] { border-color: rgba(255, 255, 255, 0.1) !important; }
-      [class*="border-income"] { border-color: rgba(16, 185, 129, 0.4) !important; }
-      [class*="border-expense"] { border-color: rgba(239, 68, 68, 0.4) !important; }
-      [class*="border-balance"] { border-color: rgba(59, 130, 246, 0.4) !important; }
-      [class*="border-yellow"] { border-color: rgba(245, 158, 11, 0.4) !important; }
-    `;
-    document.head.appendChild(globalStyle);
+    // Title
+    pdf.setFontSize(20);
+    pdf.setFont("helvetica", "bold");
+    pdf.setTextColor(0, 0, 0);
+    pdf.text("Financial Report", margin, yPosition);
+    yPosition += 8;
 
-    // Temporarily append to body for better rendering
-    clonedContent.style.position = "absolute";
-    clonedContent.style.left = "-9999px";
-    clonedContent.style.top = "0";
-    clonedContent.style.width = `${content.offsetWidth}px`;
-    clonedContent.style.backgroundColor = "#ffffff";
-    document.body.appendChild(clonedContent);
+    // Subtitle
+    pdf.setFontSize(12);
+    pdf.setFont("helvetica", "normal");
+    pdf.setTextColor(0, 0, 0);
+    const periodText = `${
+      reportData.period.charAt(0).toUpperCase() + reportData.period.slice(1)
+    } Report`;
+    pdf.text(periodText, margin, yPosition);
+    yPosition += 6;
 
-    // Convert all styles to inline RGB to avoid oklab parsing issues
-    convertStylesToInlineRGB(clonedContent);
+    // Report Information
+    pdf.setFontSize(10);
+    pdf.setTextColor(0, 0, 0);
+    pdf.text(
+      `Period: ${dayjs(reportData.dateRange.start).format(
+        "MMM D, YYYY"
+      )} - ${dayjs(reportData.dateRange.end).format("MMM D, YYYY")}`,
+      margin,
+      yPosition
+    );
+    yPosition += 5;
+    pdf.text(
+      `Generated: ${dayjs().format("MMMM D, YYYY h:mm A")}`,
+      margin,
+      yPosition
+    );
+    yPosition += 5;
+    pdf.text(`Account: ${reportData.account.name}`, margin, yPosition);
+    yPosition += 5;
+    pdf.text(
+      `Daily Limit: ${formatAmount(reportData.account.limit)}`,
+      margin,
+      yPosition
+    );
+    yPosition += 10;
 
-    // Wait for styles to apply and DOM to update
-    await new Promise((resolve) => setTimeout(resolve, 300));
+    drawLine(yPosition);
+    yPosition += 8;
 
-    // Configure html2canvas options for better quality
-    // Use foreignObjectRendering: false to avoid CSS parsing issues
-    const canvas = await html2canvas(clonedContent, {
-      scale: 2, // Higher quality (2x)
-      useCORS: true,
-      logging: false,
-      backgroundColor: "#ffffff", // White background for better PDF readability
-      windowWidth: clonedContent.scrollWidth,
-      windowHeight: clonedContent.scrollHeight,
-      allowTaint: true,
-      foreignObjectRendering: false, // Disable foreignObject to avoid CSS parsing issues
-      ignoreElements: () => {
-        // Ignore elements that might cause issues
-        return false;
-      },
-      onclone: (clonedDoc, element) => {
-        // Convert all computed styles to RGB in the cloned document
-        // This prevents html2canvas from trying to parse oklab colors
-        const walker = clonedDoc.createTreeWalker(
-          element,
-          NodeFilter.SHOW_ELEMENT,
-          null
-        );
+    // Summary Section
+    pdf.setFontSize(14);
+    pdf.setFont("helvetica", "bold");
+    pdf.text("Summary", margin, yPosition);
+    yPosition += 8;
 
-        let node;
-        while ((node = walker.nextNode())) {
-          const htmlEl = node as HTMLElement;
-          if (!htmlEl.style) continue;
+    // Summary Table
+    const summaryData = [
+      ["Total Income", formatAmount(reportData.summary.totalIncome)],
+      ["Total Expense", formatAmount(reportData.summary.totalExpense)],
+      ["Total Balance", formatAmount(reportData.summary.totalBalance)],
+      ["Net Flow", formatAmount(reportData.summary.netFlow)],
+      [
+        "Total Dept Remaining",
+        formatAmount(reportData.summary.totalDeptRemaining),
+      ],
+      [
+        "Total Receiving Remaining",
+        formatAmount(reportData.summary.totalReceivingRemaining),
+      ],
+    ];
 
-          try {
-            const computedStyle =
-              clonedDoc.defaultView?.getComputedStyle(htmlEl);
-            if (!computedStyle) continue;
-
-            // Convert color to RGB
-            const color = computedStyle.color;
-            if (color && color !== "rgba(0, 0, 0, 0)") {
-              // Create a temporary element to get RGB value
-              const temp = clonedDoc.createElement("div");
-              temp.style.color = color;
-              clonedDoc.body.appendChild(temp);
-              const rgbColor =
-                clonedDoc.defaultView?.getComputedStyle(temp).color;
-              clonedDoc.body.removeChild(temp);
-              if (rgbColor && rgbColor.includes("rgb")) {
-                htmlEl.style.color = rgbColor;
-              }
-            }
-
-            // Convert background-color to RGB
-            const bgColor = computedStyle.backgroundColor;
-            if (
-              bgColor &&
-              bgColor !== "rgba(0, 0, 0, 0)" &&
-              bgColor !== "transparent"
-            ) {
-              const temp = clonedDoc.createElement("div");
-              temp.style.backgroundColor = bgColor;
-              clonedDoc.body.appendChild(temp);
-              const rgbBg =
-                clonedDoc.defaultView?.getComputedStyle(temp).backgroundColor;
-              clonedDoc.body.removeChild(temp);
-              if (rgbBg && rgbBg.includes("rgb")) {
-                htmlEl.style.backgroundColor = rgbBg;
-              }
-            }
-
-            // Convert border-color to RGB
-            const borderColor = computedStyle.borderColor;
-            if (borderColor && borderColor !== "rgba(0, 0, 0, 0)") {
-              const temp = clonedDoc.createElement("div");
-              temp.style.borderColor = borderColor;
-              clonedDoc.body.appendChild(temp);
-              const rgbBorder =
-                clonedDoc.defaultView?.getComputedStyle(temp).borderColor;
-              clonedDoc.body.removeChild(temp);
-              if (rgbBorder && rgbBorder.includes("rgb")) {
-                htmlEl.style.borderColor = rgbBorder;
-              }
-            }
-          } catch (e) {
-            // Ignore errors and continue
-          }
-        }
-      },
+    pdf.setFontSize(10);
+    pdf.setFont("helvetica", "normal");
+    summaryData.forEach(([label, value]) => {
+      checkPageBreak(6);
+      pdf.setTextColor(0, 0, 0);
+      pdf.text(label, margin + 5, yPosition);
+      pdf.setFont("helvetica", "bold");
+      pdf.text(value, pageWidth - margin - 5, yPosition, { align: "right" });
+      pdf.setFont("helvetica", "normal");
+      yPosition += 6;
     });
 
-    // Clean up cloned element and style overrides
-    document.body.removeChild(clonedContent);
-    const globalStyleEl = document.getElementById("pdf-global-override");
-    if (globalStyleEl) {
-      document.head.removeChild(globalStyleEl);
-    }
+    yPosition += 5;
+    drawLine(yPosition);
+    yPosition += 8;
 
-    // Calculate PDF dimensions (A4: 210mm x 297mm)
-    const pdfWidth = 210; // A4 width in mm
-    const pdfHeight = 297; // A4 height in mm
-    const pdfX = 0;
-    const pdfY = 0;
+    // Period Statistics
+    checkPageBreak(20);
+    pdf.setFontSize(14);
+    pdf.setFont("helvetica", "bold");
+    pdf.text("Period Statistics", margin, yPosition);
+    yPosition += 8;
 
-    // Calculate image dimensions to fit PDF width
-    const imgWidth = pdfWidth;
-    const imgHeight = (canvas.height * pdfWidth) / canvas.width;
+    pdf.setFontSize(10);
+    pdf.setFont("helvetica", "normal");
+    pdf.text(
+      `Period Income: ${formatAmount(reportData.summary.periodIncome)}`,
+      margin + 5,
+      yPosition
+    );
+    yPosition += 6;
+    pdf.text(
+      `Period Expense: ${formatAmount(reportData.summary.periodExpense)}`,
+      margin + 5,
+      yPosition
+    );
+    yPosition += 6;
+    pdf.text(
+      `Total Transactions: ${reportData.totalTransactions}`,
+      margin + 5,
+      yPosition
+    );
+    yPosition += 10;
 
-    // Create PDF
-    const pdf = new jsPDF("p", "mm", "a4");
-    const imgData = canvas.toDataURL("image/png", 1.0);
+    drawLine(yPosition);
+    yPosition += 8;
 
-    // Calculate how many pages we need
-    const totalPages = Math.ceil(imgHeight / pdfHeight);
+    // Transaction Breakdown
+    checkPageBreak(30);
+    pdf.setFontSize(14);
+    pdf.setFont("helvetica", "bold");
+    pdf.text("Transaction Breakdown", margin, yPosition);
+    yPosition += 8;
 
-    // Add image to PDF, splitting across multiple pages if needed
-    for (let i = 0; i < totalPages; i++) {
-      if (i > 0) {
-        pdf.addPage();
+    pdf.setFontSize(10);
+    pdf.setFont("helvetica", "normal");
+    Object.entries(reportData.transactionBreakdown).forEach(([type, count]) => {
+      checkPageBreak(6);
+      pdf.text(
+        `${type.charAt(0).toUpperCase() + type.slice(1)}: ${count}`,
+        margin + 5,
+        yPosition
+      );
+      yPosition += 6;
+    });
+
+    yPosition += 5;
+    drawLine(yPosition);
+    yPosition += 8;
+
+    // Overdue Items
+    if (
+      reportData.overdueDepts.length > 0 ||
+      reportData.overdueReceivings.length > 0
+    ) {
+      checkPageBreak(30);
+      pdf.setFontSize(14);
+      pdf.setFont("helvetica", "bold");
+      pdf.setTextColor(245, 158, 11); // Yellow
+      pdf.text("Overdue Items", margin, yPosition);
+      yPosition += 8;
+
+      pdf.setFontSize(10);
+      pdf.setFont("helvetica", "normal");
+      pdf.setTextColor(0, 0, 0);
+
+      if (reportData.overdueDepts.length > 0) {
+        pdf.setFont("helvetica", "bold");
+        pdf.text(
+          `Overdue Depts (${reportData.overdueDepts.length}):`,
+          margin + 5,
+          yPosition
+        );
+        yPosition += 6;
+        pdf.setFont("helvetica", "normal");
+        reportData.overdueDepts.forEach((dept) => {
+          checkPageBreak(12);
+          pdf.text(`  ${dept.lender}`, margin + 10, yPosition);
+          yPosition += 5;
+          pdf.text(
+            `    Remaining: ${formatAmount(dept.remaining)} / ${formatAmount(
+              dept.amount
+            )}`,
+            margin + 15,
+            yPosition
+          );
+          yPosition += 5;
+          pdf.text(`    Due: ${dept.dueDate}`, margin + 15, yPosition);
+          yPosition += 6;
+        });
       }
 
-      // Calculate the y position for this page (negative to shift image up)
-      const yPosition = pdfY - i * pdfHeight;
+      if (reportData.overdueReceivings.length > 0) {
+        checkPageBreak(20);
+        pdf.setFont("helvetica", "bold");
+        pdf.text(
+          `Overdue Receivings (${reportData.overdueReceivings.length}):`,
+          margin + 5,
+          yPosition
+        );
+        yPosition += 6;
+        pdf.setFont("helvetica", "normal");
+        reportData.overdueReceivings.forEach((receiving) => {
+          checkPageBreak(12);
+          pdf.text(`  ${receiving.borrower}`, margin + 10, yPosition);
+          yPosition += 5;
+          pdf.text(
+            `    Remaining: ${formatAmount(
+              receiving.remaining
+            )} / ${formatAmount(receiving.amount)}`,
+            margin + 15,
+            yPosition
+          );
+          yPosition += 5;
+          pdf.text(`    Due: ${receiving.dueDate}`, margin + 15, yPosition);
+          yPosition += 6;
+        });
+      }
 
-      pdf.addImage(imgData, "PNG", pdfX, yPosition, imgWidth, imgHeight);
+      yPosition += 5;
+      drawLine(yPosition);
+      yPosition += 8;
+    }
+
+    // Top Sources by Expense
+    if (reportData.sourceExpenses.length > 0) {
+      checkPageBreak(40);
+      pdf.setFontSize(14);
+      pdf.setFont("helvetica", "bold");
+      pdf.text("Top Sources by Expense", margin, yPosition);
+      yPosition += 8;
+
+      // Table header
+      pdf.setFontSize(9);
+      pdf.setFont("helvetica", "bold");
+      pdf.text("#", margin + 5, yPosition);
+      pdf.text("Source Name", margin + 15, yPosition);
+      pdf.text("Income", pageWidth - margin - 80, yPosition, {
+        align: "right",
+      });
+      pdf.text("Expense", pageWidth - margin - 50, yPosition, {
+        align: "right",
+      });
+      pdf.text("Balance", pageWidth - margin - 5, yPosition, {
+        align: "right",
+      });
+      yPosition += 6;
+
+      drawLine(yPosition);
+      yPosition += 4;
+
+      // Table rows
+      pdf.setFontSize(9);
+      pdf.setFont("helvetica", "normal");
+      reportData.sourceExpenses.forEach((source, index) => {
+        checkPageBreak(8);
+        pdf.text((index + 1).toString(), margin + 5, yPosition);
+        pdf.text(source.name.substring(0, 25), margin + 15, yPosition);
+        pdf.text(
+          formatAmount(source.income),
+          pageWidth - margin - 80,
+          yPosition,
+          { align: "right" }
+        );
+        pdf.text(
+          formatAmount(source.expense),
+          pageWidth - margin - 50,
+          yPosition,
+          { align: "right" }
+        );
+        pdf.text(
+          formatAmount(source.balance),
+          pageWidth - margin - 5,
+          yPosition,
+          { align: "right" }
+        );
+        yPosition += 6;
+      });
+
+      yPosition += 5;
+      drawLine(yPosition);
+      yPosition += 8;
+    }
+
+    // Monthly Summary (if year period)
+    if (reportData.monthlySummary.length > 0) {
+      checkPageBreak(50);
+      pdf.setFontSize(14);
+      pdf.setFont("helvetica", "bold");
+      pdf.text("Monthly Summary", margin, yPosition);
+      yPosition += 8;
+
+      // Table header
+      pdf.setFontSize(9);
+      pdf.setFont("helvetica", "bold");
+      pdf.text("Month", margin + 5, yPosition);
+      pdf.text("Income", pageWidth - margin - 100, yPosition, {
+        align: "right",
+      });
+      pdf.text("Expense", pageWidth - margin - 50, yPosition, {
+        align: "right",
+      });
+      pdf.text("Net", pageWidth - margin - 5, yPosition, { align: "right" });
+      yPosition += 6;
+
+      drawLine(yPosition);
+      yPosition += 4;
+
+      // Table rows
+      pdf.setFontSize(9);
+      pdf.setFont("helvetica", "normal");
+      reportData.monthlySummary.forEach((month) => {
+        checkPageBreak(8);
+        const monthName = dayjs(month.month).format("MMM YYYY");
+        const net = month.income - month.expense;
+        pdf.text(monthName, margin + 5, yPosition);
+        pdf.text(
+          formatAmount(month.income),
+          pageWidth - margin - 100,
+          yPosition,
+          { align: "right" }
+        );
+        pdf.text(
+          formatAmount(month.expense),
+          pageWidth - margin - 50,
+          yPosition,
+          { align: "right" }
+        );
+        pdf.setTextColor(
+          net >= 0 ? 16 : 239,
+          net >= 0 ? 185 : 68,
+          net >= 0 ? 129 : 68
+        );
+        pdf.text(formatAmount(net), pageWidth - margin - 5, yPosition, {
+          align: "right",
+        });
+        pdf.setTextColor(0, 0, 0);
+        yPosition += 6;
+      });
+
+      yPosition += 5;
+      drawLine(yPosition);
+      yPosition += 8;
+    }
+
+    // Daily Expense Summary (limited to last 30 days)
+    if (reportData.dailyExpenseSummary.length > 0) {
+      checkPageBreak(50);
+      pdf.setFontSize(14);
+      pdf.setFont("helvetica", "bold");
+      pdf.text("Daily Expense Summary (Last 30 Days)", margin, yPosition);
+      yPosition += 8;
+
+      // Table header
+      pdf.setFontSize(9);
+      pdf.setFont("helvetica", "bold");
+      pdf.text("Date", margin + 5, yPosition);
+      pdf.text("Expense", pageWidth - margin - 80, yPosition, {
+        align: "right",
+      });
+      pdf.text("Limit", pageWidth - margin - 50, yPosition, { align: "right" });
+      pdf.text("Usage", pageWidth - margin - 5, yPosition, { align: "right" });
+      yPosition += 6;
+
+      drawLine(yPosition);
+      yPosition += 4;
+
+      // Table rows (last 30 days)
+      pdf.setFontSize(9);
+      pdf.setFont("helvetica", "normal");
+      reportData.dailyExpenseSummary.slice(0, 30).forEach((day) => {
+        checkPageBreak(8);
+        const dateStr = dayjs(day.date).format("MMM D, YYYY");
+        const usage = `${day.percentage.toFixed(0)}%`;
+        pdf.text(dateStr, margin + 5, yPosition);
+        pdf.text(
+          formatAmount(day.expense),
+          pageWidth - margin - 80,
+          yPosition,
+          { align: "right" }
+        );
+        pdf.text(formatAmount(day.limit), pageWidth - margin - 50, yPosition, {
+          align: "right",
+        });
+
+        // Color code usage percentage
+        if (day.percentage > 100) {
+          pdf.setTextColor(239, 68, 68); // Red
+        } else if (day.percentage >= 75) {
+          pdf.setTextColor(245, 158, 11); // Yellow
+        } else {
+          pdf.setTextColor(16, 185, 129); // Green
+        }
+        pdf.text(usage, pageWidth - margin - 5, yPosition, { align: "right" });
+        pdf.setTextColor(0, 0, 0);
+        yPosition += 6;
+      });
+    }
+
+    // Footer on last page
+    const totalPages = pdf.internal.pages.length - 1;
+    for (let i = 1; i <= totalPages; i++) {
+      pdf.setPage(i);
+      pdf.setFontSize(8);
+      pdf.setTextColor(150, 150, 150);
+      pdf.text(`Page ${i} of ${totalPages}`, pageWidth / 2, pageHeight - 10, {
+        align: "center",
+      });
     }
 
     // Download the PDF
