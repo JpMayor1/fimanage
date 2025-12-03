@@ -1,4 +1,5 @@
 import LoadingSmall from "@/components/custom/loading/LoadingSmall";
+import SourceSkeleton from "@/components/skeleton/SourceSkeleton";
 import AddSource from "@/components/source/AddSource";
 import DeleteSource from "@/components/source/DeleteSource";
 import UpdateSource from "@/components/source/UpdateSource";
@@ -87,9 +88,7 @@ const SourcePage = () => {
         className="h-[calc(100%-50px)] md:h-[calc(100%-70px)] w-full overflow-y-scroll no-scrollbar"
       >
         {firstLoading ? (
-          <p className="text-white py-3">
-            <LoadingSmall />
-          </p>
+          <SourceSkeleton />
         ) : (
           <div className="w-full">
             {sources.length === 0 ? (

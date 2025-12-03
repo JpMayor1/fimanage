@@ -1,10 +1,10 @@
-import LoadingBig from "@/components/custom/loading/LoadingBig";
 import Alerts from "@/components/dashboard/Alerts";
 import CalendarProgress from "@/components/dashboard/CalendarProgress";
 import RecentTransactions from "@/components/dashboard/RecentTransactions";
 import SummaryCards from "@/components/dashboard/SummaryCards";
 import TopSources from "@/components/dashboard/TopSources";
 import TransactionTypeChart from "@/components/dashboard/TransactionTypeChart";
+import DashboardSkeleton from "@/components/skeleton/DashboardSkeleton";
 import { useAccountStore } from "@/stores/account/account.store";
 import { useDashboardStore } from "@/stores/dashboard/useDashboardStore";
 import { useSideBar } from "@/stores/sidebar/useSideBar";
@@ -42,9 +42,7 @@ const DashboardPage = () => {
       </div>
 
       {getLoading ? (
-        <div className="flex items-center justify-center h-[calc(100vh-100px)]">
-          <LoadingBig />
-        </div>
+        <DashboardSkeleton />
       ) : (
         <div className="w-full max-w-7xl mx-auto space-y-4 md:space-y-6">
           {/* Alerts */}

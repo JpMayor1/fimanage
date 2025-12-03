@@ -1,5 +1,5 @@
 import CustomSelect from "@/components/custom/CustomSelect";
-import LoadingBig from "@/components/custom/loading/LoadingBig";
+import ReportSkeleton from "@/components/skeleton/ReportSkeleton";
 import { useAccountStore } from "@/stores/account/account.store";
 import { useReportStore } from "@/stores/report/report.store";
 import { useSideBar } from "@/stores/sidebar/useSideBar";
@@ -106,9 +106,7 @@ const ReportPage = () => {
       </div>
 
       {getLoading ? (
-        <div className="flex items-center justify-center h-[calc(100vh-100px)]">
-          <LoadingBig />
-        </div>
+        <ReportSkeleton />
       ) : (
         reportData && (
           <div className="w-full max-w-7xl mx-auto space-y-4 md:space-y-6">

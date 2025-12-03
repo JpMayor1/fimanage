@@ -1,4 +1,5 @@
 import LoadingSmall from "@/components/custom/loading/LoadingSmall";
+import DeptSkeleton from "@/components/skeleton/DeptSkeleton";
 import AddDept from "@/components/dept/AddDept";
 import DeleteDept from "@/components/dept/DeleteDept";
 import UpdateDept from "@/components/dept/UpdateDept";
@@ -95,9 +96,7 @@ const DeptPage = () => {
         className="h-[calc(100%-50px)] md:h-[calc(100%-70px)] w-full overflow-y-scroll no-scrollbar"
       >
         {firstLoading ? (
-          <p className="text-white py-3">
-            <LoadingSmall />
-          </p>
+          <DeptSkeleton />
         ) : (
           <div className="w-full">
             {depts.length === 0 ? (

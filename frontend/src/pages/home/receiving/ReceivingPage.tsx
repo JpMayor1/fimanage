@@ -1,4 +1,5 @@
 import LoadingSmall from "@/components/custom/loading/LoadingSmall";
+import ReceivingSkeleton from "@/components/skeleton/ReceivingSkeleton";
 import AddReceiving from "@/components/receiving/AddReceiving";
 import DeleteReceiving from "@/components/receiving/DeleteReceiving";
 import UpdateReceiving from "@/components/receiving/UpdateReceiving";
@@ -102,9 +103,7 @@ const ReceivingPage = () => {
         className="h-[calc(100%-50px)] md:h-[calc(100%-70px)] w-full overflow-y-scroll no-scrollbar"
       >
         {firstLoading ? (
-          <p className="text-white py-3">
-            <LoadingSmall />
-          </p>
+          <ReceivingSkeleton />
         ) : (
           <div className="w-full">
             {receivings.length === 0 ? (

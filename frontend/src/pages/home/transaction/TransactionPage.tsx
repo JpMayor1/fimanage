@@ -1,5 +1,6 @@
 import CustomSelect from "@/components/custom/CustomSelect";
 import LoadingSmall from "@/components/custom/loading/LoadingSmall";
+import TransactionSkeleton from "@/components/skeleton/TransactionSkeleton";
 import AddTransaction from "@/components/transaction/AddTransaction";
 import DeleteTransaction from "@/components/transaction/DeleteTransaction";
 import UpdateTransaction from "@/components/transaction/UpdateTransaction";
@@ -173,9 +174,7 @@ const TransactionPage = () => {
         className="h-[calc(100%-115px)] md:h-[calc(100%-70px)] w-full overflow-y-scroll no-scrollbar"
       >
         {firstLoading ? (
-          <p className="text-white py-3">
-            <LoadingSmall />
-          </p>
+          <TransactionSkeleton />
         ) : (
           <div className="w-full">
             {transactions.length === 0 ? (
