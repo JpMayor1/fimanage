@@ -19,8 +19,16 @@ export const getDeptsS = async (
 };
 
 export const addDeptS = async (data: Partial<DeptType>) => {
+  // Ensure numeric fields are never null (0 is acceptable)
+  const amount = data.amount != null ? Number(data.amount) || 0 : 0;
+  const remaining = data.remaining != null ? Number(data.remaining) || 0 : 0;
+  const interest = data.interest != null ? Number(data.interest) || 0 : 0;
+
   const newDept = await Dept.create({
     ...data,
+    amount,
+    remaining,
+    interest,
     dueDate: formatDate(data.dueDate || ""),
   });
   return newDept;
@@ -30,16 +38,23 @@ export const updateDeptS = async (id: string, data: Partial<DeptType>) => {
   const dept = await Dept.findById(id);
   if (!dept) throw new AppError("Dept not found", 404);
 
-  const updatedDept = await Dept.findByIdAndUpdate(
-    id,
-    {
-      ...data,
-      dueDate: formatDate(data.dueDate || ""),
-    },
-    {
-      new: true,
-    }
-  ).lean();
+  // Ensure numeric fields are never null (0 is acceptable)
+  const updateData: Partial<DeptType> = { ...data };
+  if (data.amount != null) {
+    updateData.amount = Number(data.amount) || 0;
+  }
+  
+  if (data.remaining != null) {
+    updateData.remaining = Number(data.remaining) || 0;
+  }
+  if (data.interest != null) {
+    updateData.interest = Number(data.interest) || 0;
+  }
+  updateData.dueDate = formatDate(data.dueDate || "");
+
+  const updatedDept = await Dept.findByIdAndUpdate(id, updateData, {
+    new: true,
+  }).lean();
 
   return updatedDept;
 };

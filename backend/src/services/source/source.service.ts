@@ -18,11 +18,13 @@ export const getSourcesS = async (
 };
 
 export const addSourceS = async (data: Partial<SourceType>) => {
+  // Ensure balance is never null (0 is acceptable)
+  const balance = data.balance != null ? Number(data.balance) || 0 : 0;
   const newSource = await Source.create({
     ...data,
     income: 0,
     expense: 0,
-    balance: data.balance || 0,
+    balance,
   });
   return newSource;
 };
@@ -31,7 +33,13 @@ export const updateSourceS = async (id: string, data: Partial<SourceType>) => {
   const source = await Source.findById(id);
   if (!source) throw new AppError("Source not found", 404);
 
-  const updatedSource = await Source.findByIdAndUpdate(id, data, {
+  // Ensure balance is never null (0 is acceptable)
+  const updateData: Partial<SourceType> = { ...data };
+  if (data.balance != null) {
+    updateData.balance = Number(data.balance) || 0;
+  }
+
+  const updatedSource = await Source.findByIdAndUpdate(id, updateData, {
     new: true,
   }).lean();
 

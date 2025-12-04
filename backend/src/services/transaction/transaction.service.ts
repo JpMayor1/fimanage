@@ -5,7 +5,9 @@ import Transaction from "@/models/transaction.model";
 import type { transactionType } from "@/types/models/transaction.type";
 import { AppError } from "@/utils/error/appError";
 
+// Ensure amounts are never null (0 is acceptable)
 const ensureNumber = (val: unknown): number => {
+  if (val == null) return 0;
   const n = typeof val === "number" ? val : Number(val);
   if (Number.isNaN(n)) return 0;
   return n;
@@ -253,10 +255,41 @@ export const addTransactionS = async (
 ) => {
   if (!data.type) throw new AppError("Transaction type is required.", 400);
 
-  const created = await Transaction.create({
-    ...data,
-    userId,
-  });
+  // Ensure amounts are never null (0 is acceptable)
+  const transactionData: Partial<transactionType> = { ...data, userId };
+  
+  if (data.income) {
+    transactionData.income = {
+      ...data.income,
+      amount: ensureNumber(data.income.amount),
+    };
+  }
+  if (data.expense) {
+    transactionData.expense = {
+      ...data.expense,
+      amount: ensureNumber(data.expense.amount),
+    };
+  }
+  if (data.transfer) {
+    transactionData.transfer = {
+      ...data.transfer,
+      amount: ensureNumber(data.transfer.amount),
+    };
+  }
+  if (data.dept) {
+    transactionData.dept = {
+      ...data.dept,
+      amount: ensureNumber(data.dept.amount),
+    };
+  }
+  if (data.receiving) {
+    transactionData.receiving = {
+      ...data.receiving,
+      amount: ensureNumber(data.receiving.amount),
+    };
+  }
+
+  const created = await Transaction.create(transactionData);
 
   await applyTransactionEffects(created.toObject() as transactionType, 1);
 
@@ -274,9 +307,43 @@ export const updateTransactionS = async (
   // Reverse previous effects
   await applyTransactionEffects(existing.toObject() as transactionType, -1);
 
+  // Ensure amounts are never null (0 is acceptable)
+  const updateData: Partial<transactionType> = { ...data };
+  
+  if (data.income) {
+    updateData.income = {
+      ...data.income,
+      amount: ensureNumber(data.income.amount),
+    };
+  }
+  if (data.expense) {
+    updateData.expense = {
+      ...data.expense,
+      amount: ensureNumber(data.expense.amount),
+    };
+  }
+  if (data.transfer) {
+    updateData.transfer = {
+      ...data.transfer,
+      amount: ensureNumber(data.transfer.amount),
+    };
+  }
+  if (data.dept) {
+    updateData.dept = {
+      ...data.dept,
+      amount: ensureNumber(data.dept.amount),
+    };
+  }
+  if (data.receiving) {
+    updateData.receiving = {
+      ...data.receiving,
+      amount: ensureNumber(data.receiving.amount),
+    };
+  }
+
   const updated = await Transaction.findByIdAndUpdate(
     id,
-    { ...data },
+    updateData,
     { new: true }
   );
   if (!updated) throw new AppError("Transaction not found after update.", 404);

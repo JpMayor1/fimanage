@@ -54,7 +54,12 @@ const AddTransaction = ({ onClose }: AddTransactionI) => {
       type: form.baseType,
     } as Partial<TransactionType>;
 
-    const amountNumber = (val: unknown) => Number(val || 0);
+    // Ensure amounts are never null (0 is acceptable)
+    const amountNumber = (val: unknown): number => {
+      if (val == null) return 0;
+      const num = Number(val);
+      return Number.isNaN(num) ? 0 : num;
+    };
 
     if (form.baseType === "income") {
       payload.income = {

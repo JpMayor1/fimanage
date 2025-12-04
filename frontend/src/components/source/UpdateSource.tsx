@@ -31,7 +31,12 @@ const UpdateSource = ({ source, onClose }: UpdateSourceI) => {
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    const success = await updateSource(source._id!, form);
+    // Ensure balance is never null (0 is acceptable)
+    const payload = {
+      ...form,
+      balance: form.balance != null ? Number(form.balance) || 0 : 0,
+    };
+    const success = await updateSource(source._id!, payload);
     if (success) return onClose();
   }
 

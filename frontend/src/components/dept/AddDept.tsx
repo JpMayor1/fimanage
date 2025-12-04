@@ -38,7 +38,14 @@ const AddDept = ({ onClose }: AddDeptI) => {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    const success = await addDept(form);
+    // Ensure numeric fields are never null (0 is acceptable)
+    const payload = {
+      ...form,
+      amount: form.amount != null ? Number(form.amount) || 0 : 0,
+      remaining: form.remaining != null ? Number(form.remaining) || 0 : 0,
+      interest: form.interest != null ? Number(form.interest) || 0 : 0,
+    };
+    const success = await addDept(payload);
     if (success) onClose();
   };
 

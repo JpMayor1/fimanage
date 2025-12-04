@@ -35,7 +35,14 @@ const UpdateDept = ({ dept, onClose }: UpdateDeptI) => {
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    const success = await updateDept(dept._id!, form);
+    // Ensure numeric fields are never null (0 is acceptable)
+    const payload = {
+      ...form,
+      amount: form.amount != null ? Number(form.amount) || 0 : 0,
+      remaining: form.remaining != null ? Number(form.remaining) || 0 : 0,
+      interest: form.interest != null ? Number(form.interest) || 0 : 0,
+    };
+    const success = await updateDept(dept._id!, payload);
     if (success) return onClose();
   }
 

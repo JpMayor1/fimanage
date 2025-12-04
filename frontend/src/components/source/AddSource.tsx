@@ -34,7 +34,12 @@ const AddSource = ({ onClose }: AddSourceI) => {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    const success = await addSource(form);
+    // Ensure balance is never null (0 is acceptable)
+    const payload = {
+      ...form,
+      balance: form.balance != null ? Number(form.balance) || 0 : 0,
+    };
+    const success = await addSource(payload);
     if (success) onClose();
   };
 

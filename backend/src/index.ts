@@ -34,6 +34,29 @@ import transactionRoute from "@/routes/transaction/transaction.route";
 
 import { startDailyExpenseJob, startOverdueCheckJob } from "./jobs/jobs";
 
+// Handle unhandled promise rejections
+process.on("unhandledRejection", (reason: Error | any, promise: Promise<any>) => {
+  console.error("❌ Unhandled Rejection at:", promise, "reason:", reason);
+  console.error("Stack:", reason?.stack || "No stack trace available");
+  // Don't exit the process, just log the error
+});
+
+// Handle uncaught exceptions
+process.on("uncaughtException", (error: Error) => {
+  console.error("❌ Uncaught Exception:", error);
+  console.error("Stack:", error.stack);
+  // Don't exit the process, just log the error
+  // In production, you might want to exit after logging
+  // but for development, we'll keep the server running
+});
+
+// Handle warnings
+process.on("warning", (warning: Error) => {
+  console.warn("⚠️ Warning:", warning.name);
+  console.warn("Message:", warning.message);
+  console.warn("Stack:", warning.stack);
+});
+
 const bootstrap = async () => {
   const app = express();
   app.set("trust proxy", 1);
@@ -121,14 +144,69 @@ const bootstrap = async () => {
   server.setTimeout(300000);
 
   server.listen(PORT, () => {
-    initDB();
-    startDailyExpenseJob();
-    startOverdueCheckJob();
-    console.log(`Server Running on port ${PORT}`);
+    initDB().catch((err) => {
+      console.error("❌ Database connection error:", err);
+      // Don't exit, server can still run and retry connection
+    });
+    
+    try {
+      startDailyExpenseJob();
+      startOverdueCheckJob();
+    } catch (err) {
+      console.error("❌ Error starting jobs:", err);
+      // Don't exit, server can still run without jobs
+    }
+    
+    console.log(`✅ Server Running on port ${PORT}`);
   });
+
+  // Handle server errors
+  server.on("error", (error: NodeJS.ErrnoException) => {
+    if (error.syscall !== "listen") {
+      throw error;
+    }
+
+    const bind = typeof PORT === "string" ? `Pipe ${PORT}` : `Port ${PORT}`;
+
+    switch (error.code) {
+      case "EACCES":
+        console.error(`❌ ${bind} requires elevated privileges`);
+        break;
+      case "EADDRINUSE":
+        console.error(`❌ ${bind} is already in use`);
+        break;
+      default:
+        console.error(`❌ Server error:`, error);
+    }
+    // Don't exit, let the error handler deal with it
+  });
+
+  // Graceful shutdown
+  const gracefulShutdown = (signal: string) => {
+    console.log(`\n🛑 ${signal} received. Shutting down gracefully...`);
+    server.close(() => {
+      console.log("✅ HTTP server closed");
+      process.exit(0);
+    });
+
+    // Force close after 10 seconds
+    setTimeout(() => {
+      console.error("❌ Forcing shutdown after timeout");
+      process.exit(1);
+    }, 10000);
+  };
+
+  process.on("SIGTERM", () => gracefulShutdown("SIGTERM"));
+  process.on("SIGINT", () => gracefulShutdown("SIGINT"));
 };
 
 bootstrap().catch((e) => {
-  console.error("Fatal boot error:", e);
-  process.exit(1);
+  console.error("❌ Fatal boot error:", e);
+  console.error("Stack:", e.stack);
+  // Don't exit immediately, give it a chance to recover
+  // Only exit if it's a critical error that prevents server from starting
+  if (e.code === "EADDRINUSE" || e.code === "EACCES") {
+    process.exit(1);
+  }
+  // For other errors, log and continue (server might still be usable)
 });
