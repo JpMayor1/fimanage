@@ -32,7 +32,7 @@ import reportRoute from "@/routes/report/report.route";
 import sourceRoute from "@/routes/source/source.route";
 import transactionRoute from "@/routes/transaction/transaction.route";
 
-import { startDailyExpenseJob, startOverdueCheckJob } from "./jobs/jobs";
+import { startDailyExpenseJob, startOverdueCheckJob, startPasswordResetLimitResetJob } from "./jobs/jobs";
 
 // Handle unhandled promise rejections
 process.on("unhandledRejection", (reason: Error | any, promise: Promise<any>) => {
@@ -152,6 +152,7 @@ const bootstrap = async () => {
     try {
       startDailyExpenseJob();
       startOverdueCheckJob();
+      startPasswordResetLimitResetJob();
     } catch (err) {
       console.error("❌ Error starting jobs:", err);
       // Don't exit, server can still run without jobs

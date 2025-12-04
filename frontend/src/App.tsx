@@ -10,6 +10,8 @@ import PageNotFound from "./pages/general/PageNotFound";
 
 import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
+import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage";
+import ResetPasswordPage from "./pages/auth/ResetPasswordPage";
 
 import { useEffect } from "react";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
@@ -74,6 +76,14 @@ function App() {
         {
           path: "/auth/register",
           element: <RegisterPage />,
+        },
+        {
+          path: "/auth/forgot-password",
+          element: <ForgotPasswordPage />,
+        },
+        {
+          path: "/auth/reset-password",
+          element: <ResetPasswordPage />,
         },
       ],
     },

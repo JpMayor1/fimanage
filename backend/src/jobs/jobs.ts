@@ -196,3 +196,48 @@ export const startOverdueCheckJob = () => {
     }
   );
 };
+
+export const startPasswordResetLimitResetJob = () => {
+  cron.schedule(
+    "0 2 * * *", // runs at 2:00 AM (Asia/Manila)
+    async () => {
+      const timeZone = "Asia/Manila";
+      const now = new Date();
+      const phTime = toZonedTime(now, timeZone);
+
+      console.log(
+        `🕛 [${formatInTimeZone(
+          phTime,
+          timeZone,
+          "yyyy-MM-dd HH:mm:ss"
+        )}] Running password reset limit reset job...`
+      );
+
+      try {
+        // Reset password reset request counts for all accounts
+        const result = await Account.updateMany(
+          {},
+          {
+            $set: {
+              passwordResetRequestsCount: 0,
+              passwordResetLastResetDate: phTime,
+            },
+          }
+        );
+
+        console.log(
+          `✅ Reset password reset request counts for ${result.modifiedCount} account(s)`
+        );
+
+        console.log(
+          `🎯 Password reset limit reset completed successfully.`
+        );
+      } catch (error) {
+        console.error("💥 Fatal error in password reset limit reset job:", error);
+      }
+    },
+    {
+      timezone: "Asia/Manila",
+    }
+  );
+};

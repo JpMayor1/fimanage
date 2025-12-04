@@ -54,3 +54,27 @@ export const logoutApi = async () => {
   const response = await axiosInstance.post("/auth/logout");
   return response;
 };
+
+export const forgotPasswordApi = async ({ email }: { email: string }) => {
+  const response = await axiosInstance.post("/auth/forgot-password", {
+    email,
+  });
+  return response;
+};
+
+export const resetPasswordApi = async ({
+  email,
+  code,
+  newPassword,
+}: {
+  email: string;
+  code: string;
+  newPassword: string;
+}) => {
+  const response = await axiosInstance.post("/auth/reset-password", {
+    email,
+    code,
+    newPassword,
+  });
+  return response;
+};

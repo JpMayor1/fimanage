@@ -15,6 +15,8 @@ const accountSchema = new Schema<AccountDocumentType>(
     password: { type: String, required: true },
     limit: { type: Number, default: 500 },
     recoveryCode: String,
+    passwordResetRequestsCount: { type: Number, default: 0 },
+    passwordResetLastResetDate: Date,
     completedOnboardingPages: { type: [String], default: [] },
   },
   { timestamps: true }

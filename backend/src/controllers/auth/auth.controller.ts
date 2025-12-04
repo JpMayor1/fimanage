@@ -3,7 +3,10 @@ import { comparePassword, hashPassword } from "@/utils/bcrypt/bcrypt";
 import { deleteFile } from "@/utils/deleteFile/deleteFile";
 import { AppError } from "@/utils/error/appError";
 import { generateToken } from "@/utils/jwt/jwt.util";
+import { sendPasswordResetEmail } from "@/services/email/email.service";
+import Account from "@/models/account.model";
 import { Request, Response } from "express";
+import { formatInTimeZone, toZonedTime } from "date-fns-tz";
 
 export const register = async (req: Request, res: Response): Promise<void> => {
   const {
@@ -130,4 +133,119 @@ export const login = async (req: Request, res: Response) => {
 export const logout = (req: Request, res: Response) => {
   res.cookie("token", "", { maxAge: 0 });
   res.status(200).json({ message: "Logged out successfully" });
+};
+
+export const forgotPassword = async (req: Request, res: Response): Promise<void> => {
+  const { email } = req.body;
+
+  if (!email) {
+    throw new AppError("Email is required.", 400);
+  }
+
+  // Find account by email
+  const account = await findAccountS({ email });
+  if (!account) {
+    // Don't reveal if email exists or not for security
+    res.status(200).json({
+      message: "If an account with that email exists, a password reset code has been sent.",
+    });
+    return;
+  }
+
+  const timeZone = "Asia/Manila";
+  const now = new Date();
+  const phTime = toZonedTime(now, timeZone);
+  const today = formatInTimeZone(phTime, timeZone, "yyyy-MM-dd");
+
+  // Check if we need to reset the daily counter
+  const lastResetDate = account.passwordResetLastResetDate
+    ? formatInTimeZone(
+        new Date(account.passwordResetLastResetDate),
+        timeZone,
+        "yyyy-MM-dd"
+      )
+    : null;
+
+  let currentCount = account.passwordResetRequestsCount || 0;
+
+  // Reset counter if it's a new day
+  if (lastResetDate !== today) {
+    currentCount = 0;
+  }
+
+  // Check if user has reached the daily limit (5 requests)
+  if (currentCount >= 5) {
+    throw new AppError(
+      "You have reached the daily limit for password reset requests. Please try again tomorrow.",
+      429
+    );
+  }
+
+  // Generate a 6-digit recovery code
+  const recoveryCode = Math.floor(100000 + Math.random() * 900000).toString();
+
+  // Update account with recovery code and increment request count
+  await Account.findByIdAndUpdate(account._id, {
+    recoveryCode,
+    passwordResetRequestsCount: currentCount + 1,
+    passwordResetLastResetDate: phTime,
+  });
+
+  // Send email with recovery code
+  try {
+    await sendPasswordResetEmail(email, recoveryCode, account.firstName);
+  } catch (error) {
+    // If email fails, still don't reveal account existence
+    console.error("Error sending password reset email:", error);
+    // Continue - we'll still return success to prevent email enumeration
+  }
+
+  res.status(200).json({
+    message: "If an account with that email exists, a password reset code has been sent.",
+  });
+};
+
+export const resetPassword = async (req: Request, res: Response): Promise<void> => {
+  const { email, code, newPassword } = req.body;
+
+  if (!email) {
+    throw new AppError("Email is required.", 400);
+  }
+  if (!code) {
+    throw new AppError("Recovery code is required.", 400);
+  }
+  if (!newPassword) {
+    throw new AppError("New password is required.", 400);
+  }
+
+  // Find account by email
+  const account = await findAccountS({ email });
+  if (!account) {
+    throw new AppError("Invalid recovery code or email.", 400);
+  }
+
+  // Verify recovery code
+  if (!account.recoveryCode || account.recoveryCode !== code) {
+    throw new AppError("Invalid recovery code or email.", 400);
+  }
+
+  // Check if code is expired (1 hour)
+  const codeAge = Date.now() - (account.updatedAt?.getTime() || 0);
+  const oneHour = 60 * 60 * 1000;
+  if (codeAge > oneHour) {
+    throw new AppError("Recovery code has expired. Please request a new one.", 400);
+  }
+
+  // Hash new password
+  const hashedPassword = await hashPassword(newPassword);
+
+  // Update password and clear recovery code
+  await Account.findByIdAndUpdate(account._id, {
+    password: hashedPassword,
+    recoveryCode: undefined,
+  });
+
+  res.status(200).json({
+    message: "Password has been reset successfully. You can now login with your new password.",
+  });
 };

@@ -13,6 +13,8 @@ export type AccountType = {
   password: string;
   address: string;
   recoveryCode?: string;
+  passwordResetRequestsCount?: number;
+  passwordResetLastResetDate?: Date;
   limit: number;
   completedOnboardingPages?: string[];
   createdAt: Date;

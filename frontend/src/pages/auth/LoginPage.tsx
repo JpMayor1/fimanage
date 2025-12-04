@@ -104,6 +104,21 @@ const LoginPage: React.FC = () => {
             }
           />
 
+          {/* Forgot Password Link */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 0.5 }}
+            className="w-full flex items-center justify-end"
+          >
+            <Link
+              to="/auth/forgot-password"
+              className="text-yellow text-sm cursor-pointer hover:underline"
+            >
+              Forgot password?
+            </Link>
+          </motion.div>
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
