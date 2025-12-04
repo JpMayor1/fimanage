@@ -26,7 +26,7 @@ const ForgotPasswordPage: React.FC = () => {
       toast.success(
         "If an account with that email exists, a password reset code has been sent to your email."
       );
-      navigate("/auth/login");
+      navigate(`/auth/reset-password?email=${encodeURIComponent(email)}`);
     } catch (error: any) {
       const errorMessage =
         error?.response?.data?.message || "Failed to send password reset code.";

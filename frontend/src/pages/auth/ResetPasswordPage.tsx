@@ -1,11 +1,11 @@
+import { resetPasswordApi } from "@/api/auth/auth.api";
 import LoadingSmall from "@/components/custom/loading/LoadingSmall";
 import TextField from "@/components/custom/TextField";
-import { resetPasswordApi } from "@/api/auth/auth.api";
 import { motion } from "framer-motion";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { FiEye, FiEyeOff, FiLock, FiMail } from "react-icons/fi";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import toast from "react-hot-toast";
 
 const ResetPasswordPage: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -70,11 +70,14 @@ const ResetPasswordPage: React.FC = () => {
         code: form.code,
         newPassword: form.newPassword,
       });
-      toast.success("Password has been reset successfully. You can now login with your new password.");
+      toast.success(
+        "Password has been reset successfully. You can now login with your new password."
+      );
       navigate("/auth/login");
-    } catch (error: any) {
+    } catch (error: unknown) {
       const errorMessage =
-        error?.response?.data?.message || "Failed to reset password.";
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message || "Failed to reset password.";
       toast.error(errorMessage);
     } finally {
       setLoading(false);
@@ -106,82 +109,128 @@ const ResetPasswordPage: React.FC = () => {
         </motion.div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit}>
           {/* Email */}
-          <TextField
-            type="email"
-            name="email"
-            placeholder="Email *"
-            value={form.email}
-            onChange={handleChange}
-            required
-            icon={<FiMail />}
-          />
+          <div className="mb-5">
+            <TextField
+              type="email"
+              name="email"
+              placeholder="Email *"
+              value={form.email}
+              onChange={handleChange}
+              required
+              icon={<FiMail />}
+            />
+          </div>
 
           {/* Recovery Code */}
-          <TextField
-            name="code"
-            placeholder="Recovery Code *"
-            value={form.code}
-            onChange={handleChange}
-            required
-            icon={<FiLock />}
-          />
+          <div className="mb-5">
+            <TextField
+              name="code"
+              placeholder="Recovery Code *"
+              value={form.code}
+              onChange={handleChange}
+              required
+              icon={<FiLock />}
+            />
+          </div>
 
           {/* New Password */}
-          <TextField
-            type={showPassword ? "text" : "password"}
-            name="newPassword"
-            placeholder="New Password *"
-            value={form.newPassword}
-            onChange={handleChange}
-            required
-            icon={<FiLock />}
-            rightIcon={
-              <button
-                type="button"
-                tabIndex={-1}
-                className="text-yellow-400 hover:text-yellow-600 transition"
-                onClick={() => setShowPassword((v) => !v)}
-                aria-label={showPassword ? "Hide password" : "Show password"}
-              >
-                {showPassword ? (
-                  <FiEyeOff className="text-lg" />
-                ) : (
-                  <FiEye className="text-lg" />
-                )}
-              </button>
-            }
-          />
+          <div className="mb-5">
+            <TextField
+              type={showPassword ? "text" : "password"}
+              name="newPassword"
+              placeholder="New Password *"
+              value={form.newPassword}
+              onChange={handleChange}
+              required
+              icon={<FiLock />}
+              rightIcon={
+                <button
+                  type="button"
+                  tabIndex={-1}
+                  className="text-yellow-400 hover:text-yellow-600 transition"
+                  onClick={() => setShowPassword((v) => !v)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? (
+                    <FiEyeOff className="text-lg" />
+                  ) : (
+                    <FiEye className="text-lg" />
+                  )}
+                </button>
+              }
+            />
+          </div>
 
           {/* Confirm Password */}
-          <TextField
-            type={showConfirmPassword ? "text" : "password"}
-            name="confirmPassword"
-            placeholder="Confirm Password *"
-            value={form.confirmPassword}
-            onChange={handleChange}
-            required
-            icon={<FiLock />}
-            rightIcon={
-              <button
-                type="button"
-                tabIndex={-1}
-                className="text-yellow-400 hover:text-yellow-600 transition"
-                onClick={() => setShowConfirmPassword((v) => !v)}
-                aria-label={
-                  showConfirmPassword ? "Hide password" : "Show password"
-                }
-              >
-                {showConfirmPassword ? (
-                  <FiEyeOff className="text-lg" />
-                ) : (
-                  <FiEye className="text-lg" />
-                )}
-              </button>
-            }
-          />
+          <div className="mb-6">
+            <TextField
+              type={showConfirmPassword ? "text" : "password"}
+              name="confirmPassword"
+              placeholder="Confirm Password *"
+              value={form.confirmPassword}
+              onChange={handleChange}
+              required
+              icon={<FiLock />}
+              rightIcon={
+                <button
+                  type="button"
+                  tabIndex={-1}
+                  className="text-yellow-400 hover:text-yellow-600 transition"
+                  onClick={() => setShowConfirmPassword((v) => !v)}
+                  aria-label={
+                    showConfirmPassword ? "Hide password" : "Show password"
+                  }
+                >
+                  {showConfirmPassword ? (
+                    <FiEyeOff className="text-lg" />
+                  ) : (
+                    <FiEye className="text-lg" />
+                  )}
+                </button>
+              }
+            />
+          </div>
 
+          {/* Code expired link */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 0.5 }}
+            className="w-full flex items-center justify-end mb-5"
+          >
+            <button
+              type="button"
+              onClick={() => navigate(`/auth/forgot-password`)}
+              className="text-yellow text-sm cursor-pointer hover:underline"
+            >
+              Code expired? Request a new one
+            </button>
+          </motion.div>
+
+          {/* Submit Button */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.5 }}
+            className="mb-5"
+          >
+            <motion.button
+              type="submit"
+              disabled={loading}
+              className={`${
+                loading
+                  ? "cursor-not-allowed opacity-80"
+                  : "cursor-pointer hover:scale-101 hover:shadow-xl transition-all"
+              } w-full py-3 rounded-xl bg-gradient-to-r from-yellow-700 to-yellow-500 text-white font-bold text-lg shadow-md`}
+              whileTap={{ scale: 0.98 }}
+            >
+              {loading ? <LoadingSmall /> : "Reset Password"}
+            </motion.button>
+          </motion.div>
+
+          {/* Remember password link */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -197,26 +246,6 @@ const ResetPasswordPage: React.FC = () => {
               Login here
             </button>
           </motion.div>
-
-          {/* Submit Button */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.5 }}
-          >
-            <motion.button
-              type="submit"
-              disabled={loading}
-              className={`${
-                loading
-                  ? "cursor-not-allowed opacity-80"
-                  : "cursor-pointer hover:scale-101 hover:shadow-xl transition-all"
-              } w-full py-3 rounded-xl bg-gradient-to-r from-yellow-700 to-yellow-500 text-white font-bold text-lg mt-2 shadow-md`}
-              whileTap={{ scale: 0.98 }}
-            >
-              {loading ? <LoadingSmall /> : "Reset Password"}
-            </motion.button>
-          </motion.div>
         </form>
       </motion.div>
     </div>
@@ -224,4 +253,3 @@ const ResetPasswordPage: React.FC = () => {
 };
 
 export default ResetPasswordPage;
-

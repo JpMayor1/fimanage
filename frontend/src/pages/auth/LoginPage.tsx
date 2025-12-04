@@ -66,7 +66,7 @@ const LoginPage: React.FC = () => {
         </motion.div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit}>
           {/* Username */}
           <TextField
             name="username"
@@ -76,6 +76,7 @@ const LoginPage: React.FC = () => {
             required
             autoFocus
             icon={<FiAtSign />}
+            containerClassName="mb-6"
           />
 
           {/* Password */}
@@ -102,6 +103,7 @@ const LoginPage: React.FC = () => {
                 )}
               </button>
             }
+            containerClassName="mb-4"
           />
 
           {/* Forgot Password Link */}
@@ -109,7 +111,7 @@ const LoginPage: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.5 }}
-            className="w-full flex items-center justify-end"
+            className="w-full flex items-center justify-end mb-2"
           >
             <Link
               to="/auth/forgot-password"
@@ -117,6 +119,27 @@ const LoginPage: React.FC = () => {
             >
               Forgot password?
             </Link>
+          </motion.div>
+
+          {/* Login Button */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.5 }}
+            className="mb-4"
+          >
+            <motion.button
+              type="submit"
+              disabled={loading}
+              className={`${
+                loading
+                  ? "cursor-not-allowed opacity-80"
+                  : "cursor-pointer hover:scale-101 hover:shadow-xl transition-all"
+              } w-full py-3 rounded-xl bg-gradient-to-r from-yellow-700 to-yellow-500 text-white font-bold text-lg mt-2 shadow-md`}
+              whileTap={{ scale: 0.98 }}
+            >
+              {loading ? <LoadingSmall /> : "Sign In"}
+            </motion.button>
           </motion.div>
 
           <motion.div
@@ -133,26 +156,6 @@ const LoginPage: React.FC = () => {
             >
               Register here
             </button>
-          </motion.div>
-
-          {/* Login Button */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.5 }}
-          >
-            <motion.button
-              type="submit"
-              disabled={loading}
-              className={`${
-                loading
-                  ? "cursor-not-allowed opacity-80"
-                  : "cursor-pointer hover:scale-101 hover:shadow-xl transition-all"
-              } w-full py-3 rounded-xl bg-gradient-to-r from-yellow-700 to-yellow-500 text-white font-bold text-lg mt-2 shadow-md`}
-              whileTap={{ scale: 0.98 }}
-            >
-              {loading ? <LoadingSmall /> : "Sign In"}
-            </motion.button>
           </motion.div>
         </form>
       </motion.div>

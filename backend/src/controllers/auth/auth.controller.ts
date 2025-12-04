@@ -1,12 +1,12 @@
+import Account from "@/models/account.model";
 import { findAccountS, registerAccountS } from "@/services/auth/auth.service";
+import { sendPasswordResetEmail } from "@/services/email/email.service";
 import { comparePassword, hashPassword } from "@/utils/bcrypt/bcrypt";
 import { deleteFile } from "@/utils/deleteFile/deleteFile";
 import { AppError } from "@/utils/error/appError";
 import { generateToken } from "@/utils/jwt/jwt.util";
-import { sendPasswordResetEmail } from "@/services/email/email.service";
-import Account from "@/models/account.model";
-import { Request, Response } from "express";
 import { formatInTimeZone, toZonedTime } from "date-fns-tz";
+import { Request, Response } from "express";
 
 export const register = async (req: Request, res: Response): Promise<void> => {
   const {
@@ -135,7 +135,10 @@ export const logout = (req: Request, res: Response) => {
   res.status(200).json({ message: "Logged out successfully" });
 };
 
-export const forgotPassword = async (req: Request, res: Response): Promise<void> => {
+export const forgotPassword = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   const { email } = req.body;
 
   if (!email) {
@@ -147,7 +150,8 @@ export const forgotPassword = async (req: Request, res: Response): Promise<void>
   if (!account) {
     // Don't reveal if email exists or not for security
     res.status(200).json({
-      message: "If an account with that email exists, a password reset code has been sent.",
+      message:
+        "If an account with that email exists, a password reset code has been sent.",
     });
     return;
   }
@@ -201,11 +205,15 @@ export const forgotPassword = async (req: Request, res: Response): Promise<void>
   }
 
   res.status(200).json({
-    message: "If an account with that email exists, a password reset code has been sent.",
+    message:
+      "If an account with that email exists, a password reset code has been sent.",
   });
 };
 
-export const resetPassword = async (req: Request, res: Response): Promise<void> => {
+export const resetPassword = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   const { email, code, newPassword } = req.body;
 
   if (!email) {
@@ -229,23 +237,39 @@ export const resetPassword = async (req: Request, res: Response): Promise<void> 
     throw new AppError("Invalid recovery code or email.", 400);
   }
 
-  // Check if code is expired (1 hour)
+  // Check if code is expired (5 minutes)
   const codeAge = Date.now() - (account.updatedAt?.getTime() || 0);
-  const oneHour = 60 * 60 * 1000;
-  if (codeAge > oneHour) {
-    throw new AppError("Recovery code has expired. Please request a new one.", 400);
+  const fiveMinutes = 5 * 60 * 1000;
+  if (codeAge > fiveMinutes) {
+    // Clear expired recovery code from database
+    await Account.findByIdAndUpdate(account._id, {
+      recoveryCode: "",
+    });
+    throw new AppError(
+      "Recovery code has expired. Please request a new one.",
+      400
+    );
   }
 
   // Hash new password
   const hashedPassword = await hashPassword(newPassword);
 
-  // Update password and clear recovery code
+  // Get current date in Asia/Manila timezone
+  const timeZone = "Asia/Manila";
+  const now = new Date();
+  const phTime = toZonedTime(now, timeZone);
+
+  // Update password, clear recovery code, and disable forgot-password for the rest of the day
+  // by setting passwordResetRequestsCount to 5 (the daily limit)
   await Account.findByIdAndUpdate(account._id, {
     password: hashedPassword,
-    recoveryCode: undefined,
+    recoveryCode: "", // Empty the recovery code
+    passwordResetRequestsCount: 5, // Set to limit to disable forgot-password for the day
+    passwordResetLastResetDate: phTime, // Update to current date
   });
 
   res.status(200).json({
-    message: "Password has been reset successfully. You can now login with your new password.",
+    message:
+      "Password has been reset successfully. You can now login with your new password.",
   });
 };

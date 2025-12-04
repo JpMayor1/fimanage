@@ -42,12 +42,12 @@ export const sendPasswordResetEmail = async (
               <div style="background: #fff; border: 2px solid #667eea; border-radius: 8px; padding: 20px; text-align: center; margin: 20px 0;">
                 <h1 style="color: #667eea; margin: 0; font-size: 32px; letter-spacing: 4px; font-family: monospace;">${recoveryCode}</h1>
               </div>
-              <p>Or click the button below to reset your password:</p>
+              <p>Click the button below to reset your password:</p>
               <div style="text-align: center; margin: 30px 0;">
                 <a href="${resetUrl}" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #fff; padding: 12px 30px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: bold;">Reset Password</a>
               </div>
               <p style="color: #666; font-size: 14px; margin-top: 30px; border-top: 1px solid #e0e0e0; padding-top: 20px;">
-                <strong>Important:</strong> This code will expire in 1 hour. If you didn't request this password reset, please ignore this email.
+                <strong>Important:</strong> This code will expire in 5 minutes. If you didn't request this password reset, please ignore this email.
               </p>
               <p style="color: #666; font-size: 12px; margin-top: 20px;">
                 If the button doesn't work, copy and paste this link into your browser:<br>
