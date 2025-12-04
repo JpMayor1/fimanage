@@ -9,7 +9,7 @@ export type SourceType = {
   balance: number;
   transactions: {
     transactionId: string;
-    type: "income" | "expense" | "transfer";
+    type: "income" | "expense" | "transfer" | "dept" | "receiving";
     note: string;
     amount: number;
   }[];

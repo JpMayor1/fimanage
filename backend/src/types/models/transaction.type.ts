@@ -20,12 +20,14 @@ export type transactionType = {
     amount: number;
   };
   dept: {
-    source: string;
+    source: string; // Dept ID
+    moneySource: string; // Money source ID
     note: string;
     amount: number;
   };
   receiving: {
-    source: string;
+    source: string; // Receiving ID
+    moneySource: string; // Money source ID
     note: string;
     amount: number;
   };

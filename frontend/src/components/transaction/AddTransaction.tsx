@@ -12,6 +12,7 @@ import { useTransactionStore } from "@/stores/transaction/transaction.store";
 import type { TransactionType } from "@/types/transaction/transaction.type";
 import { motion } from "framer-motion";
 import { useEffect, useState, type FormEvent } from "react";
+import toast from "react-hot-toast";
 import { FiX } from "react-icons/fi";
 
 interface AddTransactionI {
@@ -71,6 +72,18 @@ const AddTransaction = ({ onClose }: AddTransactionI) => {
 
     if (form.baseType === "expense") {
       const expenseAmount = amountNumber(form.expense?.amount);
+      const selectedSource = sources.find(
+        (s) => s._id === form.expense?.source
+      );
+
+      // Check if source has sufficient balance
+      if (selectedSource && expenseAmount > selectedSource.balance) {
+        toast.error(
+          `Insufficient balance. Expense amount (${expenseAmount}) exceeds available balance (${selectedSource.balance}).`
+        );
+        return;
+      }
+
       payload.expense = {
         source: form.expense?.source || "",
         note: form.expense?.note || "",
@@ -91,26 +104,72 @@ const AddTransaction = ({ onClose }: AddTransactionI) => {
     }
 
     if (form.baseType === "transfer") {
+      const transferAmount = amountNumber(form.transfer?.amount);
+      const fromSource = sources.find((s) => s._id === form.transfer?.from);
+
+      // Check if "from" source has sufficient balance
+      if (fromSource && transferAmount > fromSource.balance) {
+        toast.error(
+          `Insufficient balance. Transfer amount (${transferAmount}) exceeds available balance (${fromSource.balance}) in source.`
+        );
+        return;
+      }
+
       payload.transfer = {
         from: form.transfer?.from || "",
         to: form.transfer?.to || "",
-        amount: amountNumber(form.transfer?.amount),
+        amount: transferAmount,
       };
     }
 
     if (form.baseType === "dept") {
+      const deptAmount = amountNumber(form.dept?.amount);
+      const selectedDept = depts.find((d) => d._id === form.dept?.source);
+      const selectedMoneySource = sources.find(
+        (s) => s._id === form.dept?.moneySource
+      );
+
+      if (selectedDept && deptAmount > selectedDept.remaining) {
+        toast.error(
+          `Payment amount (${deptAmount}) cannot exceed remaining balance (${selectedDept.remaining}).`
+        );
+        return;
+      }
+
+      // Check if money source has sufficient balance
+      if (selectedMoneySource && deptAmount > selectedMoneySource.balance) {
+        toast.error(
+          `Insufficient balance. Dept payment amount (${deptAmount}) exceeds available balance (${selectedMoneySource.balance}).`
+        );
+        return;
+      }
+
       payload.dept = {
         source: form.dept?.source || "",
+        moneySource: form.dept?.moneySource || "",
         note: form.dept?.note || "",
-        amount: amountNumber(form.dept?.amount),
+        amount: deptAmount,
       };
     }
 
     if (form.baseType === "receiving") {
+      const receivingAmount = amountNumber(form.receiving?.amount);
+      const selectedReceiving = receivings.find(
+        (r) => r._id === form.receiving?.source
+      );
+
+      if (selectedReceiving && receivingAmount > selectedReceiving.remaining) {
+        toast.error(
+          `Receiving amount (${receivingAmount}) cannot exceed remaining balance (${selectedReceiving.remaining}).`
+        );
+        return;
+      }
+
       payload.receiving = {
         source: form.receiving?.source || "",
+        moneySource: form.receiving?.moneySource || "",
         note: form.receiving?.note || "",
-        amount: amountNumber(form.receiving?.amount),
+        amount: receivingAmount,
       };
     }
 
@@ -282,7 +341,16 @@ const AddTransaction = ({ onClose }: AddTransactionI) => {
               </div>
 
               <div className="flex flex-col gap-1">
-                <label className="text-white text-xs">Amount *</label>
+                <div className="flex items-center justify-between">
+                  <label className="text-white text-xs">Amount *</label>
+                  {form.expense?.source && (
+                    <span className="text-white/60 text-[10px]">
+                      Balance:{" "}
+                      {sources.find((s) => s._id === form.expense?.source)
+                        ?.balance || 0}
+                    </span>
+                  )}
+                </div>
                 <TextField
                   type="text"
                   inputMode="decimal"
@@ -342,7 +410,7 @@ const AddTransaction = ({ onClose }: AddTransactionI) => {
                     <option value="">Select source</option>
                     {sources.map((s) => (
                       <option key={s._id} value={s._id}>
-                        {s.name}
+                        {s.name} (Balance: {s.balance})
                       </option>
                     ))}
                   </CustomSelect>
@@ -405,7 +473,7 @@ const AddTransaction = ({ onClose }: AddTransactionI) => {
                     setForm((prev) => ({
                       ...prev,
                       dept: {
-                        ...(prev.dept || { note: "", amount: 0 }),
+                        ...(prev.dept || { note: "", amount: 0, moneySource: "" }),
                         source: e.target.value,
                       },
                     }))
@@ -421,7 +489,38 @@ const AddTransaction = ({ onClose }: AddTransactionI) => {
               </div>
 
               <div className="flex flex-col gap-1">
-                <label className="text-white text-xs">Amount *</label>
+                <label className="text-white text-xs">Source *</label>
+                <CustomSelect
+                  value={form.dept?.moneySource || ""}
+                  onChange={(e) =>
+                    setForm((prev) => ({
+                      ...prev,
+                      dept: {
+                        ...(prev.dept || { source: "", note: "", amount: 0 }),
+                        moneySource: e.target.value,
+                      },
+                    }))
+                  }
+                >
+                  <option value="">Select source</option>
+                  {sources.map((s) => (
+                    <option key={s._id} value={s._id}>
+                      {s.name} (Balance: {s.balance})
+                    </option>
+                  ))}
+                </CustomSelect>
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <div className="flex items-center justify-between">
+                  <label className="text-white text-xs">Amount *</label>
+                  {form.dept?.source && (
+                    <span className="text-white/60 text-[10px]">
+                      Remaining:{" "}
+                      {depts.find((d) => d._id === form.dept?.source)?.remaining || 0}
+                    </span>
+                  )}
+                </div>
                 <TextField
                   type="text"
                   inputMode="decimal"
@@ -431,7 +530,7 @@ const AddTransaction = ({ onClose }: AddTransactionI) => {
                     setForm((prev) => ({
                       ...prev,
                       dept: {
-                        ...(prev.dept || { source: "", note: "" }),
+                        ...(prev.dept || { source: "", note: "", moneySource: "" }),
                         amount: e.target.value as unknown as number,
                       },
                     }))
@@ -449,7 +548,7 @@ const AddTransaction = ({ onClose }: AddTransactionI) => {
                     setForm((prev) => ({
                       ...prev,
                       dept: {
-                        ...(prev.dept || { source: "", amount: 0 }),
+                        ...(prev.dept || { source: "", amount: 0, moneySource: "" }),
                         note: e.target.value,
                       },
                     }))
@@ -471,7 +570,7 @@ const AddTransaction = ({ onClose }: AddTransactionI) => {
                     setForm((prev) => ({
                       ...prev,
                       receiving: {
-                        ...(prev.receiving || { note: "", amount: 0 }),
+                        ...(prev.receiving || { note: "", amount: 0, moneySource: "" }),
                         source: e.target.value,
                       },
                     }))
@@ -481,6 +580,29 @@ const AddTransaction = ({ onClose }: AddTransactionI) => {
                   {receivings.map((r) => (
                     <option key={r._id} value={r._id}>
                       {r.borrower}
+                    </option>
+                  ))}
+                </CustomSelect>
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <label className="text-white text-xs">Source *</label>
+                <CustomSelect
+                  value={form.receiving?.moneySource || ""}
+                  onChange={(e) =>
+                    setForm((prev) => ({
+                      ...prev,
+                      receiving: {
+                        ...(prev.receiving || { source: "", note: "", amount: 0 }),
+                        moneySource: e.target.value,
+                      },
+                    }))
+                  }
+                >
+                  <option value="">Select source</option>
+                  {sources.map((s) => (
+                    <option key={s._id} value={s._id}>
+                      {s.name} (Balance: {s.balance})
                     </option>
                   ))}
                 </CustomSelect>
@@ -497,7 +619,7 @@ const AddTransaction = ({ onClose }: AddTransactionI) => {
                     setForm((prev) => ({
                       ...prev,
                       receiving: {
-                        ...(prev.receiving || { source: "", note: "" }),
+                        ...(prev.receiving || { source: "", note: "", moneySource: "" }),
                         amount: e.target.value as unknown as number,
                       },
                     }))
@@ -515,7 +637,7 @@ const AddTransaction = ({ onClose }: AddTransactionI) => {
                     setForm((prev) => ({
                       ...prev,
                       receiving: {
-                        ...(prev.receiving || { source: "", amount: 0 }),
+                        ...(prev.receiving || { source: "", amount: 0, moneySource: "" }),
                         note: e.target.value,
                       },
                     }))

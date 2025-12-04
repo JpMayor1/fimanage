@@ -13,7 +13,7 @@ const SourceSchema = new Schema<SourceDocumentType>(
         transactionId: String,
         type: {
           type: String,
-          enum: ["income", "expense", "transfer"],
+          enum: ["income", "expense", "transfer", "dept", "receiving"],
         },
         note: String,
         amount: Number,

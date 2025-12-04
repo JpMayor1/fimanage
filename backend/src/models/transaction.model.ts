@@ -25,12 +25,14 @@ const TransactionSchema = new Schema<transactionDocumentType>(
       amount: Number,
     },
     dept: {
-      source: String,
+      source: String, // Dept ID
+      moneySource: String, // Money source ID
       note: String,
       amount: Number,
     },
     receiving: {
-      source: String,
+      source: String, // Receiving ID
+      moneySource: String, // Money source ID
       note: String,
       amount: Number,
     },

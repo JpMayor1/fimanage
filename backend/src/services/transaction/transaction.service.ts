@@ -58,6 +58,20 @@ const applyTransactionEffects = async (
     if (!source) throw new AppError("Expense source is required.", 400);
     const amt = ensureNumber(amount) * factor;
 
+    // Validate source has sufficient balance (only when adding, factor === 1)
+    if (factor === 1) {
+      const sourceDoc = await Source.findById(source);
+      if (!sourceDoc) throw new AppError("Source not found.", 404);
+      
+      const currentBalance = ensureNumber(sourceDoc.balance);
+      if (amt > currentBalance) {
+        throw new AppError(
+          `Insufficient balance. Expense amount (${amt}) exceeds available balance (${currentBalance}).`,
+          400
+        );
+      }
+    }
+
     const update: Record<string, unknown> = {
       $inc: {
         expense: amt,
@@ -91,6 +105,20 @@ const applyTransactionEffects = async (
     const { from, to, amount } = trx.transfer;
     if (!from || !to) throw new AppError("Transfer from/to are required.", 400);
     const amt = ensureNumber(amount) * factor;
+
+    // Validate "from" source has sufficient balance (only when adding, factor === 1)
+    if (factor === 1) {
+      const fromSource = await Source.findById(from);
+      if (!fromSource) throw new AppError("Source (from) not found.", 404);
+      
+      const currentBalance = ensureNumber(fromSource.balance);
+      if (amt > currentBalance) {
+        throw new AppError(
+          `Insufficient balance. Transfer amount (${amt}) exceeds available balance (${currentBalance}) in source.`,
+          400
+        );
+      }
+    }
 
     const updateFrom: Record<string, unknown> = {
       $inc: {
@@ -140,12 +168,24 @@ const applyTransactionEffects = async (
   }
 
   if (type === "dept") {
-    const { source, amount, note } = trx.dept;
+    const { source, moneySource, amount, note } = trx.dept;
     if (!source) throw new AppError("Dept id is required.", 400);
+    if (!moneySource) throw new AppError("Money source is required for dept payment.", 400);
     const amt = ensureNumber(amount) * factor;
 
     const dept = await Dept.findById(source);
     if (!dept) throw new AppError("Dept not found.", 404);
+
+    // Validate amount doesn't exceed remaining balance (only when adding, factor === 1)
+    if (factor === 1) {
+      const currentRemaining = ensureNumber(dept.remaining);
+      if (amt > currentRemaining) {
+        throw new AppError(
+          `Payment amount (${amt}) cannot exceed remaining balance (${currentRemaining}).`,
+          400
+        );
+      }
+    }
 
     const newRemaining = Math.max(0, ensureNumber(dept.remaining) - amt);
     const newStatus =
@@ -181,15 +221,70 @@ const applyTransactionEffects = async (
         },
       });
     }
+
+    // Update money source balance (decrease like expense)
+    // Validate money source has sufficient balance (only when adding, factor === 1)
+    if (factor === 1) {
+      const moneySourceDoc = await Source.findById(moneySource);
+      if (!moneySourceDoc) throw new AppError("Money source not found.", 404);
+      
+      const currentBalance = ensureNumber(moneySourceDoc.balance);
+      if (amt > currentBalance) {
+        throw new AppError(
+          `Insufficient balance. Dept payment amount (${amt}) exceeds available balance (${currentBalance}).`,
+          400
+        );
+      }
+    }
+
+    const sourceUpdate: Record<string, unknown> = {
+      $inc: {
+        expense: amt,
+        balance: -amt,
+      },
+    };
+
+    if (factor === 1) {
+      sourceUpdate.$push = {
+        transactions: {
+          transactionId: trx._id,
+          type: "dept",
+          note,
+          amount,
+        },
+      };
+    }
+
+    await Source.findByIdAndUpdate(moneySource, sourceUpdate);
+
+    if (factor === -1) {
+      await Source.findByIdAndUpdate(moneySource, {
+        $pull: {
+          transactions: { transactionId: trx._id },
+        },
+      });
+    }
   }
 
   if (type === "receiving") {
-    const { source, amount, note } = trx.receiving;
+    const { source, moneySource, amount, note } = trx.receiving;
     if (!source) throw new AppError("Receiving id is required.", 400);
+    if (!moneySource) throw new AppError("Money source is required for receiving payment.", 400);
     const amt = ensureNumber(amount) * factor;
 
     const receiving = await Receiving.findById(source);
     if (!receiving) throw new AppError("Receiving not found.", 404);
+
+    // Validate amount doesn't exceed remaining balance (only when adding, factor === 1)
+    if (factor === 1) {
+      const currentRemaining = ensureNumber(receiving.remaining);
+      if (amt > currentRemaining) {
+        throw new AppError(
+          `Receiving amount (${amt}) cannot exceed remaining balance (${currentRemaining}).`,
+          400
+        );
+      }
+    }
 
     const newRemaining = Math.max(0, ensureNumber(receiving.remaining) - amt);
     const newStatus =
@@ -220,6 +315,35 @@ const applyTransactionEffects = async (
 
     if (factor === -1) {
       await Receiving.findByIdAndUpdate(source, {
+        $pull: {
+          transactions: { transactionId: trx._id },
+        },
+      });
+    }
+
+    // Update money source balance (increase like income)
+    const sourceUpdate: Record<string, unknown> = {
+      $inc: {
+        income: amt,
+        balance: amt,
+      },
+    };
+
+    if (factor === 1) {
+      sourceUpdate.$push = {
+        transactions: {
+          transactionId: trx._id,
+          type: "receiving",
+          note,
+          amount,
+        },
+      };
+    }
+
+    await Source.findByIdAndUpdate(moneySource, sourceUpdate);
+
+    if (factor === -1) {
+      await Source.findByIdAndUpdate(moneySource, {
         $pull: {
           transactions: { transactionId: trx._id },
         },
@@ -280,12 +404,14 @@ export const addTransactionS = async (
     transactionData.dept = {
       ...data.dept,
       amount: ensureNumber(data.dept.amount),
+      moneySource: data.dept.moneySource || "",
     };
   }
   if (data.receiving) {
     transactionData.receiving = {
       ...data.receiving,
       amount: ensureNumber(data.receiving.amount),
+      moneySource: data.receiving.moneySource || "",
     };
   }
 
@@ -332,12 +458,14 @@ export const updateTransactionS = async (
     updateData.dept = {
       ...data.dept,
       amount: ensureNumber(data.dept.amount),
+      moneySource: data.dept.moneySource || "",
     };
   }
   if (data.receiving) {
     updateData.receiving = {
       ...data.receiving,
       amount: ensureNumber(data.receiving.amount),
+      moneySource: data.receiving.moneySource || "",
     };
   }
 
