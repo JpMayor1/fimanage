@@ -1,3 +1,6 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import { AppError } from "@/utils/error/appError";
 import { Resend } from "resend";
 
