@@ -7,13 +7,18 @@ import { useSideBar } from "@/stores/sidebar/useSideBar";
 import type { AccountType } from "@/types/account/account.type";
 import { formatAmount } from "@/utils/amount/formatAmount";
 import { getFullName } from "@/utils/fullName/getFullName";
+import { changePasswordApi } from "@/api/profile/profile.api";
 import Avatar from "avatox";
 import { AnimatePresence } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import toast from "react-hot-toast";
 import {
   FiAtSign,
   FiEdit2,
+  FiEye,
+  FiEyeOff,
   FiImage,
+  FiLock,
   FiMail,
   FiMapPin,
   FiUser,
@@ -34,6 +39,16 @@ const ProfilePage = () => {
   const [profilePreview, setProfilePreview] = useState<string | null>(
     (account?.profilePicture as string) || null
   );
+  const [showChangePassword, setShowChangePassword] = useState(false);
+  const [passwordForm, setPasswordForm] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [changingPassword, setChangingPassword] = useState(false);
 
   useEffect(() => {
     setForm(account as AccountType);
@@ -67,6 +82,47 @@ const ProfilePage = () => {
       fileInputRef.current = null;
       setForm((prev) => ({ ...prev, newProfilePicture: null }));
       setIsEditing(false);
+    }
+  };
+
+  const handleChangePassword = async () => {
+    if (!passwordForm.currentPassword) {
+      toast.error("Current password is required.");
+      return;
+    }
+    if (!passwordForm.newPassword) {
+      toast.error("New password is required.");
+      return;
+    }
+    if (passwordForm.newPassword.length < 6) {
+      toast.error("New password must be at least 6 characters long.");
+      return;
+    }
+    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+      toast.error("New passwords do not match.");
+      return;
+    }
+
+    setChangingPassword(true);
+    try {
+      await changePasswordApi({
+        currentPassword: passwordForm.currentPassword,
+        newPassword: passwordForm.newPassword,
+      });
+      toast.success("Password has been changed successfully.");
+      setPasswordForm({
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      });
+      setShowChangePassword(false);
+    } catch (error: unknown) {
+      const errorMessage =
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message || "Failed to change password.";
+      toast.error(errorMessage);
+    } finally {
+      setChangingPassword(false);
     }
   };
 
@@ -357,6 +413,174 @@ const ProfilePage = () => {
                 </div>
               )}
             </div>
+          </div>
+
+          {/* Change Password */}
+          <div className="w-full space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-white/80 text-xs md:text-sm font-semibold uppercase tracking-wide">
+                Security
+              </h3>
+              {!showChangePassword && (
+                <button
+                  onClick={() => setShowChangePassword(true)}
+                  className="text-yellow text-xs md:text-sm font-medium hover:underline"
+                >
+                  Change Password
+                </button>
+              )}
+            </div>
+            {showChangePassword && (
+              <div className="space-y-3 p-4 rounded-lg bg-white/5 border border-white/10">
+                <div className="space-y-1.5">
+                  <label className="text-white/80 text-xs font-medium">
+                    Current Password *
+                  </label>
+                  <TextField
+                    type={showCurrentPassword ? "text" : "password"}
+                    name="currentPassword"
+                    placeholder="Current Password *"
+                    value={passwordForm.currentPassword}
+                    onChange={(e) =>
+                      setPasswordForm((prev) => ({
+                        ...prev,
+                        currentPassword: e.target.value,
+                      }))
+                    }
+                    required
+                    icon={<FiLock />}
+                    rightIcon={
+                      <button
+                        type="button"
+                        tabIndex={-1}
+                        className="text-yellow-400 hover:text-yellow-600 transition"
+                        onClick={() =>
+                          setShowCurrentPassword((v) => !v)
+                        }
+                        aria-label={
+                          showCurrentPassword
+                            ? "Hide password"
+                            : "Show password"
+                        }
+                      >
+                        {showCurrentPassword ? (
+                          <FiEyeOff className="text-lg" />
+                        ) : (
+                          <FiEye className="text-lg" />
+                        )}
+                      </button>
+                    }
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-white/80 text-xs font-medium">
+                    New Password *
+                  </label>
+                  <TextField
+                    type={showNewPassword ? "text" : "password"}
+                    name="newPassword"
+                    placeholder="New Password *"
+                    value={passwordForm.newPassword}
+                    onChange={(e) =>
+                      setPasswordForm((prev) => ({
+                        ...prev,
+                        newPassword: e.target.value,
+                      }))
+                    }
+                    required
+                    icon={<FiLock />}
+                    rightIcon={
+                      <button
+                        type="button"
+                        tabIndex={-1}
+                        className="text-yellow-400 hover:text-yellow-600 transition"
+                        onClick={() => setShowNewPassword((v) => !v)}
+                        aria-label={
+                          showNewPassword ? "Hide password" : "Show password"
+                        }
+                      >
+                        {showNewPassword ? (
+                          <FiEyeOff className="text-lg" />
+                        ) : (
+                          <FiEye className="text-lg" />
+                        )}
+                      </button>
+                    }
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-white/80 text-xs font-medium">
+                    Confirm New Password *
+                  </label>
+                  <TextField
+                    type={showConfirmPassword ? "text" : "password"}
+                    name="confirmPassword"
+                    placeholder="Confirm New Password *"
+                    value={passwordForm.confirmPassword}
+                    onChange={(e) =>
+                      setPasswordForm((prev) => ({
+                        ...prev,
+                        confirmPassword: e.target.value,
+                      }))
+                    }
+                    required
+                    icon={<FiLock />}
+                    rightIcon={
+                      <button
+                        type="button"
+                        tabIndex={-1}
+                        className="text-yellow-400 hover:text-yellow-600 transition"
+                        onClick={() =>
+                          setShowConfirmPassword((v) => !v)
+                        }
+                        aria-label={
+                          showConfirmPassword
+                            ? "Hide password"
+                            : "Show password"
+                        }
+                      >
+                        {showConfirmPassword ? (
+                          <FiEyeOff className="text-lg" />
+                        ) : (
+                          <FiEye className="text-lg" />
+                        )}
+                      </button>
+                    }
+                  />
+                </div>
+                <div className="flex items-center gap-3 pt-2">
+                  <button
+                    disabled={changingPassword}
+                    onClick={handleChangePassword}
+                    className={`${
+                      changingPassword
+                        ? "cursor-not-allowed opacity-80"
+                        : "cursor-pointer hover:scale-[1.02] hover:shadow-yellow/30 transition-all"
+                    } flex-1 py-2.5 rounded-xl bg-gradient-to-r from-yellow-600 to-yellow-500 text-black font-bold text-sm shadow-lg shadow-yellow/20 flex items-center justify-center gap-2`}
+                  >
+                    {changingPassword ? (
+                      <LoadingSmall />
+                    ) : (
+                      "Change Password"
+                    )}
+                  </button>
+                  <button
+                    disabled={changingPassword}
+                    onClick={() => {
+                      setShowChangePassword(false);
+                      setPasswordForm({
+                        currentPassword: "",
+                        newPassword: "",
+                        confirmPassword: "",
+                      });
+                    }}
+                    className="px-4 py-2.5 rounded-xl bg-white/10 text-white font-medium text-sm hover:bg-white/20 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
 
           {isEditing && (

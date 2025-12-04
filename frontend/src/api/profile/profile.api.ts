@@ -19,3 +19,17 @@ export const updateProfileApi = async (profile: Partial<AccountType>) => {
   });
   return response;
 };
+
+export const changePasswordApi = async ({
+  currentPassword,
+  newPassword,
+}: {
+  currentPassword: string;
+  newPassword: string;
+}) => {
+  const response = await axiosInstance.patch("/profile/change-password", {
+    currentPassword,
+    newPassword,
+  });
+  return response;
+};
