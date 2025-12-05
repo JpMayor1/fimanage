@@ -155,6 +155,14 @@ const ViewSource = ({ source, onClose }: ViewSourceI) => {
                               ? "bg-income/15 text-income"
                               : tx.type === "expense"
                               ? "bg-expense/15 text-expense"
+                              : isDeptRecord
+                              ? "bg-orange-700/20 text-orange-300"
+                              : isDeptPayment
+                              ? "bg-orange-400/15 text-orange-200"
+                              : isReceivingRecord
+                              ? "bg-indigo-700/20 text-indigo-300"
+                              : isReceivingPayment
+                              ? "bg-indigo-400/15 text-indigo-200"
                               : "bg-blue-500/15 text-blue-300"
                           }`}
                         >
