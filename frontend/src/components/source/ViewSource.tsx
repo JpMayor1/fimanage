@@ -102,13 +102,22 @@ const ViewSource = ({ source, onClose }: ViewSourceI) => {
               <div className="max-h-72 overflow-y-auto no-scrollbar space-y-1.5 pr-1">
                 {source.transactions.map((tx) => {
                   // Determine if transaction adds or deducts
+                  // Check if it's a payment transaction (transactionId is MongoDB ObjectId) 
+                  // vs record creation (transactionId starts with "dept-" or "receiving-")
+                  const isDeptPayment = tx.type === "dept" && !tx.transactionId.startsWith("dept-");
+                  const isReceivingPayment = tx.type === "receiving" && !tx.transactionId.startsWith("receiving-");
+                  const isDeptRecord = tx.type === "dept" && tx.transactionId.startsWith("dept-");
+                  const isReceivingRecord = tx.type === "receiving" && tx.transactionId.startsWith("receiving-");
+
                   const isAddition =
                     tx.type === "income" ||
-                    tx.type === "dept" ||
+                    isDeptRecord || // Debt record creation adds to source
+                    isReceivingPayment || // Receiving payment adds to source
                     (tx.type === "transfer" && tx.note === "Transfer in");
                   const isDeduction =
                     tx.type === "expense" ||
-                    tx.type === "receiving" ||
+                    isDeptPayment || // Debt payment deducts from source
+                    isReceivingRecord || // Receiving record creation deducts from source
                     (tx.type === "transfer" && tx.note === "Transfer out");
 
                   const amountColor = isAddition
@@ -121,6 +130,18 @@ const ViewSource = ({ source, onClose }: ViewSourceI) => {
                     : isDeduction
                     ? "text-red"
                     : "text-white/85";
+
+                  // Determine transaction label
+                  let transactionLabel = tx.type;
+                  if (isDeptPayment) {
+                    transactionLabel = "dept payment";
+                  } else if (isDeptRecord) {
+                    transactionLabel = "dept record";
+                  } else if (isReceivingPayment) {
+                    transactionLabel = "receiving payment";
+                  } else if (isReceivingRecord) {
+                    transactionLabel = "receiving record";
+                  }
 
                   return (
                     <div
@@ -137,7 +158,7 @@ const ViewSource = ({ source, onClose }: ViewSourceI) => {
                               : "bg-blue-500/15 text-blue-300"
                           }`}
                         >
-                          {tx.type}
+                          {transactionLabel}
                         </span>
                         <span className="truncate">
                           {tx.note || "No note"}
