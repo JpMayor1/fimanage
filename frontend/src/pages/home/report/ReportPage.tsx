@@ -296,8 +296,7 @@ const ReportPage = () => {
                                   {receiving.borrower}
                                 </p>
                                 <p className="text-white/60 text-xs">
-                                  Remaining: {formatAmount(receiving.remaining)}{" "}
-                                  / {formatAmount(receiving.amount)}
+                                  Remaining: {formatAmount(receiving.remaining)}
                                 </p>
                                 <p className="text-white/50 text-xs">
                                   Due: {receiving.dueDate}

@@ -11,7 +11,7 @@ interface ViewReceivingI {
 }
 
 const ViewReceiving = ({ receiving, onClose }: ViewReceivingI) => {
-  const remainingColor = getRemainingColor(receiving.remaining, receiving.amount);
+  const remainingColor = getRemainingColor(receiving.remaining);
 
   return (
     <motion.div
@@ -101,14 +101,7 @@ const ViewReceiving = ({ receiving, onClose }: ViewReceivingI) => {
           </div>
 
           {/* Financial summary */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs md:text-sm font-medium">
-            <div className="flex flex-col gap-1 rounded-xl bg-white/5 border border-white/15 px-3 py-2">
-              <span className="text-white/70">Total amount</span>
-              <span className="text-white font-semibold text-sm md:text-base">
-                {formatAmount(receiving.amount)}
-              </span>
-            </div>
-
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs md:text-sm font-medium">
             <div className="flex flex-col gap-1 rounded-xl bg-white/5 border border-white/15 px-3 py-2">
               <span className={`${remainingColor} text-xs`}>Remaining</span>
               <span

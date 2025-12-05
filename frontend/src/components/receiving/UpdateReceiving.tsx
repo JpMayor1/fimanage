@@ -38,7 +38,6 @@ const UpdateReceiving = ({ receiving, onClose }: UpdateReceivingI) => {
     // Ensure numeric fields are never null (0 is acceptable)
     const payload = {
       ...form,
-      amount: form.amount != null ? Number(form.amount) || 0 : 0,
       remaining: form.remaining != null ? Number(form.remaining) || 0 : 0,
       interest: form.interest != null ? Number(form.interest) || 0 : 0,
     };
@@ -83,29 +82,8 @@ const UpdateReceiving = ({ receiving, onClose }: UpdateReceivingI) => {
           </div>
 
           <div className="flex flex-col gap-1">
-            <label htmlFor="amount" className="text-white text-xs">
-              Amount *
-            </label>
-            <TextField
-              type="text"
-              inputMode="decimal"
-              pattern="[0-9.]*"
-              id="amount"
-              name="amount"
-              value={form.amount}
-              onChange={(e) => {
-                let val = e.target.value.replace(/[^0-9.]/g, "");
-                val = val.replace(/(\..*)\./g, "$1");
-                handleChange("amount", val);
-              }}
-              placeholder="Amount *"
-              className="bg-black text-white border border-white/20 focus:border-yellow"
-            />
-          </div>
-
-          <div className="flex flex-col gap-1">
             <label htmlFor="remaining" className="text-white text-xs">
-              Remaining
+              Amount Owed *
             </label>
             <TextField
               type="text"
@@ -119,7 +97,7 @@ const UpdateReceiving = ({ receiving, onClose }: UpdateReceivingI) => {
                 val = val.replace(/(\..*)\./g, "$1");
                 handleChange("remaining", val);
               }}
-              placeholder="Remaining *"
+              placeholder="Amount Owed *"
               className="bg-black text-white border border-white/20 focus:border-yellow"
             />
           </div>

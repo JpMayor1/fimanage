@@ -20,13 +20,11 @@ export const getReceivingsS = async (
 
 export const addReceivingS = async (data: Partial<ReceivingType>) => {
   // Ensure numeric fields are never null (0 is acceptable)
-  const amount = data.amount != null ? Number(data.amount) || 0 : 0;
   const remaining = data.remaining != null ? Number(data.remaining) || 0 : 0;
   const interest = data.interest != null ? Number(data.interest) || 0 : 0;
   
   const newReceiving = await Receiving.create({
     ...data,
-    amount,
     remaining,
     interest,
     dueDate: formatDate(data.dueDate || ""),
@@ -43,9 +41,6 @@ export const updateReceivingS = async (
 
   // Ensure numeric fields are never null (0 is acceptable)
   const updateData: Partial<ReceivingType> = { ...data };
-  if (data.amount != null) {
-    updateData.amount = Number(data.amount) || 0;
-  }
   if (data.remaining != null) {
     updateData.remaining = Number(data.remaining) || 0;
   }

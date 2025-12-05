@@ -139,8 +139,7 @@ const ReceivingPage = () => {
                 >
                   {receivings.map((receiving) => {
                     const remainingColor = getRemainingColor(
-                      receiving.remaining,
-                      receiving.amount
+                      receiving.remaining
                     );
 
                     return (
@@ -207,15 +206,8 @@ const ReceivingPage = () => {
                           )}
                         </div>
 
-                        {/* Amount • Remaining • Interest */}
+                        {/* Remaining • Interest */}
                         <div className="flex items-center justify-between gap-2 md:gap-3 text-xs md:text-sm flex-wrap">
-                          <div className="flex items-center gap-2">
-                            <FaDollarSign className="text-white/60 text-xs md:text-sm" />
-                            <span className="rounded-full bg-white/5 px-2.5 py-1 text-white font-medium text-xs md:text-sm whitespace-nowrap">
-                              {formatAmount(receiving.amount)}
-                            </span>
-                          </div>
-
                           <div className="flex items-center gap-2">
                             <FaBalanceScale
                               className={`${remainingColor} text-xs md:text-sm`}
