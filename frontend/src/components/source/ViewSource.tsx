@@ -100,32 +100,60 @@ const ViewSource = ({ source, onClose }: ViewSourceI) => {
 
             {source.transactions && source.transactions.length > 0 ? (
               <div className="max-h-72 overflow-y-auto no-scrollbar space-y-1.5 pr-1">
-                {source.transactions.map((tx) => (
-                  <div
-                    key={tx.transactionId}
-                    className="flex items-center justify-between gap-2 rounded-lg bg-black/30 border border-white/10 px-3 py-1.5 text-[11px] md:text-xs text-white/85"
-                  >
-                    <div className="flex items-center gap-2 truncate max-w-[70%]">
-                      <span
-                        className={`inline-flex items-center rounded-full px-1.5 py-0.5 text-[9px] font-semibold uppercase ${
-                          tx.type === "income"
-                            ? "bg-income/15 text-income"
-                            : tx.type === "expense"
-                            ? "bg-expense/15 text-expense"
-                            : "bg-blue-500/15 text-blue-300"
-                        }`}
-                      >
-                        {tx.type}
-                      </span>
-                      <span className="truncate">
-                        {tx.note || "No note"}
-                      </span>
+                {source.transactions.map((tx) => {
+                  // Determine if transaction adds or deducts
+                  const isAddition =
+                    tx.type === "income" ||
+                    tx.type === "dept" ||
+                    (tx.type === "transfer" && tx.note === "Transfer in");
+                  const isDeduction =
+                    tx.type === "expense" ||
+                    tx.type === "receiving" ||
+                    (tx.type === "transfer" && tx.note === "Transfer out");
+
+                  const amountColor = isAddition
+                    ? "text-green"
+                    : isDeduction
+                    ? "text-red"
+                    : "text-white/85";
+                  const indicatorColor = isAddition
+                    ? "text-green"
+                    : isDeduction
+                    ? "text-red"
+                    : "text-white/85";
+
+                  return (
+                    <div
+                      key={tx.transactionId}
+                      className="flex items-center justify-between gap-2 rounded-lg bg-black/30 border border-white/10 px-3 py-1.5 text-[11px] md:text-xs text-white/85"
+                    >
+                      <div className="flex items-center gap-2 truncate max-w-[70%]">
+                        <span
+                          className={`inline-flex items-center rounded-full px-1.5 py-0.5 text-[9px] font-semibold uppercase ${
+                            tx.type === "income"
+                              ? "bg-income/15 text-income"
+                              : tx.type === "expense"
+                              ? "bg-expense/15 text-expense"
+                              : "bg-blue-500/15 text-blue-300"
+                          }`}
+                        >
+                          {tx.type}
+                        </span>
+                        <span className="truncate">
+                          {tx.note || "No note"}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <span className={`font-semibold ${indicatorColor}`}>
+                          {isAddition ? "+" : isDeduction ? "-" : ""}
+                        </span>
+                        <span className={`font-semibold ${amountColor}`}>
+                          {formatAmount(tx.amount)}
+                        </span>
+                      </div>
                     </div>
-                    <span className="font-semibold">
-                      {formatAmount(tx.amount)}
-                    </span>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             ) : (
               <p className="text-white/50 text-xs">
