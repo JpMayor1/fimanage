@@ -75,6 +75,14 @@ export const startDailyExpenseJob = () => {
           const totalExpense = expensesByUser.get(userId) || 0;
           const userLimit = user.limit || 500;
 
+          // Skip saving calendar data if expense is 0
+          if (totalExpense === 0) {
+            console.log(
+              `⏭️  User ${userId}: Skipping calendar entry (expense is 0)`
+            );
+            continue;
+          }
+
           await Calendar.findOneAndUpdate(
             {
               userId,
