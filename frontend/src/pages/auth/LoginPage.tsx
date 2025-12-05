@@ -92,7 +92,7 @@ const LoginPage: React.FC = () => {
               <button
                 type="button"
                 tabIndex={-1}
-                className="text-yellow-400 hover:text-yellow-600 transition"
+                className="text-yellow-400 hover:text-yellow-600 transition cursor-pointer"
                 onClick={() => setShowPassword((v) => !v)}
                 aria-label={showPassword ? "Hide password" : "Show password"}
               >

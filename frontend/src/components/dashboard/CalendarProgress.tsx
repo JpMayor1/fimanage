@@ -170,7 +170,7 @@ const CalendarProgress: React.FC = () => {
           return (
             <div
               key={day}
-              className="relative flex justify-center"
+              className="relative flex justify-center cursor-pointer"
               onClick={(e) => {
                 e.stopPropagation();
                 handleDateAction(dateKey);

@@ -39,7 +39,7 @@ const TourOverlay = ({ targetElement, onClose }: TourOverlayProps) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed top-0 left-0 right-0 bg-black/80 backdrop-blur-sm z-[9998]"
+          className="fixed top-0 left-0 right-0 bg-black/80 backdrop-blur-sm z-[9998] cursor-pointer"
           style={{ height: `${rect.top}px` }}
           onClick={onClose}
         />
@@ -50,7 +50,7 @@ const TourOverlay = ({ targetElement, onClose }: TourOverlayProps) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed left-0 right-0 bg-black/80 backdrop-blur-sm z-[9998]"
+        className="fixed left-0 right-0 bg-black/80 backdrop-blur-sm z-[9998] cursor-pointer"
         style={{
           top: `${rect.bottom}px`,
           height: `${window.innerHeight - rect.bottom}px`,
@@ -64,7 +64,7 @@ const TourOverlay = ({ targetElement, onClose }: TourOverlayProps) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed bg-black/80 backdrop-blur-sm z-[9998]"
+          className="fixed bg-black/80 backdrop-blur-sm z-[9998] cursor-pointer"
           style={{
             top: `${rect.top}px`,
             left: 0,
@@ -80,7 +80,7 @@ const TourOverlay = ({ targetElement, onClose }: TourOverlayProps) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed bg-black/80 backdrop-blur-sm z-[9998]"
+        className="fixed bg-black/80 backdrop-blur-sm z-[9998] cursor-pointer"
         style={{
           top: `${rect.top}px`,
           left: `${rect.right}px`,

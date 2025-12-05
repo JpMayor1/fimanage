@@ -71,7 +71,7 @@ const SideBar = () => {
         fixed top-0 left-0 h-full bg-none z-20 transform 
         transition-transform duration-300 ease-in-out overflow-hidden
         ${open ? "w-full translate-x-0" : "-translate-x-full"} 
-        md:translate-x-0
+        md:translate-x-0 cursor-pointer
       `}
         onClick={() => setOpen(false)}
       ></div>
@@ -146,7 +146,7 @@ const SideBar = () => {
               to={link}
               className={`${linkBase} ${
                 isActive(link) ? linkActive : linkInactive
-              }`}
+              } cursor-pointer`}
               onClick={() => setOpen(false)}
             >
               <Icon

@@ -104,8 +104,8 @@ const RegisterPage: React.FC = () => {
         >
           {/* Profile Picture Upload */}
           <div className="flex flex-col items-center mb-2">
-            <div onClick={() => fileInputRef.current?.click()}>
-              <div className="w-20 h-20 md:w-30 md:h-30 rounded-full bg-yellow-100 border-2 border-yellow-300 flex items-center justify-center overflow-hidden shadow cursor-pointer hover:ring-2 hover:ring-yellow-400 transition">
+            <div onClick={() => fileInputRef.current?.click()} className="cursor-pointer">
+              <div className="w-20 h-20 md:w-30 md:h-30 rounded-full bg-yellow-100 border-2 border-yellow-300 flex items-center justify-center overflow-hidden shadow hover:ring-2 hover:ring-yellow-400 transition">
                 {profilePreview ? (
                   <img
                     src={profilePreview}
@@ -206,7 +206,7 @@ const RegisterPage: React.FC = () => {
               <button
                 type="button"
                 tabIndex={-1}
-                className="text-yellow-400 hover:text-yellow-600 transition"
+                className="text-yellow-400 hover:text-yellow-600 transition cursor-pointer"
                 onClick={() => setShowPassword((v) => !v)}
                 aria-label={showPassword ? "Hide password" : "Show password"}
               >
