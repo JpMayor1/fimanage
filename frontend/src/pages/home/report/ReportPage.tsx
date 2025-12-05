@@ -432,7 +432,7 @@ const ReportPage = () => {
                             <div className="w-24 h-2 bg-white/10 rounded-full overflow-hidden">
                               <div
                                 className={`h-full ${
-                                  day.percentage > 100
+                                  day.percentage >= 100
                                     ? "bg-red"
                                     : day.percentage >= 75
                                     ? "bg-yellow"
@@ -445,7 +445,7 @@ const ReportPage = () => {
                             </div>
                             <span
                               className={`text-xs font-bold w-12 text-right ${
-                                day.percentage > 100
+                                day.percentage >= 100
                                   ? "text-red"
                                   : day.percentage >= 75
                                   ? "text-yellow"

@@ -157,6 +157,11 @@ const CalendarProgress: React.FC = () => {
           const strokeDashoffset =
             strokeDasharray - (strokeDasharray * progress) / 100;
 
+          // Calculate actual percentage for color determination
+          const actualPercentage = record
+            ? (record.expense / record.limit) * 100
+            : 0;
+
           const isToday =
             date.isSame(today, "day") &&
             date.isSame(today, "month") &&
@@ -192,7 +197,7 @@ const CalendarProgress: React.FC = () => {
                   cy="20"
                   r="18"
                   className={`${
-                    progress > 100
+                    actualPercentage >= 100
                       ? "stroke-red"
                       : progress >= 75
                       ? "stroke-yellow"

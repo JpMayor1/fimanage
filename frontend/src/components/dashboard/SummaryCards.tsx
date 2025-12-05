@@ -71,7 +71,7 @@ const SummaryCards = () => {
               <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
                 <div
                   className={`h-full transition-all ${
-                    card.progress > 100
+                    card.progress >= 100
                       ? "bg-red"
                       : card.progress >= 75
                       ? "bg-yellow"
