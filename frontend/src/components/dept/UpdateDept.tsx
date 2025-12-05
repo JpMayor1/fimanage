@@ -1,11 +1,13 @@
 import LoadingSmall from "@/components/custom/loading/LoadingSmall";
 import TextField from "@/components/custom/TextField";
+import CustomSelect from "@/components/custom/CustomSelect";
 import { overlayAnim } from "@/constants/overlay.animation.constant";
 import { useDeptStore } from "@/stores/dept/dept.store";
+import { useSourceStore } from "@/stores/source/source.store";
 import type { DeptType } from "@/types/dept/dept.type";
 import { dateToDDMMYYYY } from "@/utils/date/date.util";
 import { motion } from "framer-motion";
-import { useState, type FormEvent } from "react";
+import { useState, useEffect, type FormEvent } from "react";
 import { FiX } from "react-icons/fi";
 
 interface UpdateDeptI {
@@ -15,11 +17,16 @@ interface UpdateDeptI {
 
 const UpdateDept = ({ dept, onClose }: UpdateDeptI) => {
   const { updateDept, loading } = useDeptStore();
+  const { sources, getSources } = useSourceStore();
 
   const [form, setForm] = useState<Partial<DeptType>>({
     ...dept,
     dueDate: dateToDDMMYYYY(dept.dueDate),
   });
+
+  useEffect(() => {
+    if (!sources.length) void getSources(false);
+  }, [sources.length, getSources]);
 
   const handleChange = (
     eOrName: React.ChangeEvent<HTMLInputElement> | string,
@@ -35,11 +42,19 @@ const UpdateDept = ({ dept, onClose }: UpdateDeptI) => {
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
+    
+    const newRemaining = form.remaining != null ? Number(form.remaining) || 0 : 0;
+    const oldRemaining = Number(dept.remaining) || 0;
+    const oldSource = dept.source;
+    const newSource = form.source || null;
+    
+    // Handle source validation (no balance check needed since we're increasing balance)
+    // But we should handle source changes properly
+    
     // Ensure numeric fields are never null (0 is acceptable)
     const payload = {
       ...form,
-      amount: form.amount != null ? Number(form.amount) || 0 : 0,
-      remaining: form.remaining != null ? Number(form.remaining) || 0 : 0,
+      remaining: newRemaining,
       interest: form.interest != null ? Number(form.interest) || 0 : 0,
     };
     const success = await updateDept(dept._id!, payload);
@@ -81,29 +96,8 @@ const UpdateDept = ({ dept, onClose }: UpdateDeptI) => {
           </div>
 
           <div className="flex flex-col gap-1">
-            <label htmlFor="amount" className="text-white text-xs">
-              Amount *
-            </label>
-            <TextField
-              type="text"
-              inputMode="decimal"
-              pattern="[0-9.]*"
-              id="amount"
-              name="amount"
-              value={form.amount}
-              onChange={(e) => {
-                let val = e.target.value.replace(/[^0-9.]/g, "");
-                val = val.replace(/(\..*)\./g, "$1");
-                handleChange("amount", val);
-              }}
-              placeholder="Amount *"
-              className="bg-black text-white border border-white/20 focus:border-yellow"
-            />
-          </div>
-
-          <div className="flex flex-col gap-1">
             <label htmlFor="remaining" className="text-white text-xs">
-              Remaining
+              Amount Owed *
             </label>
             <TextField
               type="text"
@@ -117,9 +111,26 @@ const UpdateDept = ({ dept, onClose }: UpdateDeptI) => {
                 val = val.replace(/(\..*)\./g, "$1");
                 handleChange("remaining", val);
               }}
-              placeholder="Remaining *"
+              placeholder="Amount Owed *"
               className="bg-black text-white border border-white/20 focus:border-yellow"
             />
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <label htmlFor="source" className="text-white text-xs">
+              Source (Optional)
+            </label>
+            <CustomSelect
+              value={form.source || ""}
+              onChange={(e) => handleChange("source", e.target.value)}
+            >
+              <option value="">No source selected</option>
+              {sources.map((s) => (
+                <option key={s._id} value={s._id}>
+                  {s.name} (Balance: {s.balance})
+                </option>
+              ))}
+            </CustomSelect>
           </div>
 
           <div className="flex flex-col gap-1">

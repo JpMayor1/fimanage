@@ -5,7 +5,7 @@ const DeptSchema = new Schema<DeptDocumentType>(
   {
     userId: String,
     lender: String,
-    amount: Number,
+    source: String,
     remaining: Number,
     dueDate: String,
     interest: Number,

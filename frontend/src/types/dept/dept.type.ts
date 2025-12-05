@@ -2,7 +2,7 @@ export type DeptType = {
   _id: string;
   userId: string;
   lender: string;
-  amount: number;
+  source?: string;
   remaining: number;
   dueDate: string;
   interest: number;

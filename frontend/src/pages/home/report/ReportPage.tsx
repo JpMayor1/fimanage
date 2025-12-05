@@ -268,8 +268,7 @@ const ReportPage = () => {
                                 {dept.lender}
                               </p>
                               <p className="text-white/60 text-xs">
-                                Remaining: {formatAmount(dept.remaining)} /{" "}
-                                {formatAmount(dept.amount)}
+                                Remaining: {formatAmount(dept.remaining)}
                               </p>
                               <p className="text-white/50 text-xs">
                                 Due: {dept.dueDate}

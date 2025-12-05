@@ -196,9 +196,7 @@ export const generatePDF = async (title: string, reportData: ReportData) => {
           pdf.text(`  ${dept.lender}`, margin + 10, yPosition);
           yPosition += 5;
           pdf.text(
-            `    Remaining: ${formatAmount(dept.remaining)} / ${formatAmount(
-              dept.amount
-            )}`,
+            `    Remaining: ${formatAmount(dept.remaining)}`,
             margin + 15,
             yPosition
           );

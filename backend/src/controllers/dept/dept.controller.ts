@@ -20,14 +20,14 @@ export const getDepts = async (req: CustomRequest, res: Response) => {
 
 export const addDept = async (req: CustomRequest, res: Response) => {
   const account = req.account;
-  const { lender, amount, remaining, dueDate, interest, note } = req.body;
+  const { lender, source, remaining, dueDate, interest, note } = req.body;
   if (!lender) throw new AppError("Lender is required.", 400);
-  if (!amount) throw new AppError("Amount is required.", 400);
+  if (remaining == null) throw new AppError("Remaining amount is required.", 400);
 
   const newDept = await addDeptS({
     userId: account._id,
     lender,
-    amount,
+    source,
     remaining,
     dueDate,
     interest,
@@ -38,13 +38,13 @@ export const addDept = async (req: CustomRequest, res: Response) => {
 
 export const updateDept = async (req: CustomRequest, res: Response) => {
   const { id } = req.params;
-  const { lender, amount, remaining, dueDate, interest, note } = req.body;
+  const { lender, source, remaining, dueDate, interest, note } = req.body;
   if (!lender) throw new AppError("Lender is required.", 400);
-  if (!amount) throw new AppError("Amount is required.", 400);
+  if (remaining == null) throw new AppError("Remaining amount is required.", 400);
 
   const updatedDept = await updateDeptS(id, {
     lender,
-    amount,
+    source,
     remaining,
     dueDate,
     interest,
