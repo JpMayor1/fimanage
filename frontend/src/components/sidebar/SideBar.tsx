@@ -9,6 +9,7 @@ import { GrMoney } from "react-icons/gr";
 import { IoMdClose } from "react-icons/io";
 import { MdLogout, MdOutlineSpaceDashboard } from "react-icons/md";
 import { Link, useLocation } from "react-router-dom";
+import { useEffect } from "react";
 import BlurImage from "../custom/BlurImage";
 
 const SideBar = () => {
@@ -16,6 +17,16 @@ const SideBar = () => {
   const { logout, loading } = useAuthStore();
   const { open, setOpen } = useSideBar();
   const location = useLocation();
+
+  // Ensure sidebar is closed by default on mobile
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const isMobile = window.innerWidth <= 768;
+      if (isMobile && open) {
+        setOpen(false);
+      }
+    }
+  }, []); // Only run on mount
 
   if (!account) return null;
 

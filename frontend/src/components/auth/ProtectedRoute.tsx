@@ -1,5 +1,6 @@
 import { useAccountStore } from "@/stores/account/account.store";
 import { useAuthStore } from "@/stores/auth/useAuthStore";
+import { useSideBar } from "@/stores/sidebar/useSideBar";
 import { useOnboarding } from "@/hooks/useOnboarding";
 import { useEffect } from "react";
 import { Navigate, Outlet } from "react-router-dom";
@@ -10,6 +11,7 @@ import OnboardingTour from "../onboarding/OnboardingTour";
 const ProtectedRoute = () => {
   const { isAuthenticated } = useAuthStore();
   const { account, verify } = useAccountStore();
+  const { setOpen } = useSideBar();
   
   // Initialize onboarding for current page
   useOnboarding();
@@ -20,6 +22,16 @@ const ProtectedRoute = () => {
       verify();
     }
   }, [isAuthenticated, account, verify]);
+
+  useEffect(() => {
+    // Ensure sidebar is closed by default on mobile after login
+    if (isAuthenticated && typeof window !== "undefined") {
+      const isMobile = window.innerWidth <= 768;
+      if (isMobile) {
+        setOpen(false);
+      }
+    }
+  }, [isAuthenticated, setOpen]);
 
   // Show splash while checking authentication
   if (isAuthenticated === null) {
