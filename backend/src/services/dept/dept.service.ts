@@ -38,7 +38,7 @@ export const addDeptS = async (data: Partial<DeptType>) => {
       dueDate: formatDate(data.dueDate || ""),
     });
 
-    // Then update source with the dept ID - increase balance (like income)
+    // Then update source with the dept ID - increase balance (like income) (add at beginning)
     await Source.findByIdAndUpdate(data.source, {
       $inc: {
         balance: remaining,
@@ -46,10 +46,13 @@ export const addDeptS = async (data: Partial<DeptType>) => {
       },
       $push: {
         transactions: {
-          transactionId: `dept-${newDept._id}`,
-          type: "dept",
-          note: data.note || `Dept from ${data.lender}`,
-          amount: remaining,
+          $each: [{
+            transactionId: `dept-${newDept._id}`,
+            type: "dept",
+            note: data.note || `Dept from ${data.lender}`,
+            amount: remaining,
+          }],
+          $position: 0,
         },
       },
     });
@@ -93,7 +96,7 @@ export const updateDeptS = async (id: string, data: Partial<DeptType>) => {
 
     // If new source is being set (either new or changed)
     if (newSource && newSource !== oldSource) {
-      // Increase new source balance (like income)
+      // Increase new source balance (like income) (add at beginning)
       await Source.findByIdAndUpdate(newSource, {
         $inc: {
           balance: newRemaining,
@@ -101,24 +104,42 @@ export const updateDeptS = async (id: string, data: Partial<DeptType>) => {
         },
         $push: {
           transactions: {
-            transactionId: `dept-${id}`,
-            type: "dept",
-            note: data.note || dept.note || `Dept from ${data.lender || dept.lender}`,
-            amount: newRemaining,
+            $each: [{
+              transactionId: `dept-${id}`,
+              type: "dept",
+              note: data.note || dept.note || `Dept from ${data.lender || dept.lender}`,
+              amount: newRemaining,
+            }],
+            $position: 0,
           },
         },
       });
     } else if (newSource && newSource === oldSource) {
-      // Same source, but remaining amount might have changed
+      // Same source, but remaining amount or note might have changed
       const remainingDiff = newRemaining - oldRemaining;
+      const newNote = data.note || dept.note || `Dept from ${data.lender || dept.lender}`;
+      
+      // Update source balance if amount changed
       if (remainingDiff !== 0) {
-        // Update source balance
         await Source.findByIdAndUpdate(newSource, {
           $inc: {
             balance: remainingDiff,
             income: remainingDiff,
           },
         });
+      }
+      
+      // Update the transaction entry in source's transactions array
+      const source = await Source.findById(newSource);
+      if (source) {
+        const transactionIndex = source.transactions.findIndex(
+          (t) => t.transactionId === `dept-${id}`
+        );
+        if (transactionIndex !== -1) {
+          source.transactions[transactionIndex].amount = newRemaining;
+          source.transactions[transactionIndex].note = newNote;
+          await source.save();
+        }
       }
     }
   }

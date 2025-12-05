@@ -46,7 +46,7 @@ export const addReceivingS = async (data: Partial<ReceivingType>) => {
       dueDate: formatDate(data.dueDate || ""),
     });
 
-    // Then update source with the receiving ID
+    // Then update source with the receiving ID (add at beginning with $position: 0)
     await Source.findByIdAndUpdate(data.source, {
       $inc: {
         balance: -remaining,
@@ -54,10 +54,13 @@ export const addReceivingS = async (data: Partial<ReceivingType>) => {
       },
       $push: {
         transactions: {
-          transactionId: `receiving-${newReceiving._id}`,
-          type: "receiving",
-          note: data.note || `Receiving from ${data.borrower}`,
-          amount: remaining,
+          $each: [{
+            transactionId: `receiving-${newReceiving._id}`,
+            type: "receiving",
+            note: data.note || `Receiving from ${data.borrower}`,
+            amount: remaining,
+          }],
+          $position: 0,
         },
       },
     });
@@ -116,7 +119,7 @@ export const updateReceivingS = async (
         );
       }
 
-      // Deduct from new source balance and add to transactions
+      // Deduct from new source balance and add to transactions (add at beginning)
       await Source.findByIdAndUpdate(newSource, {
         $inc: {
           balance: -newRemaining,
@@ -124,23 +127,29 @@ export const updateReceivingS = async (
         },
         $push: {
           transactions: {
-            transactionId: `receiving-${id}`,
-            type: "receiving",
-            note:
-              data.note ||
-              receiving.note ||
-              `Receiving from ${data.borrower || receiving.borrower}`,
-            amount: newRemaining,
+            $each: [{
+              transactionId: `receiving-${id}`,
+              type: "receiving",
+              note:
+                data.note ||
+                receiving.note ||
+                `Receiving from ${data.borrower || receiving.borrower}`,
+              amount: newRemaining,
+            }],
+            $position: 0,
           },
         },
       });
     } else if (newSource && newSource === oldSource) {
-      // Same source, but remaining amount might have changed
+      // Same source, but remaining amount or note might have changed
       const remainingDiff = newRemaining - oldRemaining;
+      const newNote = data.note || receiving.note || `Receiving from ${data.borrower || receiving.borrower}`;
+      
+      // Fetch source once for both balance check and transaction update
+      const source = await Source.findById(newSource);
+      if (!source) throw new AppError("Source not found", 404);
+      
       if (remainingDiff !== 0) {
-        const source = await Source.findById(newSource);
-        if (!source) throw new AppError("Source not found", 404);
-
         if (remainingDiff > 0) {
           // Remaining increased, need more balance
           const currentBalance = ensureNumber(source.balance);
@@ -151,7 +160,7 @@ export const updateReceivingS = async (
             );
           }
         }
-
+        
         // Update source balance
         await Source.findByIdAndUpdate(newSource, {
           $inc: {
@@ -159,6 +168,16 @@ export const updateReceivingS = async (
             expense: remainingDiff,
           },
         });
+      }
+      
+      // Update the transaction entry in source's transactions array
+      const transactionIndex = source.transactions.findIndex(
+        (t) => t.transactionId === `receiving-${id}`
+      );
+      if (transactionIndex !== -1) {
+        source.transactions[transactionIndex].amount = newRemaining;
+        source.transactions[transactionIndex].note = newNote;
+        await source.save();
       }
     }
   }

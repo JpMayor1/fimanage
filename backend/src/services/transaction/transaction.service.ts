@@ -34,10 +34,13 @@ const applyTransactionEffects = async (
     if (factor === 1) {
       update.$push = {
         transactions: {
-          transactionId: trx._id,
-          type: "income",
-          note,
-          amount,
+          $each: [{
+            transactionId: trx._id,
+            type: "income",
+            note,
+            amount,
+          }],
+          $position: 0,
         },
       };
     }
@@ -82,10 +85,13 @@ const applyTransactionEffects = async (
     if (factor === 1) {
       update.$push = {
         transactions: {
-          transactionId: trx._id,
-          type: "expense",
-          note,
-          amount,
+          $each: [{
+            transactionId: trx._id,
+            type: "expense",
+            note,
+            amount,
+          }],
+          $position: 0,
         },
       };
     }
@@ -136,19 +142,25 @@ const applyTransactionEffects = async (
     if (factor === 1) {
       updateFrom.$push = {
         transactions: {
-          transactionId: trx._id,
-          type: "transfer",
-          note: "Transfer out",
-          amount,
+          $each: [{
+            transactionId: trx._id,
+            type: "transfer",
+            note: "Transfer out",
+            amount,
+          }],
+          $position: 0,
         },
       };
 
       updateTo.$push = {
         transactions: {
-          transactionId: trx._id,
-          type: "transfer",
-          note: "Transfer in",
-          amount,
+          $each: [{
+            transactionId: trx._id,
+            type: "transfer",
+            note: "Transfer in",
+            amount,
+          }],
+          $position: 0,
         },
       };
     }
@@ -205,9 +217,12 @@ const applyTransactionEffects = async (
     if (factor === 1) {
       update.$push = {
         transactions: {
-          transactionId: trx._id,
-          note,
-          amount,
+          $each: [{
+            transactionId: trx._id,
+            note,
+            amount,
+          }],
+          $position: 0,
         },
       };
     }
@@ -247,10 +262,13 @@ const applyTransactionEffects = async (
     if (factor === 1) {
       sourceUpdate.$push = {
         transactions: {
-          transactionId: trx._id,
-          type: "dept",
-          note,
-          amount,
+          $each: [{
+            transactionId: trx._id,
+            type: "dept",
+            note,
+            amount,
+          }],
+          $position: 0,
         },
       };
     }
@@ -304,9 +322,12 @@ const applyTransactionEffects = async (
     if (factor === 1) {
       update.$push = {
         transactions: {
-          transactionId: trx._id,
-          note,
-          amount,
+          $each: [{
+            transactionId: trx._id,
+            note,
+            amount,
+          }],
+          $position: 0,
         },
       };
     }
@@ -332,10 +353,13 @@ const applyTransactionEffects = async (
     if (factor === 1) {
       sourceUpdate.$push = {
         transactions: {
-          transactionId: trx._id,
-          type: "receiving",
-          note,
-          amount,
+          $each: [{
+            transactionId: trx._id,
+            type: "receiving",
+            note,
+            amount,
+          }],
+          $position: 0,
         },
       };
     }
