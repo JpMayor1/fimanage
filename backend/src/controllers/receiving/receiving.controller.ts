@@ -20,13 +20,14 @@ export const getReceivings = async (req: CustomRequest, res: Response) => {
 
 export const addReceiving = async (req: CustomRequest, res: Response) => {
   const account = req.account;
-  const { borrower, remaining, dueDate, interest, note } = req.body;
+  const { borrower, source, remaining, dueDate, interest, note } = req.body;
   if (!borrower) throw new AppError("Borrower is required.", 400);
   if (remaining == null) throw new AppError("Remaining amount is required.", 400);
 
   const newReceiving = await addReceivingS({
     userId: account._id,
     borrower,
+    source,
     remaining,
     dueDate,
     interest,
@@ -37,12 +38,13 @@ export const addReceiving = async (req: CustomRequest, res: Response) => {
 
 export const updateReceiving = async (req: CustomRequest, res: Response) => {
   const { id } = req.params;
-  const { borrower, remaining, dueDate, interest, note } = req.body;
+  const { borrower, source, remaining, dueDate, interest, note } = req.body;
   if (!borrower) throw new AppError("Borrower is required.", 400);
   if (remaining == null) throw new AppError("Remaining amount is required.", 400);
 
   const updatedReceiving = await updateReceivingS(id, {
     borrower,
+    source,
     remaining,
     dueDate,
     interest,

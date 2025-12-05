@@ -4,6 +4,7 @@ export type ReceivingType = {
   _id: string;
   userId: string;
   borrower: string;
+  source?: string;
   remaining: number;
   dueDate: string;
   interest: number;

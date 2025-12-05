@@ -1,11 +1,14 @@
 import LoadingSmall from "@/components/custom/loading/LoadingSmall";
 import TextField from "@/components/custom/TextField";
+import CustomSelect from "@/components/custom/CustomSelect";
 import { overlayAnim } from "@/constants/overlay.animation.constant";
 import { useReceivingStore } from "@/stores/receiving/receiving.store";
+import { useSourceStore } from "@/stores/source/source.store";
 import type { ReceivingType } from "@/types/receiving/receiving.type";
 import { motion } from "framer-motion";
-import { useState, type FormEvent } from "react";
+import { useState, useEffect, type FormEvent } from "react";
 import { FiX } from "react-icons/fi";
+import toast from "react-hot-toast";
 
 interface AddReceivingI {
   onClose: () => void;
@@ -21,7 +24,12 @@ const initialState: Partial<ReceivingType> = {
 
 const AddReceiving = ({ onClose }: AddReceivingI) => {
   const { addReceiving, loading } = useReceivingStore();
+  const { sources, getSources } = useSourceStore();
   const [form, setForm] = useState<Partial<ReceivingType>>(initialState);
+
+  useEffect(() => {
+    if (!sources.length) void getSources(false);
+  }, [sources.length, getSources]);
 
   const handleChange = (
     eOrName: React.ChangeEvent<HTMLInputElement> | string,
@@ -37,10 +45,24 @@ const AddReceiving = ({ onClose }: AddReceivingI) => {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    
+    const remainingAmount = form.remaining != null ? Number(form.remaining) || 0 : 0;
+    
+    // If source is selected, validate balance
+    if (form.source) {
+      const selectedSource = sources.find((s) => s._id === form.source);
+      if (selectedSource && remainingAmount > selectedSource.balance) {
+        toast.error(
+          `Insufficient balance. Receiving amount (${remainingAmount}) exceeds available balance (${selectedSource.balance}).`
+        );
+        return;
+      }
+    }
+    
     // Ensure numeric fields are never null (0 is acceptable)
     const payload = {
       ...form,
-      remaining: form.remaining != null ? Number(form.remaining) || 0 : 0,
+      remaining: remainingAmount,
       interest: form.interest != null ? Number(form.interest) || 0 : 0,
     };
     const success = await addReceiving(payload);
@@ -100,6 +122,23 @@ const AddReceiving = ({ onClose }: AddReceivingI) => {
               placeholder="Amount Owed *"
               className="bg-black text-white border border-white/20 focus:border-yellow"
             />
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <label htmlFor="source" className="text-white text-xs">
+              Source (Optional)
+            </label>
+            <CustomSelect
+              value={form.source || ""}
+              onChange={(e) => handleChange("source", e.target.value)}
+            >
+              <option value="">No source selected</option>
+              {sources.map((s) => (
+                <option key={s._id} value={s._id}>
+                  {s.name} (Balance: {s.balance})
+                </option>
+              ))}
+            </CustomSelect>
           </div>
 
           <div className="flex flex-col gap-1">

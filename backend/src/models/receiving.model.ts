@@ -5,6 +5,7 @@ const ReceivingSchema = new Schema<ReceivingDocumentType>(
   {
     userId: String,
     borrower: String,
+    source: String,
     remaining: Number,
     dueDate: String,
     interest: Number,

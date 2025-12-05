@@ -1,7 +1,9 @@
 import Receiving from "@/models/receiving.model";
+import Source from "@/models/source.model";
 import { ReceivingType } from "@/types/models/receiving.type";
 import { formatDate } from "@/utils/date&time/getPhDt";
 import { AppError } from "@/utils/error/appError";
+import { ensureNumber } from "@/utils/number/ensureNumber";
 
 export const getReceivingsS = async (
   userId: string,
@@ -22,7 +24,47 @@ export const addReceivingS = async (data: Partial<ReceivingType>) => {
   // Ensure numeric fields are never null (0 is acceptable)
   const remaining = data.remaining != null ? Number(data.remaining) || 0 : 0;
   const interest = data.interest != null ? Number(data.interest) || 0 : 0;
-  
+
+  // If source is provided, deduct from source balance
+  if (data.source) {
+    const source = await Source.findById(data.source);
+    if (!source) throw new AppError("Source not found", 404);
+
+    const currentBalance = ensureNumber(source.balance);
+    if (remaining > currentBalance) {
+      throw new AppError(
+        `Insufficient balance. Receiving amount (${remaining}) exceeds available balance (${currentBalance}).`,
+        400
+      );
+    }
+
+    // Create receiving first to get its ID
+    const newReceiving = await Receiving.create({
+      ...data,
+      remaining,
+      interest,
+      dueDate: formatDate(data.dueDate || ""),
+    });
+
+    // Then update source with the receiving ID
+    await Source.findByIdAndUpdate(data.source, {
+      $inc: {
+        balance: -remaining,
+        expense: remaining,
+      },
+      $push: {
+        transactions: {
+          transactionId: `receiving-${newReceiving._id}`,
+          type: "receiving",
+          note: data.note || `Receiving from ${data.borrower}`,
+          amount: remaining,
+        },
+      },
+    });
+
+    return newReceiving;
+  }
+
   const newReceiving = await Receiving.create({
     ...data,
     remaining,
@@ -39,6 +81,88 @@ export const updateReceivingS = async (
   const receiving = await Receiving.findById(id);
   if (!receiving) throw new AppError("Receiving not found", 404);
 
+  const oldRemaining = ensureNumber(receiving.remaining);
+  const oldSource = receiving.source?.toString();
+  const newRemaining =
+    data.remaining != null ? Number(data.remaining) || 0 : oldRemaining;
+  const newSource = data.source || null;
+
+  // Handle source changes
+  if (oldSource || newSource) {
+    // If source was set and is being removed or changed
+    if (oldSource && (!newSource || newSource !== oldSource)) {
+      // Restore balance to old source
+      await Source.findByIdAndUpdate(oldSource, {
+        $inc: {
+          balance: oldRemaining,
+          expense: -oldRemaining,
+        },
+        $pull: {
+          transactions: { transactionId: `receiving-${id}` },
+        },
+      });
+    }
+
+    // If new source is being set (either new or changed)
+    if (newSource && newSource !== oldSource) {
+      const source = await Source.findById(newSource);
+      if (!source) throw new AppError("Source not found", 404);
+
+      const currentBalance = ensureNumber(source.balance);
+      if (newRemaining > currentBalance) {
+        throw new AppError(
+          `Insufficient balance. Receiving amount (${newRemaining}) exceeds available balance (${currentBalance}).`,
+          400
+        );
+      }
+
+      // Deduct from new source balance and add to transactions
+      await Source.findByIdAndUpdate(newSource, {
+        $inc: {
+          balance: -newRemaining,
+          expense: newRemaining,
+        },
+        $push: {
+          transactions: {
+            transactionId: `receiving-${id}`,
+            type: "receiving",
+            note:
+              data.note ||
+              receiving.note ||
+              `Receiving from ${data.borrower || receiving.borrower}`,
+            amount: newRemaining,
+          },
+        },
+      });
+    } else if (newSource && newSource === oldSource) {
+      // Same source, but remaining amount might have changed
+      const remainingDiff = newRemaining - oldRemaining;
+      if (remainingDiff !== 0) {
+        const source = await Source.findById(newSource);
+        if (!source) throw new AppError("Source not found", 404);
+
+        if (remainingDiff > 0) {
+          // Remaining increased, need more balance
+          const currentBalance = ensureNumber(source.balance);
+          if (remainingDiff > currentBalance) {
+            throw new AppError(
+              `Insufficient balance. Additional amount (${remainingDiff}) exceeds available balance (${currentBalance}).`,
+              400
+            );
+          }
+        }
+
+        // Update source balance
+        await Source.findByIdAndUpdate(newSource, {
+          $inc: {
+            balance: -remainingDiff,
+            expense: remainingDiff,
+          },
+        });
+      }
+    }
+  }
+
   // Ensure numeric fields are never null (0 is acceptable)
   const updateData: Partial<ReceivingType> = { ...data };
   if (data.remaining != null) {
@@ -49,20 +173,31 @@ export const updateReceivingS = async (
   }
   updateData.dueDate = formatDate(data.dueDate || "");
 
-  const updatedReceiving = await Receiving.findByIdAndUpdate(
-    id,
-    updateData,
-    {
-      new: true,
-    }
-  ).lean();
+  const updatedReceiving = await Receiving.findByIdAndUpdate(id, updateData, {
+    new: true,
+  }).lean();
 
   return updatedReceiving;
 };
 
 export const deleteReceivingS = async (id: string) => {
-  const deletedReceiving = await Receiving.findByIdAndDelete(id);
-  if (!deletedReceiving) throw new AppError("Receiving not found", 404);
+  const receiving = await Receiving.findById(id);
+  if (!receiving) throw new AppError("Receiving not found", 404);
 
+  // If source was set, restore the balance
+  if (receiving.source) {
+    const remaining = ensureNumber(receiving.remaining);
+    await Source.findByIdAndUpdate(receiving.source, {
+      $inc: {
+        balance: remaining,
+        expense: -remaining,
+      },
+      $pull: {
+        transactions: { transactionId: `receiving-${id}` },
+      },
+    });
+  }
+
+  const deletedReceiving = await Receiving.findByIdAndDelete(id);
   return deletedReceiving;
 };
