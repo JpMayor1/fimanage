@@ -1,6 +1,7 @@
 import LoadingSmall from "@/components/custom/loading/LoadingSmall";
 import TextField from "@/components/custom/TextField";
 import CustomSelect from "@/components/custom/CustomSelect";
+import InfoIcon from "@/components/custom/InfoIcon";
 import { overlayAnim } from "@/constants/overlay.animation.constant";
 import { useDeptStore } from "@/stores/dept/dept.store";
 import { useSourceStore } from "@/stores/source/source.store";
@@ -74,8 +75,8 @@ const AddDept = ({ onClose }: AddDeptI) => {
           <h2 className="block font-semibold text-white">Add Dept</h2>
 
           <div className="flex flex-col gap-1">
-            <label htmlFor="lender" className="text-white text-xs">
-              Lender *
+            <label htmlFor="lender" className="text-white text-xs flex items-center">
+              Lender * <InfoIcon info="The person or entity you owe money to" />
             </label>
             <TextField
               id="lender"
@@ -89,8 +90,8 @@ const AddDept = ({ onClose }: AddDeptI) => {
           </div>
 
           <div className="flex flex-col gap-1">
-            <label htmlFor="remaining" className="text-white text-xs">
-              Amount Owed *
+            <label htmlFor="remaining" className="text-white text-xs flex items-center">
+              Amount Owed * <InfoIcon info="The total amount you owe (will decrease as you make payments)" />
             </label>
             <TextField
               type="text"
@@ -110,8 +111,8 @@ const AddDept = ({ onClose }: AddDeptI) => {
           </div>
 
           <div className="flex flex-col gap-1">
-            <label htmlFor="source" className="text-white text-xs">
-              Source (Optional)
+            <label htmlFor="source" className="text-white text-xs flex items-center">
+              Source (Optional) <InfoIcon info="Link this debt to a money source to track it in your source balance" />
             </label>
             <CustomSelect
               value={form.source || ""}
@@ -127,8 +128,8 @@ const AddDept = ({ onClose }: AddDeptI) => {
           </div>
 
           <div className="flex flex-col gap-1">
-            <label htmlFor="dueDate" className="text-white text-xs">
-              Due Date
+            <label htmlFor="dueDate" className="text-white text-xs flex items-center">
+              Due Date <InfoIcon info="The date when this debt should be paid" />
             </label>
             <TextField
               type="date"
@@ -144,8 +145,8 @@ const AddDept = ({ onClose }: AddDeptI) => {
           </div>
 
           <div className="flex flex-col gap-1">
-            <label htmlFor="interest" className="text-white text-xs">
-              Interest
+            <label htmlFor="interest" className="text-white text-xs flex items-center">
+              Interest <InfoIcon info="Interest rate percentage (e.g., 5 for 5%)" />
             </label>
             <TextField
               type="text"
@@ -164,8 +165,8 @@ const AddDept = ({ onClose }: AddDeptI) => {
             />
           </div>
           <div className="flex flex-col gap-1">
-            <label htmlFor="note" className="text-white text-xs">
-              Note
+            <label htmlFor="note" className="text-white text-xs flex items-center">
+              Note <InfoIcon info="Additional details or description about this debt" />
             </label>
             <TextField
               id="note"

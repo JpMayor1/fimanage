@@ -1,6 +1,7 @@
 import LoadingSmall from "@/components/custom/loading/LoadingSmall";
 import CustomSelect from "@/components/custom/CustomSelect";
 import TextField from "@/components/custom/TextField";
+import InfoIcon from "@/components/custom/InfoIcon";
 import LimitWarningModal from "@/components/transaction/LimitWarningModal";
 import { overlayAnim } from "@/constants/overlay.animation.constant";
 import { useAccountStore } from "@/stores/account/account.store";
@@ -228,7 +229,9 @@ const AddTransaction = ({ onClose }: AddTransactionI) => {
           <h2 className="block font-semibold text-white">Add Transaction</h2>
 
           <div className="flex flex-col gap-1">
-            <label className="text-white text-xs">Type *</label>
+            <label className="text-white text-xs flex items-center">
+              Type * <InfoIcon info="Select the type of transaction (Income, Expense, Transfer, Dept Payment, or Receiving Payment)" />
+            </label>
             <CustomSelect
               value={form.baseType}
               onChange={(e) => {
@@ -252,7 +255,9 @@ const AddTransaction = ({ onClose }: AddTransactionI) => {
           {form.baseType === "income" && (
             <div className="space-y-3">
               <div className="flex flex-col gap-1">
-                <label className="text-white text-xs">Source *</label>
+                <label className="text-white text-xs flex items-center">
+                  Source * <InfoIcon info="The money source where this income will be added" />
+                </label>
                 <CustomSelect
                   value={form.income?.source || ""}
                   onChange={(e) =>
@@ -275,7 +280,9 @@ const AddTransaction = ({ onClose }: AddTransactionI) => {
               </div>
 
               <div className="flex flex-col gap-1">
-                <label className="text-white text-xs">Amount *</label>
+                <label className="text-white text-xs flex items-center">
+                  Amount * <InfoIcon info="The amount of money received" />
+                </label>
                 <TextField
                   type="text"
                   inputMode="decimal"
@@ -296,7 +303,9 @@ const AddTransaction = ({ onClose }: AddTransactionI) => {
               </div>
 
               <div className="flex flex-col gap-1">
-                <label className="text-white text-xs">Note</label>
+                <label className="text-white text-xs flex items-center">
+                  Note <InfoIcon info="Optional description or details about this income" />
+                </label>
                 <TextField
                   value={form.income?.note || ""}
                   onChange={(e) =>
@@ -318,7 +327,9 @@ const AddTransaction = ({ onClose }: AddTransactionI) => {
           {form.baseType === "expense" && (
             <div className="space-y-3">
               <div className="flex flex-col gap-1">
-                <label className="text-white text-xs">Source *</label>
+                <label className="text-white text-xs flex items-center">
+                  Source * <InfoIcon info="The money source where this expense will be deducted from" />
+                </label>
                 <CustomSelect
                   value={form.expense?.source || ""}
                   onChange={(e) =>
@@ -342,7 +353,9 @@ const AddTransaction = ({ onClose }: AddTransactionI) => {
 
               <div className="flex flex-col gap-1">
                 <div className="flex items-center justify-between">
-                  <label className="text-white text-xs">Amount *</label>
+                  <label className="text-white text-xs flex items-center">
+                    Amount * <InfoIcon info="The amount of money spent" />
+                  </label>
                   {form.expense?.source && (
                     <span className="text-white/60 text-[10px]">
                       Balance:{" "}
@@ -371,7 +384,9 @@ const AddTransaction = ({ onClose }: AddTransactionI) => {
               </div>
 
               <div className="flex flex-col gap-1">
-                <label className="text-white text-xs">Note</label>
+                <label className="text-white text-xs flex items-center">
+                  Note <InfoIcon info="Optional description or details about this expense" />
+                </label>
                 <TextField
                   value={form.expense?.note || ""}
                   onChange={(e) =>
@@ -394,7 +409,9 @@ const AddTransaction = ({ onClose }: AddTransactionI) => {
             <div className="space-y-3">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div className="flex flex-col gap-1">
-                  <label className="text-white text-xs">From *</label>
+                  <label className="text-white text-xs flex items-center">
+                    From * <InfoIcon info="The source where money will be deducted from" />
+                  </label>
                   <CustomSelect
                     value={form.transfer?.from || ""}
                     onChange={(e) =>
@@ -417,7 +434,9 @@ const AddTransaction = ({ onClose }: AddTransactionI) => {
                 </div>
 
                 <div className="flex flex-col gap-1">
-                  <label className="text-white text-xs">To *</label>
+                  <label className="text-white text-xs flex items-center">
+                    To * <InfoIcon info="The source where money will be added to" />
+                  </label>
                   <CustomSelect
                     value={form.transfer?.to || ""}
                     onChange={(e) =>
@@ -441,7 +460,9 @@ const AddTransaction = ({ onClose }: AddTransactionI) => {
               </div>
 
               <div className="flex flex-col gap-1">
-                <label className="text-white text-xs">Amount *</label>
+                <label className="text-white text-xs flex items-center">
+                  Amount * <InfoIcon info="The amount of money to transfer between sources" />
+                </label>
                 <TextField
                   type="text"
                   inputMode="decimal"
@@ -466,7 +487,9 @@ const AddTransaction = ({ onClose }: AddTransactionI) => {
           {form.baseType === "dept" && (
             <div className="space-y-3">
               <div className="flex flex-col gap-1">
-                <label className="text-white text-xs">Dept *</label>
+                <label className="text-white text-xs flex items-center">
+                  Dept * <InfoIcon info="Select the debt you want to make a payment for" />
+                </label>
                 <CustomSelect
                   value={form.dept?.source || ""}
                   onChange={(e) =>
@@ -491,7 +514,9 @@ const AddTransaction = ({ onClose }: AddTransactionI) => {
               </div>
 
               <div className="flex flex-col gap-1">
-                <label className="text-white text-xs">Source *</label>
+                <label className="text-white text-xs flex items-center">
+                  Source * <InfoIcon info="The money source to deduct the payment from" />
+                </label>
                 <CustomSelect
                   value={form.dept?.moneySource || ""}
                   onChange={(e) =>
@@ -515,7 +540,9 @@ const AddTransaction = ({ onClose }: AddTransactionI) => {
 
               <div className="flex flex-col gap-1">
                 <div className="flex items-center justify-between">
-                  <label className="text-white text-xs">Amount *</label>
+                  <label className="text-white text-xs flex items-center">
+                    Amount * <InfoIcon info="The payment amount (will reduce the debt remaining)" />
+                  </label>
                   {form.dept?.source && (
                     <span className="text-white/60 text-[10px]">
                       Remaining:{" "}
@@ -543,7 +570,9 @@ const AddTransaction = ({ onClose }: AddTransactionI) => {
               </div>
 
               <div className="flex flex-col gap-1">
-                <label className="text-white text-xs">Note</label>
+                <label className="text-white text-xs flex items-center">
+                  Note <InfoIcon info="Optional description or details about this payment" />
+                </label>
                 <TextField
                   value={form.dept?.note || ""}
                   onChange={(e) =>
@@ -565,7 +594,9 @@ const AddTransaction = ({ onClose }: AddTransactionI) => {
           {form.baseType === "receiving" && (
             <div className="space-y-3">
               <div className="flex flex-col gap-1">
-                <label className="text-white text-xs">Receiving *</label>
+                <label className="text-white text-xs flex items-center">
+                  Receiving * <InfoIcon info="Select the receiving you want to record a payment for" />
+                </label>
                 <CustomSelect
                   value={form.receiving?.source || ""}
                   onChange={(e) =>
@@ -590,7 +621,9 @@ const AddTransaction = ({ onClose }: AddTransactionI) => {
               </div>
 
               <div className="flex flex-col gap-1">
-                <label className="text-white text-xs">Source *</label>
+                <label className="text-white text-xs flex items-center">
+                  Source * <InfoIcon info="The money source where the received payment will be added" />
+                </label>
                 <CustomSelect
                   value={form.receiving?.moneySource || ""}
                   onChange={(e) =>
@@ -613,7 +646,9 @@ const AddTransaction = ({ onClose }: AddTransactionI) => {
               </div>
 
               <div className="flex flex-col gap-1">
-                <label className="text-white text-xs">Amount *</label>
+                <label className="text-white text-xs flex items-center">
+                  Amount * <InfoIcon info="The payment amount received (will reduce the receiving remaining)" />
+                </label>
                 <TextField
                   type="text"
                   inputMode="decimal"
@@ -634,7 +669,9 @@ const AddTransaction = ({ onClose }: AddTransactionI) => {
               </div>
 
               <div className="flex flex-col gap-1">
-                <label className="text-white text-xs">Note</label>
+                <label className="text-white text-xs flex items-center">
+                  Note <InfoIcon info="Optional description or details about this payment" />
+                </label>
                 <TextField
                   value={form.receiving?.note || ""}
                   onChange={(e) =>

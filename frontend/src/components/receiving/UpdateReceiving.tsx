@@ -1,6 +1,7 @@
 import LoadingSmall from "@/components/custom/loading/LoadingSmall";
 import TextField from "@/components/custom/TextField";
 import CustomSelect from "@/components/custom/CustomSelect";
+import InfoIcon from "@/components/custom/InfoIcon";
 import { overlayAnim } from "@/constants/overlay.animation.constant";
 import { useReceivingStore } from "@/stores/receiving/receiving.store";
 import { useSourceStore } from "@/stores/source/source.store";
@@ -107,8 +108,8 @@ const UpdateReceiving = ({ receiving, onClose }: UpdateReceivingI) => {
           </label>
 
           <div className="flex flex-col gap-1">
-            <label htmlFor="borrower" className="text-white text-xs">
-              Borrower *
+            <label htmlFor="borrower" className="text-white text-xs flex items-center">
+              Borrower * <InfoIcon info="The person or entity who owes you money" />
             </label>
             <TextField
               id="borrower"
@@ -122,8 +123,8 @@ const UpdateReceiving = ({ receiving, onClose }: UpdateReceivingI) => {
           </div>
 
           <div className="flex flex-col gap-1">
-            <label htmlFor="remaining" className="text-white text-xs">
-              Amount Owed *
+            <label htmlFor="remaining" className="text-white text-xs flex items-center">
+              Amount Owed * <InfoIcon info="The total amount owed to you (will decrease as payments are received)" />
             </label>
             <TextField
               type="text"
@@ -143,8 +144,8 @@ const UpdateReceiving = ({ receiving, onClose }: UpdateReceivingI) => {
           </div>
 
           <div className="flex flex-col gap-1">
-            <label htmlFor="source" className="text-white text-xs">
-              Source (Optional)
+            <label htmlFor="source" className="text-white text-xs flex items-center">
+              Source (Optional) <InfoIcon info="Link this receiving to a money source to track it in your source balance" />
             </label>
             <CustomSelect
               value={form.source || ""}
@@ -160,8 +161,8 @@ const UpdateReceiving = ({ receiving, onClose }: UpdateReceivingI) => {
           </div>
 
           <div className="flex flex-col gap-1">
-            <label htmlFor="dueDate" className="text-white text-xs">
-              Due Date
+            <label htmlFor="dueDate" className="text-white text-xs flex items-center">
+              Due Date <InfoIcon info="The date when this amount should be received" />
             </label>
             <TextField
               type="date"
@@ -177,8 +178,8 @@ const UpdateReceiving = ({ receiving, onClose }: UpdateReceivingI) => {
           </div>
 
           <div className="flex flex-col gap-1">
-            <label htmlFor="interest" className="text-white text-xs">
-              Interest
+            <label htmlFor="interest" className="text-white text-xs flex items-center">
+              Interest <InfoIcon info="Interest rate percentage (e.g., 5 for 5%)" />
             </label>
             <TextField
               type="text"
@@ -198,8 +199,8 @@ const UpdateReceiving = ({ receiving, onClose }: UpdateReceivingI) => {
           </div>
 
           <div className="flex flex-col gap-1">
-            <label htmlFor="note" className="text-white text-xs">
-              Note
+            <label htmlFor="note" className="text-white text-xs flex items-center">
+              Note <InfoIcon info="Additional details or description about this receiving" />
             </label>
             <TextField
               id="note"

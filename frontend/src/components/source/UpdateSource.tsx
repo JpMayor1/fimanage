@@ -1,5 +1,6 @@
 import LoadingSmall from "@/components/custom/loading/LoadingSmall";
 import TextField from "@/components/custom/TextField";
+import InfoIcon from "@/components/custom/InfoIcon";
 import { overlayAnim } from "@/constants/overlay.animation.constant";
 import { useSourceStore } from "@/stores/source/source.store";
 import type { SourceType } from "@/types/source/source.type";
@@ -60,8 +61,8 @@ const UpdateSource = ({ source, onClose }: UpdateSourceI) => {
           <h2 className="block font-semibold text-white">Update Source</h2>
 
           <div className="flex flex-col gap-1">
-            <label htmlFor="name" className="text-white text-xs">
-              Name *
+            <label htmlFor="name" className="text-white text-xs flex items-center">
+              Name * <InfoIcon info="The name of your money source (e.g., Bank Account, Wallet, Cash)" />
             </label>
             <TextField
               id="name"
@@ -75,8 +76,8 @@ const UpdateSource = ({ source, onClose }: UpdateSourceI) => {
           </div>
 
           <div className="flex flex-col gap-1">
-            <label htmlFor="balance" className="text-white text-xs">
-              Balance *
+            <label htmlFor="balance" className="text-white text-xs flex items-center">
+              Balance * <InfoIcon info="The current amount of money available in this source" />
             </label>
             <TextField
               type="text"
