@@ -14,7 +14,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import {
   FaBalanceScale,
   FaCalendarAlt,
-  FaDollarSign,
   FaPercentage,
   FaPlus,
   FaStickyNote,

@@ -45,9 +45,6 @@ const UpdateDept = ({ dept, onClose }: UpdateDeptI) => {
     e.preventDefault();
     
     const newRemaining = form.remaining != null ? Number(form.remaining) || 0 : 0;
-    const oldRemaining = Number(dept.remaining) || 0;
-    const oldSource = dept.source;
-    const newSource = form.source || null;
     
     // Handle source validation (no balance check needed since we're increasing balance)
     // But we should handle source changes properly

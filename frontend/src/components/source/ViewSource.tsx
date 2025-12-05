@@ -132,7 +132,7 @@ const ViewSource = ({ source, onClose }: ViewSourceI) => {
                     : "text-white/85";
 
                   // Determine transaction label
-                  let transactionLabel = tx.type;
+                  let transactionLabel: string = tx.type;
                   if (isDeptPayment) {
                     transactionLabel = "dept payment";
                   } else if (isDeptRecord) {
