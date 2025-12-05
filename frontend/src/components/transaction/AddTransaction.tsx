@@ -480,11 +480,13 @@ const AddTransaction = ({ onClose }: AddTransactionI) => {
                   }
                 >
                   <option value="">Select dept</option>
-                  {depts.map((d) => (
-                    <option key={d._id} value={d._id}>
-                      {d.lender}
-                    </option>
-                  ))}
+                  {depts
+                    .filter((d) => d.status !== "paid")
+                    .map((d) => (
+                      <option key={d._id} value={d._id}>
+                        {d.lender}
+                      </option>
+                    ))}
                 </CustomSelect>
               </div>
 
@@ -577,11 +579,13 @@ const AddTransaction = ({ onClose }: AddTransactionI) => {
                   }
                 >
                   <option value="">Select receiving</option>
-                  {receivings.map((r) => (
-                    <option key={r._id} value={r._id}>
-                      {r.borrower}
-                    </option>
-                  ))}
+                  {receivings
+                    .filter((r) => r.status !== "paid")
+                    .map((r) => (
+                      <option key={r._id} value={r._id}>
+                        {r.borrower}
+                      </option>
+                    ))}
                 </CustomSelect>
               </div>
 
