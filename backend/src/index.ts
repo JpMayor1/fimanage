@@ -113,7 +113,7 @@ const bootstrap = async () => {
       cookie: {
         httpOnly: false,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
+        sameSite: "none",
       },
     })
   );
