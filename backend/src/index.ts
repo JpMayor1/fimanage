@@ -1,4 +1,4 @@
-import "source-map-support/register";
+// import "source-map-support/register";
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -32,14 +32,21 @@ import reportRoute from "@/routes/report/report.route";
 import sourceRoute from "@/routes/source/source.route";
 import transactionRoute from "@/routes/transaction/transaction.route";
 
-import { startDailyExpenseJob, startOverdueCheckJob, startPasswordResetLimitResetJob } from "./jobs/jobs";
+import {
+  startDailyExpenseJob,
+  startOverdueCheckJob,
+  startPasswordResetLimitResetJob,
+} from "./jobs/jobs";
 
 // Handle unhandled promise rejections
-process.on("unhandledRejection", (reason: Error | any, promise: Promise<any>) => {
-  console.error("❌ Unhandled Rejection at:", promise, "reason:", reason);
-  console.error("Stack:", reason?.stack || "No stack trace available");
-  // Don't exit the process, just log the error
-});
+process.on(
+  "unhandledRejection",
+  (reason: Error | any, promise: Promise<any>) => {
+    console.error("❌ Unhandled Rejection at:", promise, "reason:", reason);
+    console.error("Stack:", reason?.stack || "No stack trace available");
+    // Don't exit the process, just log the error
+  }
+);
 
 // Handle uncaught exceptions
 process.on("uncaughtException", (error: Error) => {
@@ -148,7 +155,7 @@ const bootstrap = async () => {
       console.error("❌ Database connection error:", err);
       // Don't exit, server can still run and retry connection
     });
-    
+
     try {
       startDailyExpenseJob();
       startOverdueCheckJob();
@@ -157,7 +164,7 @@ const bootstrap = async () => {
       console.error("❌ Error starting jobs:", err);
       // Don't exit, server can still run without jobs
     }
-    
+
     console.log(`✅ Server Running on port ${PORT}`);
   });
 
