@@ -25,7 +25,7 @@ import ReportPage from "./pages/home/report/ReportPage";
 import SourcePage from "./pages/home/source/SourcePage";
 import TransactionPage from "./pages/home/transaction/TransactionPage";
 import { useAuthStore } from "./stores/auth/useAuthStore";
-// import { initCSRF } from "./utils/csrf/csrf.util";
+import { initCSRF } from "./utils/csrf/csrf.util";
 
 function App() {
   const { isAuthenticated, checkAuth } = useAuthStore();
@@ -33,7 +33,7 @@ function App() {
   useEffect(() => {
     const initializeApp = async () => {
       // Initialize CSRF
-      // await initCSRF();
+      await initCSRF();
 
       // Check authentication status silently
       // Ensure splash screen shows for minimum 1 second
