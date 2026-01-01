@@ -20,7 +20,7 @@ export function startBackendKeepAlive() {
 
 async function pingBackend() {
   try {
-    await axios.get("/test");
+    await axios.get("/api/test");
     console.log("[keep-alive] backend pinged");
   } catch (err) {
     // Do NOT throw — keep-alive must never break the app
