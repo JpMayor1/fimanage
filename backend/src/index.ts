@@ -5,7 +5,7 @@ dotenv.config();
 
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import csrf from "csurf";
+// import csrf from "csurf";
 import express from "express";
 import mongoSanitize from "express-mongo-sanitize";
 import helmet from "helmet";
@@ -17,7 +17,7 @@ import { globalErrorHandler } from "./middlewares/globalErrorHandler";
 import { globalRateLimiter } from "./middlewares/limit.middleware";
 
 import authRoute from "@/routes/auth/auth.route";
-import csrfRoute from "@/routes/csrf/csrf.route";
+// import csrfRoute from "@/routes/csrf/csrf.route";
 import verifierRoute from "@/routes/verifier/verifier.route";
 
 import cloudinary from "@/middlewares/cloudinary";
@@ -108,15 +108,15 @@ const bootstrap = async () => {
   app.use(cookieParser());
 
   // CSRF protection
-  app.use(
-    csrf({
-      cookie: {
-        httpOnly: false,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-      },
-    })
-  );
+  // app.use(
+  //   csrf({
+  //     cookie: {
+  //       httpOnly: false,
+  //       secure: process.env.NODE_ENV === "production",
+  //       sameSite: "lax",
+  //     },
+  //   })
+  // );
 
   // Log IP
   app.use((req, res, next) => {
@@ -130,7 +130,7 @@ const bootstrap = async () => {
   });
 
   // Routes
-  app.use("/api/csrf-token", csrfRoute);
+  // app.use("/api/csrf-token", csrfRoute);
   app.use("/api/verifier", verifierRoute);
   app.use("/api/auth", authRoute);
 
