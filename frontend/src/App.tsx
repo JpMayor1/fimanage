@@ -25,16 +25,12 @@ import ReportPage from "./pages/home/report/ReportPage";
 import SourcePage from "./pages/home/source/SourcePage";
 import TransactionPage from "./pages/home/transaction/TransactionPage";
 import { useAuthStore } from "./stores/auth/useAuthStore";
-import { initCSRF } from "./utils/csrf/csrf.util";
 
 function App() {
   const { isAuthenticated, checkAuth } = useAuthStore();
 
   useEffect(() => {
     const initializeApp = async () => {
-      // Initialize CSRF
-      await initCSRF();
-
       // Check authentication status silently
       // Ensure splash screen shows for minimum 1 second
       const startTime = Date.now();
@@ -45,7 +41,7 @@ function App() {
       if (elapsed < minDisplayTime) {
         // Wait for remaining time to meet minimum display duration
         await new Promise((resolve) =>
-          setTimeout(resolve, minDisplayTime - elapsed)
+          setTimeout(resolve, minDisplayTime - elapsed),
         );
       }
     };
